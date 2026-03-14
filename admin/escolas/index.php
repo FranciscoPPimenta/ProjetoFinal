@@ -227,18 +227,18 @@ if ($stmt) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <?php
-                    $sql = "SELECT unidades_organicas.*,animacoes.nome as 'Animacao' FROM unidades_organicas INNER JOIN animacoes ON unidades_organicas.id_animacao = animacoes.id_animacao";
+                    $sql = "SELECT escolas.*,animacoes.nome as 'Animacao' FROM escolas INNER JOIN animacoes ON escolas.id_animacao = animacoes.id_animacao";
                     $stmt = mysqli_prepare($conn, $sql);
 
                     if ($stmt) {
                         // Execute the statement
                         mysqli_stmt_execute($stmt);
                         $result = mysqli_stmt_get_result($stmt);
-                        $unidades = [];
+                        $escolas = [];
                         // Get the result
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                $unidades[] = $row; // Assuming 'nome' is a column in the result set
+                                $escolas[] = $row; // Assuming 'nome' is a column in the result set
                             }
                         }
                         // Close the statement
@@ -246,7 +246,7 @@ if ($stmt) {
                     }
                     ?>
                     <!-- Page Heading -->
-                    <h1 class="h3 fs-1 text-gray-800 fw-bold">Unidades Orgânicas</h1>
+                    <h1 class="h3 fs-1 text-gray-800 fw-bold">Escolas</h1>
                     <?php
                     if (isset($_SESSION["deleted"])) {
                         echo '<p class="fs-3 text-danger">Unidade ' . $_SESSION["deletedObject"] . ' apagada com sucesso!</p>';
@@ -259,8 +259,8 @@ if ($stmt) {
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h1 class="m-0 font-weight-bold text-primary">Tabela Unidades Orgânicas</h1>
-                            <a class="btn btn-primary" href="create.php">Criar Nova Unidade</a>
+                            <h1 class="m-0 font-weight-bold text-primary">Tabela Escolas</h1>
+                            <a class="btn btn-primary" href="create.php">Adicionar Escola</a>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -285,17 +285,17 @@ if ($stmt) {
                                     </tfoot>
                                     <tbody>
                                         <?php
-                                        foreach ($unidades as $unidade) {
+                                        foreach ($escolas as $escola) {
                                         ?>
                                             <tr>
-                                                <td><?php echo $unidade['nome']; ?></td>
-                                                <td><?php echo $unidade['descricao']; ?></td>
+                                                <td><?php echo $escola['nome']; ?></td>
+                                                <td><?php echo $escola['descricao']; ?></td>
                                                 <?php
-                                                $sql = "SELECT eventos.nome FROM eventos INNER JOIN unidades_organicas ON eventos.id_unidade = unidades_organicas.id_unidade WHERE unidades_organicas.id_unidade = ?";
+                                                $sql = "SELECT eventos.nome FROM eventos INNER JOIN escolas ON eventos.id_escola = escolas.id_escola WHERE escolas.id_escola = ?";
                                                 $stmt = mysqli_prepare($conn, $sql);
 
                                                 if ($stmt) {
-                                                    mysqli_stmt_bind_param($stmt, "i", $unidade["id_unidade"]);
+                                                    mysqli_stmt_bind_param($stmt, "i", $escola["id_escola"]);
                                                     // Execute the statement
                                                     mysqli_stmt_execute($stmt);
                                                     $result = mysqli_stmt_get_result($stmt);
@@ -319,13 +319,13 @@ if ($stmt) {
                                                 }
                                                 ?>
                                                 <td><?php echo $string ?></td>
-                                                <td><?php echo $unidade['Animacao']; ?></td>
+                                                <td><?php echo $escola['Animacao']; ?></td>
                                                 <td>
                                                     <a class="btn btn-primary"
-                                                        href="../../database/unidades/editar_unidade.php?id=<?php echo $unidade["id_unidade"] ?>">Editar</a>
+                                                        href="../../database/escolas/editar_escola.php?id=<?php echo $unidade["id_escola"] ?>">Editar</a>
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                         data-bs-target="#deleteModal"
-                                                        onclick="setDeleteModalText('<?php echo $unidade['nome']; ?>','<?php echo $unidade['id_unidade'] ?>')">Apagar</button>
+                                                        onclick="setDeleteModalText('<?php echo $unidade['nome']; ?>','<?php echo $escola['id_escola'] ?>')">Apagar</button>
                                                 </td>
                                             </tr>
                                         <?php

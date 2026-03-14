@@ -1,9 +1,9 @@
 <?php
 require_once("../../database/config.php");
 session_start();
-if (!isset($_SESSION["userID"])) {
-    header("Location: ../../login.php");
-}
+// if (!isset($_SESSION["userID"])) {
+//     header("Location: ../../login.php");
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +43,7 @@ if (!isset($_SESSION["userID"])) {
 
 </head>
 <?php
-$sql = "SELECT * FROM admin WHERE id_admin = ?";
+$sql = "SELECT * FROM admins WHERE id_admin = ?";
 $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
@@ -245,16 +245,16 @@ if ($stmt) {
                                     <form id="form" method="POST">
                                         <?php
                                         if (isset($_SESSION["create_nome"])) {
-                                            echo '<input type="text" style="margin:5px;font-size:20px" class="form-control"value="' . $_SESSION["create_nome"] . '" name="nome" id="nome" required>';
+                                            echo '<input type="text" style="margin:5px;font-size:20px" class="form-control"value="' . $_SESSION["create_nome"] . '" name="nomeEscola" id="nomeEscola" required>';
                                         } else {
-                                            echo '<input type="text" style="margin:5px;font-size:20px" class="form-control" name="nome" id="nome" required>';
+                                            echo '<input type="text" style="margin:5px;font-size:20px" class="form-control" name="nomeEscola" id="nomeEscola" required>';
                                         }
                                         ?>
                                         <?php
                                         if (isset($_SESSION["create_desc"])) {
-                                            echo '<textarea style="margin:5px;font-size:20px" name="descricao" id="descricao" class="form-control" required>' . $_SESSION["create_desc"] . '</textarea>';
+                                            echo '<textarea style="margin:5px;font-size:20px" name="descricaoEscola" id="descricaoEscola" class="form-control" required>' . $_SESSION["create_desc"] . '</textarea>';
                                         } else {
-                                            echo '<textarea style="margin:5px;font-size:20px" name="descricao" id="descricao" class="form-control" required></textarea>';
+                                            echo '<textarea style="margin:5px;font-size:20px" name="descricaoEscola" id="descricaoEscola" class="form-control" required></textarea>';
                                         }
                                         ?>
                                         <?php
@@ -277,9 +277,9 @@ if ($stmt) {
                                         <?php
                                         if (isset($_SESSION["animacao_textura"])) {
                                         ?>
-                                            <select style="margin:5px;font-size:20px" class="form-control" name="animacao"
-                                                id="animacao" required>
-                                                <option value="">Selecione uma animação</option>
+                                            <select style="margin:5px;font-size:20px" class="form-control"
+                                                name="animacaoEscola" id="animacaoEscola" required>
+                                                <option disabled value="0">Selecione uma animação</option>
                                                 <?php
                                                 foreach ($data as $animacao) {
                                                     if ($animacao['id_animacao'] == $_SESSION['animacao_id']) {
@@ -291,8 +291,8 @@ if ($stmt) {
                                             } else {
                                                 ?>
                                                 <select style="margin:5px;font-size:20px" class="form-control"
-                                                    name="animacao" id="animacao" required>
-                                                    <option value="" selected>Selecione uma animação</option>
+                                                    name="animacaoEscola" id="animacaoEscola" required>
+                                                    <option disabled value="" selected>Selecione uma animação</option>
                                                 <?php
                                                 foreach ($data as $animacao) {
                                                     echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
@@ -398,25 +398,25 @@ if ($stmt) {
             objeto
         } from '../js/3D/3D.js';
 
-        document.getElementById("animacao").addEventListener("change", function() {
+        document.getElementById("animacaoEscola").addEventListener("change", function() {
             // Get the selected value
-            var selectedValue = document.getElementById("animacao").value;
-            if (document.getElementById("nome").value != "") {
-                if (document.getElementById("descricao").value != "") {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&nome=" + document.getElementById("nome").value + "&desc=" + document.getElementById(
-                            "descricao").value + "&page=unidades";
+            var selectedValue = document.getElementById("animacaoEscola").value;
+            if (document.getElementById("nomeEscola").value != "") {
+                if (document.getElementById("descricaoEscola").value != "") {
+                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                        "&nome=" + document.getElementById("nomeEscola").value + "&desc=" + document.getElementById(
+                            "descricaoEscola").value + "&page=escolas";
                 } else {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&nome=" + document.getElementById("nome").value + "&page=unidades";
+                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                        "&nome=" + document.getElementById("nomeEscola").value + "&page=escolas";
                 }
             } else {
-                if (document.getElementById("descricao").value != "") {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&desc=" + document.getElementById("descricao").value + "&page=unidades";
+                if (document.getElementById("descricaoEscola").value != "") {
+                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                        "&desc=" + document.getElementById("descricaoEscola").value + "&page=escolas";
                 } else {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&page=unidades";
+                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                        "&page=escolas";
                 }
             }
         });
@@ -437,16 +437,17 @@ if ($stmt) {
 
     <script>
         function setCreateModalText() {
-            var string = "De certeza que quer criar a unidade?</br>" +
+            var string = "De certeza que quer adicionar a escola " + document.getElementById("nomeEscola").value +
+                ".?</br>" +
                 "Campos para a Unidade Orgânica</br>" +
-                "Nome: " + document.getElementById("nome").value + "</br>" +
-                "Descrição: " + document.getElementById("descricao").value + "</br>" +
-                "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                "Nome: " + document.getElementById("nomeEscola").value + "</br>" +
+                "Descrição: " + document.getElementById("descricaoEscola").value + "</br>" +
+                "Animação: " + document.getElementById("animacaoEscola").options[document.getElementById("animacaoEscola")
                     .selectedIndex].text;
             document.getElementById("createModalBody").innerHTML = string;
         }
 
-        document.getElementById("form").action = '../../database/unidades/create.php';
+        document.getElementById("form").action = '../../database/escolas/create.php';
     </script>
     <?php
     $keep = 'userID';
