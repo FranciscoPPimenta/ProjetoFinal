@@ -55,9 +55,10 @@ $map = [
     'desc'        => 'create_desc',
     'ambito'      => 'create_ambito',
     'data'        => 'create_data',
-    'professores' => 'professor_curso',
+    'coordenador' => 'coordenador_curso',
     'regime'      => 'create_regime',
-    'unidade'     => 'unidade_curso',
+    'escola'      => 'escola_curso',
+    'escolas'     => 'escola_evento',
     'evento'      => 'evento_curso',
 ];
 

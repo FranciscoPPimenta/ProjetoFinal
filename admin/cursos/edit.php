@@ -1,7 +1,7 @@
 <?php
 require_once("../../database/config.php");
 session_start();
-// if(!isset($_SESSION["userID"])){
+// if (!isset($_SESSION["userID"])) {
 //     header("Location: ../../login.php");
 // }
 ?>
@@ -18,8 +18,9 @@ session_start();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+    <link rel="stylesheet" href="../css/loading.css">
 
-    <title>Admin - Evento</title>
+    <title>Admin - Curso</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
@@ -67,7 +68,14 @@ $textura = $_SESSION['curso']['Textura'];
 ?>
 
 <body id="page-top">
-
+    <div id="loading">
+        <div class="arc-loader" role="status" aria-label="Loading">
+            <svg viewBox="0 0 50 50" class="arc-svg">
+                <circle class="arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke-linecap="round" />
+            </svg>
+        </div>
+        <p class="mt-3 text-center">Loading animation...</p>
+    </div>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -116,9 +124,9 @@ $textura = $_SESSION['curso']['Textura'];
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../animacoes/index.php">
@@ -129,6 +137,12 @@ $textura = $_SESSION['curso']['Textura'];
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -247,12 +261,12 @@ $textura = $_SESSION['curso']['Textura'];
                                             <?php echo $_SESSION["curso"]["nome"]; ?></p>
                                         <p style="font-size:45px" class="card-text">
                                             <?php echo $_SESSION["curso"]["descricao"]; ?></p>
-                                        <p style="font-size:30px" class="card-text">Unidade:
-                                            <?php echo $_SESSION["curso"]["Unidade"] ?></p>
+                                        <p style="font-size:30px" class="card-text">Escola:
+                                            <?php echo $_SESSION["curso"]["Escola"] ?></p>
                                         <p style="font-size:30px" class="card-text">Regime:
                                             <?php echo $_SESSION["curso"]["regime"] ?></p>
-                                        <p style="font-size:30px" class="card-text">Professor:
-                                            <?php echo $_SESSION["curso"]["Professor"] ?></p>
+                                        <p style="font-size:30px" class="card-text">Docente:
+                                            <?php echo $_SESSION["curso"]["Docente"] ?></p>
                                         <p style="font-size:30px" class="card-text">Evento:
                                             <?php echo $_SESSION["curso"]["Evento"] ?></p>
                                         <p style="font-size:30px" class="card-text">Animação:
@@ -269,16 +283,16 @@ $textura = $_SESSION['curso']['Textura'];
                                             <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
                                                 class="form-control"><?php echo $_SESSION["curso"]["descricao"]; ?></textarea>
                                             <?php
-                                            $sql = "SELECT * from professores";
+                                            $sql = "SELECT * from docentes";
                                             $stmt = mysqli_prepare($conn, $sql);
 
                                             if ($stmt) {
                                                 // Execute the statement
                                                 mysqli_stmt_execute($stmt);
                                                 $result = mysqli_stmt_get_result($stmt);
-                                                $profs = array();
+                                                $docs = array();
                                                 while ($row = mysqli_fetch_assoc($result)) {
-                                                    $profs[] = $row;
+                                                    $docs[] = $row;
                                                 }
 
                                                 // Close the statement
@@ -287,7 +301,7 @@ $textura = $_SESSION['curso']['Textura'];
                                             ?>
                                             <p style="font-size:15px">Regime:</p>
                                             <select style="margin:5px;font-size:20px" class="form-control" name="regime"
-                                                id="regime" required>
+                                                id="regime">
                                                 <?php
                                                 if (isset($_SESSION["curso"]["regime"])) {
                                                     if ($_SESSION["curso"]["regime"] == "Diurno") {
@@ -303,26 +317,84 @@ $textura = $_SESSION['curso']['Textura'];
                                                 ?>
                                             </select>
                                             <p style="font-size:15px">Coordenador:</p>
-                                            <select style="margin:5px;font-size:20px" class="form-control"
-                                                name="professores" id="professores" required>
+                                            <select style="margin:5px;font-size:20px" class="form-control" name="docente"
+                                                id="docente">
                                                 <?php
-                                                foreach ($profs as $prof) {
-                                                    if ($prof['id_professor'] == $_SESSION['curso']['Professor']) {
-                                                        echo '<option value="' . $prof['id_professor'] . '" selected>' . $prof["nome"] . '</option>';
+                                                foreach ($docs as $doc) {
+                                                    if ($doc['nome'] == $_SESSION['curso']['Docente']) {
+                                                        echo '<option value="' . $doc['id_docente'] . '" selected>' . $doc["nome"] . '</option>';
                                                     } else {
-                                                        echo '<option value="' . $prof['id_professor'] . '">' . $prof["nome"] . '</option>';
+                                                        echo '<option value="' . $doc['id_docente'] . '">' . $doc["nome"] . '</option>';
                                                     }
                                                 }
                                                 ?>
                                             </select>
-                                            <p style="font-size:15px">Unidade Orgânica:</p>
-                                            <input type="text" style="margin:5px;font-size:20px" class="form-control"
-                                                name="unidade" id="unidade"
-                                                value="<?php echo $_SESSION["curso"]["Unidade"]; ?>">
+                                            <p style="font-size:15px">Escola:</p>
+                                            <?php
+                                            $sql = "SELECT * FROM escolas";
+                                            $stmt = mysqli_prepare($conn, $sql);
+
+                                            if ($stmt) {
+                                                // Execute the statement
+                                                mysqli_stmt_execute($stmt);
+                                                $result = mysqli_stmt_get_result($stmt);
+                                                $escolas = array();
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $escolas[] = $row;
+                                                }
+                                                // Close the statement
+                                                mysqli_stmt_close($stmt);
+                                            }
+                                            ?>
+                                            <select style="margin:5px;font-size:20px" class="form-control" name="escola"
+                                                id="escola">
+                                                <?php
+                                                if (isset($_SESSION["curso"]["Escola"])) {
+                                                    foreach ($escolas as $escola) {
+                                                        if ($escola["nome"] == $_SESSION["curso"]["Escola"]) {
+                                                            echo '
+                                                                    <option selected value="' . $escola["id_escola"] . '">' . $escola["nome"] . '</option>';
+                                                        } else {
+                                                            echo '
+                                                                    <option value="' . $escola["id_escola"] . '">' . $escola["nome"] . '</option>';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
                                             <p style="font-size:15px">Evento:</p>
-                                            <input type="text" style="margin:5px;font-size:20px" class="form-control"
-                                                name="evento" id="evento"
-                                                value="<?php echo $_SESSION["curso"]["Evento"]; ?>">
+                                            <?php
+                                            $sql = "SELECT * FROM eventos";
+                                            $stmt = mysqli_prepare($conn, $sql);
+
+                                            if ($stmt) {
+                                                // Execute the statement
+                                                mysqli_stmt_execute($stmt);
+                                                $result = mysqli_stmt_get_result($stmt);
+                                                $eventos = array();
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $eventos[] = $row;
+                                                }
+                                                // Close the statement
+                                                mysqli_stmt_close($stmt);
+                                            }
+                                            ?>
+                                            <select style="margin:5px;font-size:20px" class="form-control" name="evento"
+                                                id="evento">
+                                                <?php
+                                                if (isset($_SESSION["curso"]["Animacao"])) {
+                                                    foreach ($eventos as $evento) {
+                                                        if ($evento["id_animacao"] == $_SESSION["curso"]["id_evento"]) {
+                                                            echo '
+                                                                    <option selected value="' . $evento["id_evento"] . '">' . $evento["nome"] . '</option>';
+                                                        } else {
+                                                            echo '
+                                                                    <option value="' . $evento["id_evento"] . '">' . $evento["nome"] . '</option>';
+                                                        }
+                                                    }
+                                                }
+                                                ?>
+                                            </select>
                                             <p style="font-size:15px">Animação:</p>
                                             <?php
                                             $sql = "SELECT * FROM animacoes";
@@ -341,7 +413,7 @@ $textura = $_SESSION['curso']['Textura'];
                                             }
                                             ?>
                                             <select style="margin:5px;font-size:20px" class="form-control" name="animacao"
-                                                id="animacao" required>
+                                                id="animacao">
                                                 <?php
                                                 if (isset($_SESSION["curso"]["Animacao"])) {
                                                     foreach ($animacoess as $animacaos) {
@@ -362,7 +434,7 @@ $textura = $_SESSION['curso']['Textura'];
                                                     <div class="modal-content">
                                                         <div class="modal-header">
                                                             <h1 class="modal-title fs-5" id="updateModalLabel">Atualizar
-                                                                Evento</h1>
+                                                                Curso</h1>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                         </div>
@@ -371,7 +443,7 @@ $textura = $_SESSION['curso']['Textura'];
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary"
                                                                 data-bs-dismiss="modal">Não</button>
-                                                            <button id="updateEvento" type="submit"
+                                                            <button id="updateCurso" type="submit"
                                                                 class="btn btn-primary">Sim</button>
                                                         </div>
                                                     </div>
@@ -379,7 +451,7 @@ $textura = $_SESSION['curso']['Textura'];
                                             </div>
                                         </form>
                                     </div>
-                                    <button class="btn btn-primary" id="editButton" onclick="editEvento()">Editar</button>
+                                    <button class="btn btn-primary" id="editButton" onclick="editCurso()">Editar</button>
                                     <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
                                         data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
@@ -453,7 +525,7 @@ $textura = $_SESSION['curso']['Textura'];
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar Evento</h1>
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar Curso</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="deleteModalBody">
@@ -461,7 +533,7 @@ $textura = $_SESSION['curso']['Textura'];
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                    <a id="apagaEvento" type="button" class="btn btn-primary">Sim</a>
+                    <a id="apagaCurso" type="button" class="btn btn-primary">Sim</a>
                 </div>
             </div>
         </div>
@@ -480,33 +552,33 @@ $textura = $_SESSION['curso']['Textura'];
 
 
     </script>
-    <script type="module" src="../js/3D/3D.js"></script>
     <script type="module">
         import {
             objeto
         } from '../js/3D/3D.js';
-        // Call the objeto function after the DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                console.log("<?php echo 'aaa' ?>");
-                objeto(<?php echo json_encode(base64_encode($_SESSION['curso']['Textura'])) ?>, (
-                    <?php echo json_encode(base64_encode($_SESSION['curso']['Objeto'])) ?>));
-                document.getElementById("nome").readOnly = true;
-                document.getElementById("unidade").readOnly = true;
-                document.getElementById("evento").readOnly = true;
-            }, 1000); // Delay of 5 seconds
-        });
+
+        const tex = <?= json_encode(base64_encode($_SESSION['curso']['Textura'])) ?>;
+        const glb = <?= json_encode(base64_encode($_SESSION['curso']['Objeto'])) ?>;
+
+        try {
+            await objeto(tex, glb);
+        } catch (e) {
+            console.error(e);
+            document.getElementById('loading').textContent = 'Failed to load animation.';
+        } finally {
+            document.body.classList.add('ready');
+        }
     </script>
     <?php
     if (isset($_SESSION["curso"])) {
     ?>
         <script>
-            function editEvento() {
+            function editCurso() {
                 if (document.getElementById("Editing").hasAttribute("hidden")) {
                     document.getElementById("notEditing").setAttribute("hidden", "");
-                    document.getElementById("editButton").setAttribute("hidden", "");
-                    document.getElementById("Editing").removeAttribute("hidden");
                     document.getElementById("updateButton").removeAttribute("hidden");
+                    document.getElementById("Editing").removeAttribute("hidden");
+                    document.getElementById("editButton").setAttribute("hidden", "");
                 }
             }
 
@@ -515,31 +587,29 @@ $textura = $_SESSION['curso']['Textura'];
                     "Campos atualizados</br>" +
                     "Nome: " + document.getElementById("nome").value + "</br>" +
                     "Descrição: " + document.getElementById("descricao").value + "</br>" +
-                    "Unidade: " + document.getElementById("unidade").value + "</br>" +
-                    "Regime: " + document.getElementById("regime").value + "</br>" +
-                    "Professor: " + document.getElementById("professores").options[document.getElementById("professores")
-                        .selectedIndex].text + "</br>" +
-                    "Evento: " + document.getElementById("evento").value + "</br>" +
                     "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
-                        .selectedIndex].text + "</br>";
-
+                        .selectedIndex].text + "</br>" +
+                    "Regime: " + document.getElementById("regime").options[document.getElementById("regime").selectedIndex]
+                    .text + "</br>" +
+                    "Docente(s): " + document.getElementById("docente").options[document.getElementById("docente")
+                        .selectedIndex].text + "</br>" +
+                    "Evento: " + document.getElementById("evento").options[document.getElementById("evento").selectedIndex]
+                    .text;
                 document.getElementById("updateModalBody").innerHTML = string;
             }
 
             function setDeleteModalText() {
                 document.getElementById("deleteModalBody").innerHTML =
-                    "De certeza que quer apagar o evento: \"<?php echo $_SESSION['curso']['nome']; ?>\"";
-                document.getElementById("apagaEvento").setAttribute("href", "../../database/cursos/delete_curso.php?id=" +
+                    "De certeza que quer apagar o curso: \"<?php echo $_SESSION['curso']['nome']; ?>\"";
+                document.getElementById("apagaCurso").setAttribute("href", "../../database/cursos/delete_curso.php?id=" +
                     <?php echo $_SESSION['curso']['id_curso']; ?> + "&start_page=edit");
             }
+            <?php } ?>
         </script>
-    <?php
-    }
-    ?>
-    <?php
-    $_SESSION["updated"] = null;
-    $_SESSION["exists"] = null;
-    ?>
+        <?php
+        $_SESSION["updated"] = null;
+        $_SESSION["exists"] = null;
+        ?>
 </body>
 
 </html>

@@ -1,9 +1,9 @@
 <?php
 require_once("../../database/config.php");
 session_start();
-if (!isset($_SESSION["userID"])) {
-    header("Location: ../../login.php");
-}
+// if (!isset($_SESSION["userID"])) {
+//     header("Location: ../../login.php");
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,10 +15,14 @@ if (!isset($_SESSION["userID"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+    <link rel="stylesheet" href="../css/loading.css">
 
-    <title>Admin - Unidade</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>Admin - Escolas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- Custom fonts for this template-->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -40,7 +44,7 @@ if (!isset($_SESSION["userID"])) {
 
 </head>
 <?php
-$sql = "SELECT * FROM admin WHERE id_admin = ?";
+$sql = "SELECT * FROM admins WHERE id_admin = ?";
 $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
@@ -59,10 +63,18 @@ if ($stmt) {
     // Close the statement
     mysqli_stmt_close($stmt);
 }
+
 ?>
 
 <body id="page-top">
-
+    <div id="loading">
+        <div class="arc-loader" role="status" aria-label="Loading">
+            <svg viewBox="0 0 50 50" class="arc-svg">
+                <circle class="arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke-linecap="round" />
+            </svg>
+        </div>
+        <p class="mt-3 text-center">Loading animation...</p>
+    </div>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -111,9 +123,9 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../animacoes/index.php">
@@ -124,6 +136,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -195,9 +213,9 @@ if ($stmt) {
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row["admin_name"] ?></span>
-                                <img class="img-profile rounded-circle"
-                                    src="../img/undraw_profile.svg">
+                                <span
+                                    class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row["admin_name"] ?></span>
+                                <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -227,7 +245,7 @@ if ($stmt) {
                 </nav>
                 <!-- End of Topbar -->
                 <?php
-                if (isset($_SESSION["unidade"])) {
+                if (isset($_SESSION["escola"])) {
                     //echo base64_encode($_SESSION["evento"]['Textura']);
                 ?>
                     <div class="container-fluid">
@@ -238,15 +256,22 @@ if ($stmt) {
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body" id="notEditing">
-                                        <p style="font-size:80px" class="card-title"><?php echo $_SESSION["unidade"]["nome"]; ?></p>
-                                        <p style="font-size:45px" class="card-text"><?php echo $_SESSION["unidade"]["descricao"]; ?></p>
-                                        <p style="font-size:30px" class="card-text">Animação: <?php echo $_SESSION["unidade"]["Animacao"]; ?></p>
+                                        <p style="font-size:80px" class="card-title">
+                                            <?php echo $_SESSION["escola"]["nome"]; ?></p>
+                                        <p style="font-size:45px" class="card-text">
+                                            <?php echo $_SESSION["escola"]["descricao"]; ?></p>
+                                        <p style="font-size:30px" class="card-text">Animação:
+                                            <?php echo $_SESSION["escola"]["Animacao"]; ?></p>
 
                                     </div>
                                     <div class="card-body" id="Editing" hidden>
-                                        <form action='../../database/unidades/edit.php?id=<?php echo $_SESSION['unidade']['id_unidade']; ?>' method="POST">
-                                            <input type="text" style="margin:5px;font-size:20px" class="form-control" name="nome" id="nome" value="<?php echo $_SESSION["unidade"]["nome"]; ?>">
-                                            <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao" class="form-control"><?php echo $_SESSION["unidade"]["descricao"]; ?></textarea>
+                                        <form
+                                            action='../../database/escolas/edit.php?id=<?php echo $_SESSION['escola']['id_escola']; ?>'
+                                            method="POST">
+                                            <input type="text" style="margin:5px;font-size:20px" class="form-control"
+                                                name="nome" id="nome" value="<?php echo $_SESSION["escola"]["nome"]; ?>">
+                                            <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
+                                                class="form-control"><?php echo $_SESSION["escola"]["descricao"]; ?></textarea>
                                             <?php
                                             $sql = "SELECT * from animacoes";
                                             $stmt = mysqli_prepare($conn, $sql);
@@ -264,10 +289,11 @@ if ($stmt) {
                                                 mysqli_stmt_close($stmt);
                                             }
                                             ?>
-                                            <select style="margin:5px;font-size:20px" class="form-control" name="animacao" id="animacao">
+                                            <select style="margin:5px;font-size:20px" class="form-control" name="animacao"
+                                                id="animacao">
                                                 <?php
                                                 foreach ($data as $animacao) {
-                                                    if ($animacao['id_animacao'] == $_SESSION['unidade']['id_animacao']) {
+                                                    if ($animacao['id_animacao'] == $_SESSION['escola']['id_animacao']) {
                                                         echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
                                                     } else {
                                                         echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
@@ -275,27 +301,34 @@ if ($stmt) {
                                                 }
                                                 ?>
                                             </select>
-                                            <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="updateModal" tabindex="-1"
+                                                aria-labelledby="updateModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="updateModalLabel">Atualizar Unidade</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <h1 class="modal-title fs-5" id="updateModalLabel">Atualizar
+                                                                escola</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body" id="updateModalBody">
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                                                            <button id="updateUnidade" type="submit" class="btn btn-primary">Sim</button>
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Não</button>
+                                                            <button id="updateEscola" type="submit"
+                                                                class="btn btn-primary">Sim</button>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
                                     </div>
-                                    <button class="btn btn-primary" id="editButton" onclick="editUnidade()">Editar</button>
-                                    <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
+                                    <button class="btn btn-primary" id="editButton" onclick="editEscola()">Editar</button>
+                                    <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
                                     <?php
                                     if (isset($_SESSION["updated"])) {
                                         echo '<p style="font-size:30px" class="card-text text-success" id="mensagemAtualizada">' . $_SESSION["updated"] . '</p>';
@@ -365,7 +398,7 @@ if ($stmt) {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar Unidade</h1>
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar Escola</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="deleteModalBody">
@@ -392,25 +425,28 @@ if ($stmt) {
 
 
     </script>
-    <script type="module" src="../js/3D/3D.js"></script>
     <script type="module">
         import {
             objeto
         } from '../js/3D/3D.js';
-        // Call the objeto function after the DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                console.log("<?php echo 'aaa' ?>");
-                objeto(<?php echo json_encode(base64_encode($_SESSION['unidade']['Textura'])) ?>, (<?php echo json_encode(base64_encode($_SESSION['unidade']['Objeto'])) ?>));
 
-            }, 1000); // Delay of 5 seconds
-        });
+        const tex = <?= json_encode(base64_encode($_SESSION['escola']['Textura'])) ?>;
+        const glb = <?= json_encode(base64_encode($_SESSION['escola']['Objeto'])) ?>;
+
+        try {
+            await objeto(tex, glb);
+        } catch (e) {
+            console.error(e);
+            document.getElementById('loading').textContent = 'Failed to load animation.';
+        } finally {
+            document.body.classList.add('ready');
+        }
     </script>
     <?php
-    if (isset($_SESSION["unidade"])) {
+    if (isset($_SESSION["escola"])) {
     ?>
         <script>
-            function editUnidade() {
+            function editEscola() {
                 if (document.getElementById("Editing").hasAttribute("hidden")) {
                     document.getElementById("notEditing").setAttribute("hidden", "");
                     document.getElementById("updateButton").removeAttribute("hidden");
@@ -420,17 +456,20 @@ if ($stmt) {
             }
 
             function setUpdateModalText() {
-                var string = "De certeza que quer atualizar a unidade?</br>" +
+                var string = "De certeza que quer atualizar a escola?</br>" +
                     "Campos atualizados</br>" +
                     "Nome: " + document.getElementById("nome").value + "</br>" +
                     "Descrição: " + document.getElementById("descricao").value + "</br>" +
-                    "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao").selectedIndex].text;
+                    "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                        .selectedIndex].text;
                 document.getElementById("updateModalBody").innerHTML = string;
             }
 
             function setDeleteModalText() {
-                document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a unidade: \"<?php echo $_SESSION['unidade']['nome']; ?>\"";
-                document.getElementById("apagaEvento").setAttribute("href", "../../database/unidades/delete_unidade.php?id=" + <?php echo $_SESSION['unidade']['id_unidade']; ?> + "&start_page=edit");
+                document.getElementById("deleteModalBody").innerHTML =
+                    "De certeza que quer apagar a escola: \"<?php echo $_SESSION['escola']['nome']; ?>\"";
+                document.getElementById("apagaEvento").setAttribute("href", "../../database/escolas/delete_escola.php?id=" +
+                    <?php echo $_SESSION['escola']['id_escola']; ?> + "&start_page=edit");
             }
         </script>
     <?php

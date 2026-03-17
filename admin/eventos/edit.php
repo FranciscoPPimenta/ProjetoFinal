@@ -1,9 +1,9 @@
 <?php
 require_once("../../database/config.php");
 session_start();
-if (!isset($_SESSION["userID"])) {
-    header("Location: ../../login.php");
-}
+// if (!isset($_SESSION["userID"])) {
+//     header("Location: ../../login.php");
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,10 +15,13 @@ if (!isset($_SESSION["userID"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
 
     <title>Admin - Evento</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!-- Custom fonts for this template-->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
@@ -40,7 +43,7 @@ if (!isset($_SESSION["userID"])) {
 
 </head>
 <?php
-$sql = "SELECT * FROM admin WHERE id_admin = ?";
+$sql = "SELECT * FROM admins WHERE id_admin = ?";
 $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
@@ -113,9 +116,9 @@ $textura = $_SESSION['evento']['Textura'];
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../animacoes/index.php">
@@ -126,6 +129,12 @@ $textura = $_SESSION['evento']['Textura'];
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -196,9 +205,9 @@ $textura = $_SESSION['evento']['Textura'];
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row["admin_name"] ?></span>
-                                <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                <span
+                                    class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row["admin_name"] ?></span>
+                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -240,17 +249,28 @@ $textura = $_SESSION['evento']['Textura'];
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body" id="notEditing">
-                                        <p style="font-size:80px" class="card-title"><?php echo $_SESSION["evento"]["nome"]; ?></p>
-                                        <p style="font-size:45px" class="card-text"><?php echo $_SESSION["evento"]["descricao"]; ?></p>
-                                        <p style="font-size:30px" class="card-text">Data: <?php echo $_SESSION["evento"]["dia"]; ?>/<?php echo $_SESSION["evento"]["mes"]; ?></p>
-                                        <p style="font-size:30px" class="card-text">Âmbito: <?php echo $_SESSION["evento"]["Ambito"] ?></p>
-                                        <p style="font-size:30px" class="card-text">Animação: <?php echo $_SESSION["evento"]["Animacao"] ?></p>
+                                        <p style="font-size:80px" class="card-title">
+                                            <?php echo $_SESSION["evento"]["nome"]; ?></p>
+                                        <p style="font-size:45px" class="card-text">
+                                            <?php echo $_SESSION["evento"]["descricao"]; ?></p>
+                                        <p style="font-size:30px" class="card-text">Data:
+                                            <?php echo $_SESSION["evento"]["dia"]; ?>/<?php echo $_SESSION["evento"]["mes"]; ?>
+                                        </p>
+                                        <p style="font-size:30px" class="card-text">Âmbito:
+                                            <?php echo $_SESSION["evento"]["Ambito"] ?></p>
+                                        <p style="font-size:30px" class="card-text">Animação:
+                                            <?php echo $_SESSION["evento"]["Animacao"] ?></p>
                                     </div>
                                     <div class="card-body" id="Editing" hidden>
-                                        <form action='../../database/eventos/edit.php?id=<?php echo $_SESSION['evento']['id_evento']; ?>' method="POST">
-                                            <input type="text" style="margin:5px;font-size:20px" class="form-control" name="nome" id="nome" value="<?php echo $_SESSION["evento"]["nome"]; ?>">
-                                            <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao" class="form-control"><?php echo $_SESSION["evento"]["descricao"]; ?></textarea>
-                                            <input type="date" style="margin:5px;font-size:20px" class="form-control" name="data" id="data">
+                                        <form
+                                            action='../../database/eventos/edit.php?id=<?php echo $_SESSION['evento']['id_evento']; ?>'
+                                            method="POST">
+                                            <input type="text" style="margin:5px;font-size:20px" class="form-control"
+                                                name="nome" id="nome" value="<?php echo $_SESSION["evento"]["nome"]; ?>">
+                                            <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
+                                                class="form-control"><?php echo $_SESSION["evento"]["descricao"]; ?></textarea>
+                                            <input type="date" style="margin:5px;font-size:20px" class="form-control"
+                                                name="data" id="data">
                                             <?php
                                             $sql = "SELECT * from ambitos";
                                             $stmt = mysqli_prepare($conn, $sql);
@@ -268,7 +288,8 @@ $textura = $_SESSION['evento']['Textura'];
                                                 mysqli_stmt_close($stmt);
                                             }
                                             ?>
-                                            <select style="margin:5px;font-size:20px" class="form-control" name="ambito" id="ambito">
+                                            <select style="margin:5px;font-size:20px" class="form-control" name="ambito"
+                                                id="ambito">
                                                 <?php
                                                 foreach ($data as $ambito) {
                                                     if ($ambito['id_ambito'] == $_SESSION['evento']['id_ambito']) {
@@ -280,18 +301,23 @@ $textura = $_SESSION['evento']['Textura'];
                                                 ?>
                                             </select>
 
-                                            <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModalLabel" aria-hidden="true">
+                                            <div class="modal fade" id="updateModal" tabindex="-1"
+                                                aria-labelledby="updateModalLabel" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="updateModalLabel">Atualizar Evento</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            <h1 class="modal-title fs-5" id="updateModalLabel">Atualizar
+                                                                Evento</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body" id="updateModalBody">
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                                                            <button id="updateEvento" type="submit" class="btn btn-primary">Sim</button>
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Não</button>
+                                                            <button id="updateEvento" type="submit"
+                                                                class="btn btn-primary">Sim</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -299,8 +325,10 @@ $textura = $_SESSION['evento']['Textura'];
                                         </form>
                                     </div>
                                     <button class="btn btn-primary" id="editButton" onclick="editEvento()">Editar</button>
-                                    <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
+                                    <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
                                     <?php
                                     if (isset($_SESSION["updated"])) {
                                         echo '<p style="font-size:30px" class="card-text text-success" id="mensagemAtualizada">' . $_SESSION["updated"] . '</p>';
@@ -406,7 +434,8 @@ $textura = $_SESSION['evento']['Textura'];
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(function() {
                 console.log("<?php echo 'aaa' ?>");
-                objeto(<?php echo json_encode(base64_encode($_SESSION['evento']['Textura'])) ?>, (<?php echo json_encode(base64_encode($_SESSION['evento']['Objeto'])) ?>));
+                objeto(<?php echo json_encode(base64_encode($_SESSION['evento']['Textura'])) ?>, (
+                    <?php echo json_encode(base64_encode($_SESSION['evento']['Objeto'])) ?>));
 
             }, 1000); // Delay of 5 seconds
         });
@@ -421,9 +450,11 @@ $textura = $_SESSION['evento']['Textura'];
                     const date = new Date();
                     let data = "";
                     if (<?php echo $_SESSION['evento']['dia']; ?> == 1) {
-                        data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?> - 1, <?php $_SESSION['evento']['dia']; ?>);
+                        data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?> - 1,
+                            <?php $_SESSION['evento']['dia']; ?>);
                     } else {
-                        data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?>, <?php $_SESSION['evento']['dia']; ?>);
+                        data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?>,
+                            <?php $_SESSION['evento']['dia']; ?>);
                     }
                     //codigo toISOString server para obter a primeira parte da data sendo que no seu formato está como YYYY-MM-DDTHH:mm:sssZ entao 
                     //fazemos a divisao no T e tiramos a primeira parte [0]
@@ -438,14 +469,19 @@ $textura = $_SESSION['evento']['Textura'];
                 const data = new Date(document.getElementById("data").value);
                 const id = <?php echo $_SESSION['evento']['id_evento']; ?>;
                 console.log(id);
-                var string = "De certeza que quer atualizar o evento?</br>Campos atualizados</br>Nome: " + document.getElementById("nome").value + "</br>Descrição: " + document.getElementById("descricao").value + "</br>Dia: " +
-                    +data.getDate() + "</br>Mês: " + data.getMonth() + "<br>Âmbito: " + document.getElementById("ambito").options[document.getElementById("ambito").selectedIndex].text;
+                var string = "De certeza que quer atualizar o evento?</br>Campos atualizados</br>Nome: " + document
+                    .getElementById("nome").value + "</br>Descrição: " + document.getElementById("descricao").value +
+                    "</br>Dia: " +
+                    +data.getDate() + "</br>Mês: " + data.getMonth() + "<br>Âmbito: " + document.getElementById("ambito")
+                    .options[document.getElementById("ambito").selectedIndex].text;
                 document.getElementById("updateModalBody").innerHTML = string;
             }
 
             function setDeleteModalText() {
-                document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o evento: \"<?php echo $_SESSION['evento']['nome']; ?>\"";
-                document.getElementById("apagaEvento").setAttribute("href", "../../database/eventos/delete_evento.php?id=" + <?php echo $_SESSION['evento']['id_evento']; ?> + "&start_page=edit");
+                document.getElementById("deleteModalBody").innerHTML =
+                    "De certeza que quer apagar o evento: \"<?php echo $_SESSION['evento']['nome']; ?>\"";
+                document.getElementById("apagaEvento").setAttribute("href", "../../database/eventos/delete_evento.php?id=" +
+                    <?php echo $_SESSION['evento']['id_evento']; ?> + "&start_page=edit");
             }
         </script>
     <?php

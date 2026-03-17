@@ -125,9 +125,9 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="index.php">
@@ -138,6 +138,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
 
             <!-- Divider -->

@@ -115,6 +115,12 @@ if ($stmt) {
                     <i class="fas fa-fw fa-table"></i>
                     <span>Animações</span></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
+            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">

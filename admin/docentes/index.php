@@ -122,6 +122,12 @@ if ($stmt) {
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
+            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -227,25 +233,6 @@ if ($stmt) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <?php
-                    // $sql = "SELECT ucs.*,animacoes.nome as 'Animacao',cursos.nome as 'Curso' FROM ucs INNER JOIN animacoes ON ucs.id_animacao = animacoes.id_animacao INNER JOIN uc_curso ON ucs.id_uc = uc_curso.id_uc INNER JOIN cursos ON uc_curso.id_curso = cursos.id_curso";
-                    // $stmt = mysqli_prepare($conn, $sql);
-
-                    // if ($stmt) {
-                    //     // Execute the statement
-                    //     mysqli_stmt_execute($stmt);
-                    //     $result = mysqli_stmt_get_result($stmt);
-                    //     $ucs = [];
-                    //     // Get the result
-                    //     if (mysqli_num_rows($result) > 0) {
-                    //         while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                    //             $ucs[]  = $row; // Assuming 'nome' is a column in the result set
-                    //         }
-                    //     } else {
-                    //         echo "No records found."; // Handle case where no records are found
-                    //     }
-                    //     // Close the statement
-                    //     mysqli_stmt_close($stmt);
-                    // }
                     $sql = "SELECT * FROM docentes INNER JOIN uc_docente ON docentes.id_docente = uc_docente.id_docente";
                     $stmt = mysqli_prepare($conn, $sql);
 
@@ -294,14 +281,15 @@ if ($stmt) {
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h1 class="m-0 font-weight-bold text-primary">Tabela Docentes</h1>
-                            <form method="POST" action="../../database/professores/create.php">
+                            <form method="POST" action="../../database/docentes/create.php">
                                 <div class="row">
                                     <div class="col-1">
                                         <button type="submit" class="btn btn-primary">Adicionar
                                             Docente</button>
                                     </div>
                                     <div class="col-4">
-                                        <input type="text" id="nomeProf" name="nomeProf" class="form-control"></input>
+                                        <input type="text" id="nomeProf" name="nomeProf" required
+                                            class="form-control"></input>
                                     </div>
                                     <div class="col-7"></div>
                                 </div>
@@ -349,7 +337,9 @@ if ($stmt) {
                                                 mysqli_stmt_close($stmt);
                                                 $string = "";
 
-                                                $string = implode(', ', $cursos);
+                                                $nomes = array_column($cursos, 'nome');
+                                                $string = implode(', ', $nomes);
+
                                                 ?>
 
                                                 <td><?php
@@ -375,7 +365,9 @@ if ($stmt) {
                                                 mysqli_stmt_close($stmt);
                                                 $stringUc = "";
 
-                                                $stringUc = implode(', ', $cursos);
+                                                $nomes = array_column($ucs, 'nome');
+                                                $stringUc = implode(', ', $nomes);
+
                                                 ?>
                                                 <td><?php
                                                     if ($stringUc == "") {
@@ -489,7 +481,7 @@ if ($stmt) {
         function setDeleteModalText(name, id) {
             document.getElementById("deleteModalBody").innerHTML = "De certeza que quer remover o docente: \"" + name +
                 "\"";
-            document.getElementById("removeDocente").setAttribute("href", "../../database/professores/remove.php?id=" +
+            document.getElementById("removeDocente").setAttribute("href", "../../database/docentes/remove.php?id=" +
                 id);
         }
     </script>

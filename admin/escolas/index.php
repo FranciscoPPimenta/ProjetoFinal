@@ -20,7 +20,7 @@ session_start();
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
-    <title>Admin - Unidades</title>
+    <title>Admin - Escolas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Custom fonts for this template -->
@@ -108,9 +108,9 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../animacoes/index.php">
@@ -121,6 +121,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -322,10 +328,10 @@ if ($stmt) {
                                                 <td><?php echo $escola['Animacao']; ?></td>
                                                 <td>
                                                     <a class="btn btn-primary"
-                                                        href="../../database/escolas/editar_escola.php?id=<?php echo $unidade["id_escola"] ?>">Editar</a>
+                                                        href="../../database/escolas/editar_escola.php?id=<?php echo $escola["id_escola"] ?>">Editar</a>
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                         data-bs-target="#deleteModal"
-                                                        onclick="setDeleteModalText('<?php echo $unidade['nome']; ?>','<?php echo $escola['id_escola'] ?>')">Apagar</button>
+                                                        onclick="setDeleteModalText('<?php echo $escola['nome']; ?>','<?php echo $escola['id_escola'] ?>')">Apagar</button>
                                                 </td>
                                             </tr>
                                         <?php
@@ -380,7 +386,7 @@ if ($stmt) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                    <a id="apagaUnidade" type="button" class="btn btn-primary">Sim</a>
+                    <a id="apagaEscola" type="button" class="btn btn-primary">Sim</a>
                 </div>
             </div>
         </div>
@@ -423,9 +429,9 @@ if ($stmt) {
     <script src="../js/demo/datatables-demo.js"></script>
     <script>
         function setDeleteModalText(name, id) {
-            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o unidade orgânica: \"" +
+            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a escola: \"" +
                 name + "\"";
-            document.getElementById("apagaUnidade").setAttribute("href", "../../database/unidades/delete_unidade.php?id=" +
+            document.getElementById("apagaEscola").setAttribute("href", "../../database/escolas/delete_escola.php?id=" +
                 id + "&start_page=index");
         }
     </script>

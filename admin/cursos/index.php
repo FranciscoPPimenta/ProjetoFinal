@@ -109,9 +109,9 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../animacoes/index.php">
@@ -122,6 +122,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -321,11 +327,11 @@ if ($stmt) {
                                                 <td><?php echo $string["nome"]; ?></td>
                                                 <td><?php echo $curso['Animacao']; ?></td>
                                                 <?php
-                                                $sql = "SELECT escolas.nome FROM escoals INNER JOIN cursos ON escolas.id_escola = cursos.id_unidade WHERE cursos.id_escola = ?";
+                                                $sql = "SELECT escolas.nome FROM escolas INNER JOIN cursos ON escolas.id_escola = cursos.id_escola WHERE cursos.id_escola = ?";
                                                 $stmt = mysqli_prepare($conn, $sql);
 
                                                 if ($stmt) {
-                                                    mysqli_stmt_bind_param($stmt, "i", $curso["id_unidade"]);
+                                                    mysqli_stmt_bind_param($stmt, "i", $curso["id_escola"]);
                                                     // Execute the statement
                                                     mysqli_stmt_execute($stmt);
                                                     $result = mysqli_stmt_get_result($stmt);
@@ -346,7 +352,7 @@ if ($stmt) {
                                                 ?>
                                                 <td><?php echo $nome_unidade ?></td>
                                                 <?php
-                                                $sql = "SELECT professores.nome FROM professores INNER JOIN cursos ON professores.id_professor = cursos.id_coordenador WHERE cursos.id_coordenador = ?";
+                                                $sql = "SELECT docentes.nome FROM docentes INNER JOIN cursos ON docentes.id_docente = cursos.id_coordenador WHERE cursos.id_coordenador = ?";
                                                 $stmt = mysqli_prepare($conn, $sql);
 
                                                 if ($stmt) {

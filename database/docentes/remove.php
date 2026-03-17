@@ -36,9 +36,9 @@ if (isset($_GET['id'])) {
     mysqli_stmt_close($stmtCheck);
 
     if ($count > 0) {
-        $_SESSION["exists"] = "$delete é coordenador de certos cursos, não consegue eliminar ainda!";
+        $_SESSION["exists"] = "$deleted é coordenador de certos cursos, não consegue eliminar ainda!";
         $_SESSION["color"] = "danger";
-        header("Location: ../../admin/professores /index.php");
+        header("Location: ../../admin/docentes/index.php");
     }
 
     $sqlCheck = "SELECT COUNT(*) FROM uc_docente WHERE id_docente = ?";
@@ -60,7 +60,7 @@ if (isset($_GET['id'])) {
     if ($count > 0) {
         $_SESSION["exists"] = "$delete é docente de certas unidades curriculares, não consegue eliminar ainda!";
         $_SESSION["color"] = "danger";
-        header("Location: ../../admin/professores/index.php");
+        header("Location: ../../admin/docentes/index.php");
     }
 
     $sql = "DELETE FROM docentes WHERE id_docente = ?";
@@ -82,7 +82,7 @@ if (isset($_GET['id'])) {
             $_SESSION["deletedObject"] = $deleted;
         }
         mysqli_stmt_close($stmt);
-        header("Location: ../../admin/professores/index.php");
+        header("Location: ../../admin/docentes/index.php");
     } else {
         // Handle SQL preparation error
         echo json_encode(array("error" => "Failed to prepare SQL statement."));

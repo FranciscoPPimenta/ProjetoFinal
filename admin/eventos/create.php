@@ -1,9 +1,9 @@
 <?php
 require_once("../../database/config.php");
 session_start();
-if (!isset($_SESSION["userID"])) {
-    header("Location: ../..login.php");
-}
+// if (!isset($_SESSION["userID"])) {
+//     header("Location: ../..login.php");
+// }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,8 +16,8 @@ if (!isset($_SESSION["userID"])) {
     <meta name="description" content="">
     <meta name="author" content="">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
 
     <title>Admin - Evento</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -108,9 +108,9 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../animacoes/index.php">
@@ -121,6 +121,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -295,16 +301,16 @@ if ($stmt) {
                                                 ?>
                                                 </select>
                                                 <?php
-                                                $sql = "SELECT * from unidades_organicas";
+                                                $sql = "SELECT * from escolas";
                                                 $stmt = mysqli_prepare($conn, $sql);
 
                                                 if ($stmt) {
                                                     // Execute the statement
                                                     mysqli_stmt_execute($stmt);
                                                     $result = mysqli_stmt_get_result($stmt);
-                                                    $dataUnidade = array();
+                                                    $dataEscola = array();
                                                     while ($row = mysqli_fetch_assoc($result)) {
-                                                        $dataUnidade[] = $row;
+                                                        $dataEscola[] = $row;
                                                     }
 
                                                     // Close the statement
@@ -312,27 +318,27 @@ if ($stmt) {
                                                 }
                                                 ?>
                                                 <?php
-                                                if (isset($_SESSION["unidade_evento"])) {
+                                                if (isset($_SESSION["escola_evento"])) {
                                                 ?>
                                                     <select style="margin:5px;font-size:20px" class="form-control"
-                                                        name="unidades" id="unidades" required>
-                                                        <option value="" disabled>Selecione uma unidade</option>
+                                                        name="escolas" id="escolas" required>
+                                                        <option value="" disabled>Selecione uma escola</option>
                                                         <?php
-                                                        foreach ($dataUnidade as $unidades) {
-                                                            if ($unidades['id_unidade'] == $_SESSION['unidade_evento']) {
-                                                                echo '<option value="' . $unidades['id_unidade'] . '" selected>' . $unidades["nome"] . '</option>';
+                                                        foreach ($dataEscola as $escolas) {
+                                                            if ($escolas['id_escola'] == $_SESSION['escola_evento']) {
+                                                                echo '<option value="' . $escolas['id_escola'] . '" selected>' . $escolas["nome"] . '</option>';
                                                             } else {
-                                                                echo '<option value="' . $unidades['id_unidade'] . '">' . $unidades["nome"] . '</option>';
+                                                                echo '<option value="' . $escolas['id_escola'] . '">' . $escolas["nome"] . '</option>';
                                                             }
                                                         }
                                                     } else {
                                                         ?>
                                                         <select style="margin:5px;font-size:20px" class="form-control"
-                                                            name="unidades" id="unidades" required>
-                                                            <option value="" selected disabled>Selecione uma unidade</option>
+                                                            name="escolas" id="escolas" required>
+                                                            <option value="" selected disabled>Selecione uma escola</option>
                                                             <?php
-                                                            foreach ($dataUnidade as $unidades) {
-                                                                echo '<option value="' . $unidades['id_unidade'] . '">' . $unidades["nome"] . '</option>';
+                                                            foreach ($dataEscola as $escolas) {
+                                                                echo '<option value="' . $escolas['id_escola'] . '">' . $escolas["nome"] . '</option>';
                                                             } ?>
                                                         <?php
                                                     }
@@ -488,71 +494,29 @@ if ($stmt) {
             objeto
         } from '../js/3D/3D.js';
 
-        document.getElementById("animacao").addEventListener("change", function() {
-            // Get the selected value
-            var selectedValue = document.getElementById("animacao").value;
-            if (document.getElementById("nome").value != "") {
-                if (document.getElementById("descricao").value != "") {
-                    if (document.getElementById("ambito").value != "") {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&desc=" + document.getElementById("descricao").value + "&ambito=" + document.getElementById("ambito").value + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&desc=" + document.getElementById("descricao").value + "&ambito=" + document.getElementById("ambito").value + "&page=eventos";
-                        }
-                    } else {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&desc=" + document.getElementById("descricao").value + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&desc=" + document.getElementById("descricao").value + "&page=eventos";
-                        }
-                    }
-                } else {
-                    if (document.getElementById("ambito").value != "") {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&ambito=" + document.getElementById("ambito").value + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&ambito=" + document.getElementById("ambito").value + "&page=eventos";
-                        }
-                    } else {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&nome=" + document.getElementById("nome").value + "&page=eventos";
-                        }
-                    }
-                }
-            } else {
-                if (document.getElementById("descricao").value != "") {
-                    if (document.getElementById("ambito").value != "") {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&desc=" + document.getElementById("descricao").value + "&ambito=" + document.getElementById("ambito").value + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&desc=" + document.getElementById("descricao").value + "&ambito=" + document.getElementById("ambito").value + "&page=eventos";
-                        }
-                    } else {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&desc=" + document.getElementById("descricao").value + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&desc=" + document.getElementById("descricao").value + "&page=eventos";
-                        }
-                    }
-                } else {
-                    if (document.getElementById("ambito").value != "") {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&desc=" + document.getElementById("descricao").value + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&ambito=" + document.getElementById("ambito").value + "&page=eventos";
-                        }
-                    } else {
-                        if (document.getElementById("data").value != "") {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&page=eventos&data=" + document.getElementById("data").value;
-                        } else {
-                            window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue + "&page=eventos";
-                        }
-                    }
-                }
+        document.getElementById("animacao")?.addEventListener("change", () => {
+            const base = "../../database/animacoes/get_animacao.php";
+            const params = new URLSearchParams();
+
+            // Always send these
+            params.set("id", document.getElementById("animacao")?.value ?? "");
+            params.set("page", "eventos");
+
+            // Optional fields: only include if non-empty
+            const optional = {
+                nome: "nome",
+                desc: "descricao",
+                ambito: "ambito",
+                data: "data",
+                escolas: "escolas"
+            };
+
+            for (const [paramName, elementId] of Object.entries(optional)) {
+                const value = document.getElementById(elementId)?.value?.trim();
+                if (value) params.set(paramName, value);
             }
 
+            window.location.href = `${base}?${params.toString()}`;
         });
 
         <?php
@@ -560,7 +524,8 @@ if ($stmt) {
             console.log("aur");
             document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(function() {
-                    objeto(<?php echo json_encode(base64_encode($_SESSION['animacao_textura'])) ?>, (<?php echo json_encode(base64_encode($_SESSION['animacao_objeto'])) ?>));
+                    objeto(<?php echo json_encode(base64_encode($_SESSION['animacao_textura'])) ?>, (
+                        <?php echo json_encode(base64_encode($_SESSION['animacao_objeto'])) ?>));
                 }, 1000); // Delay of 5 seconds
             });
         <?php
@@ -571,11 +536,18 @@ if ($stmt) {
     <script>
         function setCreateModalText() {
             var string = "De certeza que quer criar o evento?</br>" +
-                "Campos para a Unidade Orgânica</br>" +
+                "Campos para o Evento</br>" +
                 "Nome: " + document.getElementById("nome").value + "</br>" +
                 "Descrição: " + document.getElementById("descricao").value + "</br>" +
-                "Ambito: " + document.getElementById("ambito").options[document.getElementById("ambito").selectedIndex].text + "</br>" +
-                "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao").selectedIndex].text;
+                "Ambito: " + document.getElementById("ambito").options[document.getElementById("ambito").selectedIndex]
+                .text + "</br>" +
+                "Escola: " + document.getElementById("escolas").options[document.getElementById("escolas").selectedIndex]
+                .text +
+                "</br>" +
+                "Animação: " + document.getElementById(
+                    "animacao").options[document
+                    .getElementById("animacao")
+                    .selectedIndex].text;
             document.getElementById("createModalBody").innerHTML = string;
         }
 

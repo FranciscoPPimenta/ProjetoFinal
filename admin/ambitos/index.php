@@ -4,7 +4,6 @@ session_start();
 // if(!isset($_SESSION["userID"])){
 //     header("Location: ../../login.php");
 // }
-
 ?>
 
 <!DOCTYPE html>
@@ -21,19 +20,20 @@ session_start();
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
-    <title>Admin - Animação Preview</title>
+    <title>Admin - Âmbitos</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
-    <!-- Custom fonts for this template-->
+    <!-- Custom fonts for this template -->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Custom styles for this page -->
+    <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
     <script type="importmap">
         {
       "imports": {
@@ -42,7 +42,6 @@ session_start();
       }
     }
   </script>
-
 </head>
 <?php
 $sql = "SELECT * FROM admins WHERE id_admin = ?";
@@ -64,7 +63,6 @@ if ($stmt) {
     // Close the statement
     mysqli_stmt_close($stmt);
 }
-
 ?>
 
 <body id="page-top">
@@ -76,7 +74,7 @@ if ($stmt) {
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -121,7 +119,7 @@ if ($stmt) {
                     <i class="fas fa-fw fa-table"></i>
                     <span>Docentes</span></a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Animações</span></a>
@@ -131,7 +129,7 @@ if ($stmt) {
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="../ambitos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Âmbitos</span>
@@ -239,46 +237,101 @@ if ($stmt) {
                 </nav>
                 <!-- End of Topbar -->
 
+                <!-- Begin Page Content -->
                 <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <div style="height: 750px" class="card mb-12">
-                        <?php
-                        if (isset($_SESSION["exists"])) {
-                            echo '<p style="margin-left:10px" class="fs-3 text-' . $_SESSION["color"] . '">' . $_SESSION["exists"] . '</p>';
+                    <?php
+                    $sql = "SELECT * FROM ambitos";
+                    $stmt = mysqli_prepare($conn, $sql);
+
+                    if ($stmt) {
+                        // Execute the statement
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        $ambitos = [];
+                        // Get the result
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
+                                $ambitos[]  = $row; // Assuming 'nome' is a column in the result set
+                            }
+                        } else {
+                            echo "No records found."; // Handle case where no records are found
                         }
-                        ?>
-                        <p style="margin-left:10px" id="vazio" class="fs-3 text-danger"></p>
-                        <div class="row g-0">
-                            <div class="col-md-4" id="canvas" style="height:30vh">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body" id="notEditing">
-                                    <form action="../../database/animacoes/create.php" method="POST"
-                                        enctype="multipart/form-data">
-                                        Nome
-                                        <input type="text" style="margin:5px;font-size:20px" class="form-control"
-                                            id="nome" name="nome" required>
-                                        Textura
-                                        <input type="file" style="margin:5px;font-size:20px" class="form-control"
-                                            id="textura" name="textura" required>
-                                        Objeto
-                                        <input type="file" style="margin:5px;font-size:20px" class="form-control"
-                                            id="objeto" name="objeto" required>
-                                        <button class="btn btn-warning" type="button"
-                                            id="previewButton">Preview</button>
-                                        <button class="btn btn-primary" type="submit">Criar Animação</button>
-                                    </form>
+                        // Close the statement
+                        mysqli_stmt_close($stmt);
+                    }
+                    ?>
+                    <!-- Page Heading -->
+                    <h1 class="h3 fs-1 text-gray-800 fw-bold">Âmbitos</h1>
+                    <?php
+                    if (isset($_SESSION["deleted"])) {
+                        echo '<p class="fs-3 text-success">Âmbito ' . $_SESSION["deletedObject"] . ' apagado com sucesso!</p>';
+                    }
+                    ?>
+                    <?php
+                    if (isset($_SESSION["exists"])) {
+                        echo '<p class="fs-3 text-' . $_SESSION["color"] . '">' . $_SESSION["exists"] . '</p>';
+                    }
+                    ?>
+
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h1 class="m-0 font-weight-bold text-primary">Tabela Âmbitos</h1>
+                            <form method="POST" action="../../database/ambitos/create.php">
+                                <div class="row">
+                                    <div class="col-1">
+                                        <button type="submit" class="btn btn-primary">Adicionar
+                                            Ambito</button>
+                                    </div>
+                                    <div class="col-4">
+                                        <input type="text" id="nomeAmbito" name="nomeAmbito" required
+                                            class="form-control"></input>
+                                    </div>
+                                    <div class="col-7"></div>
                                 </div>
+                            </form>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th id="teste">Nome</th>
+                                            <th>Edição</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Edição</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        <?php
+                                        foreach ($ambitos as $ambito) {
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $ambito['nome']; ?></td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal"
+                                                        onclick="setDeleteModalText('<?php echo $ambito['nome']; ?>','<?php echo $ambito['id_ambito'] ?>')">Apagar</button>
+                                                </td>
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- Begin Page Content -->
 
+                </div>
                 <!-- /.container-fluid -->
 
             </div>
-            <!-- End of Main Content -->
+
 
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
@@ -301,13 +354,31 @@ if ($stmt) {
         <i class="fas fa-angle-up"></i>
     </a>
 
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-ed">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar Ambito</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="deleteModalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                    <a id="aspagaAmbito" type="button" class="btn btn-primary">Sim</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="logoutModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -330,79 +401,38 @@ if ($stmt) {
 
     <!-- Custom scripts for all pages-->
     <script src="../js/sb-admin-2.min.js"></script>
-    <script>
 
+    <!-- Page level plugins -->
+    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
+    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
-    </script>
+    <!-- Page level custom scripts -->
+    <script src="../js/demo/datatables-demo.js"></script>
+
     <script type="module">
         import {
             objeto
         } from '../js/3D/3D.js';
 
-        function fileToBase64(file, callback) {
-            const reader = new FileReader();
-            reader.onloadend = function() {
-                const base64Data = reader.result.split('base64,')[1];
-                callback(base64Data); // Return the base64 string
-            };
-            reader.readAsDataURL(file);
-        }
-        // Preview function that will be triggered on button click
-        function preview() {
-            const objetoFile = document.getElementById("objeto").files[0];
-            const texturaFile = document.getElementById("textura").files[0];
+        let previewAnimId = null;
+        let previewAnimName = '';
 
-            if (objetoFile && texturaFile) {
-                // Convert both files to base64 first
-                fileToBase64(objetoFile, function(objetoBase64) {
-                    fileToBase64(texturaFile, function(texturaBase64) {
-                        // Now, both objetoBase64 and texturaBase64 contain the file content as base64
-                        objeto(texturaBase64, objetoBase64); // Pass them to your 3D rendering function
-                    });
-                });
-            } else {
-                document.getElementById("vazio").innerHTML =
-                    "Por favor escolha um ficheiro para o modelo e um para a textura!";
-            }
-        }
-        // Bind the preview function to the button click
-        document.getElementById('previewButton').addEventListener('click', preview);
+        const modalEl = document.getElementById('previewModal');
+        const modal = new bootstrap.Modal(modalEl);
+
+        const confirmView = document.getElementById('previewConfirmView');
+        const canvasView = document.getElementById('previewCanvasView');
+
+        const confirmText = document.getElementById('previewConfirmText');
+        const statusText = document.getElementById('previewStatus');
+
+        function setDeleteModalText(name, id) {
+            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o âmbito: \"" + name +
+                "\"?";
+            document.getElementById("apagaAmbito").setAttribute("href", "../../database/ambitos/deleteAmbito.php?id=" +
+                id + "&start_page=index");
+        };
     </script>
-    <!-- <script>
-        const nome = document.getElementById("nome"),
-            textura = document.getElementById("textura"),
-            objetoInput = document.getElementById("objeto");
-
-        nome.addEventListener('invalid', function() {
-            if (this.validity.valueMissing) {
-                this.setCustomValidity('Nome é obrigatório');
-            }
-        });
-
-        textura.addEventListener('invalid', function() {
-            if (this.validity.valueMissing) {
-                this.setCustomValidity('Textura é obrigatória');
-            }
-        });
-
-        objetoInput.addEventListener('invalid', function() {
-            if (this.validity.valueMissing) {
-                this.setCustomValidity('Objeto é obrigatório');
-            }
-        });
-
-        nome.addEventListener('input', function() {
-            this.setCustomValidity('');
-        });
-
-        textura.addEventListener('input', function() {
-            this.setCustomValidity('');
-        });
-
-        objetoInput.addEventListener('input', function() {
-            this.setCustomValidity('');
-        });
-    </script> -->
 </body>
 <?php
 $keep = 'userID';

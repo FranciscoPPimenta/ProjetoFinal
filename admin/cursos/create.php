@@ -108,9 +108,9 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="../animacoes/index.php">
@@ -121,6 +121,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../ambitos/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Âmbitos</span>
+                </a>
             </li>
 
             <!-- Divider -->
@@ -293,27 +299,27 @@ if ($stmt) {
                                         }
                                         ?>
                                         <?php
-                                        if (isset($_SESSION["professor_curso"])) {
+                                        if (isset($_SESSION["coordenador_curso"])) {
                                         ?>
                                             <select style="margin:5px;font-size:20px" class="form-control"
-                                                name="professores" id="professores" required>
+                                                name="coordenador" id="coordenador" required>
                                                 <option value="" disabled>Selecione um coordenador</option>
                                                 <?php
                                                 foreach ($profs as $prof) {
-                                                    if ($prof['id_professor'] == $_SESSION['professor_curso']) {
-                                                        echo '<option value="' . $prof['id_professor'] . '" selected>' . $prof["nome"] . '</option>';
+                                                    if ($prof['id_docente'] == $_SESSION['coordenador_curso']) {
+                                                        echo '<option value="' . $prof['id_docente'] . '" selected>' . $prof["nome"] . '</option>';
                                                     } else {
-                                                        echo '<option value="' . $prof['id_professor'] . '">' . $prof["nome"] . '</option>';
+                                                        echo '<option value="' . $prof['id_docente'] . '">' . $prof["nome"] . '</option>';
                                                     }
                                                 }
                                             } else {
                                                 ?>
                                                 <select style="margin:5px;font-size:20px" class="form-control"
-                                                    name="professores" id="professores" required>
+                                                    name="coordenador" id="coordenador" required>
                                                     <option value="" selected disabled>Selecione um coordenador</option>
                                                 <?php
                                                 foreach ($profs as $prof) {
-                                                    echo '<option value="' . $prof['id_professor'] . '">' . $prof["nome"] . '</option>';
+                                                    echo '<option value="' . $prof['id_docente'] . '">' . $prof["nome"] . '</option>';
                                                 }
                                             }
                                                 ?>
@@ -326,9 +332,9 @@ if ($stmt) {
                                                     // Execute the statement
                                                     mysqli_stmt_execute($stmt);
                                                     $result = mysqli_stmt_get_result($stmt);
-                                                    $unidades = array();
+                                                    $escolas = array();
                                                     while ($row = mysqli_fetch_assoc($result)) {
-                                                        $unidades[] = $row;
+                                                        $escolas[] = $row;
                                                     }
 
                                                     // Close the statement
@@ -336,28 +342,28 @@ if ($stmt) {
                                                 }
                                                 ?>
                                                 <?php
-                                                if (isset($_SESSION["unidade_curso"])) {
+                                                if (isset($_SESSION["escola_curso"])) {
                                                 ?>
-                                                    <select style="margin:5px;font-size:20px" class="form-control"
-                                                        name="unidade" id="unidade" required>
-                                                        <option value="" disabled>Selecione uma escpça</option>
+                                                    <select style="margin:5px;font-size:20px" class="form-control" name="escola"
+                                                        id="escola" required>
+                                                        <option value="" disabled>Selecione uma escola</option>
                                                         <?php
-                                                        foreach ($unidades as $unidade) {
-                                                            if ($unidade['id_unidade'] == $_SESSION['unidade_curso']) {
-                                                                echo '<option value="' . $unidade['id_unidade'] . '" selected>' . $unidade["nome"] . '</option>';
+                                                        foreach ($escolas as $escola) {
+                                                            if ($escola['id_escola'] == $_SESSION['escola_curso']) {
+                                                                echo '<option value="' . $escola['id_escola'] . '" selected>' . $escola["nome"] . '</option>';
                                                             } else {
-                                                                echo '<option value="' . $unidade['id_unidade'] . '">' . $unidade["nome"] . '</option>';
+                                                                echo '<option value="' . $escola['id_escola'] . '">' . $escola["nome"] . '</option>';
                                                             }
                                                         }
                                                     } else {
                                                         ?>
                                                         <select style="margin:5px;font-size:20px" class="form-control"
-                                                            name="unidade" id="unidade" required>
+                                                            name="escola" id="escola" required>
                                                             <option value="" selected disabled>Selecione uma escola
                                                             </option>
                                                         <?php
-                                                        foreach ($unidades as $unidade) {
-                                                            echo '<option value="' . $unidade['id_unidade'] . '">' . $unidade["nome"] . '</option>';
+                                                        foreach ($escolas as $escola) {
+                                                            echo '<option value="' . $escola['id_escola'] . '">' . $escola["nome"] . '</option>';
                                                         }
                                                     }
                                                         ?>
@@ -549,463 +555,36 @@ if ($stmt) {
             objeto
         } from '../js/3D/3D.js';
 
-        document.getElementById("animacao").addEventListener("change", function() {
-            // Get the selected value
-            var selectedValue = document.getElementById("animacao").value;
-            if (document.getElementById("nome").value != "") {
-                if (document.getElementById("descricao").value != "") {
-                    if (document.getElementById("professores").value != "") {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos&regime=" +
-                                        document.getElementById("regime").value + "&unidade=" + document
-                                        .getElementById("unidade").value + "&evento=" + document.getElementById(
-                                            "eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos&regime=" +
-                                        document.getElementById("regime").value + "&unidade=" + document
-                                        .getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos&regime=" +
-                                        document.getElementById("regime").value + "&evento=" + document
-                                        .getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos&regime=" +
-                                        document.getElementById("regime").value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos&unidade=" +
-                                        document.getElementById("unidade").value + "&evento=" + document
-                                        .getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos&unidade=" +
-                                        document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos&evento=" +
-                                        document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&professores=" +
-                                        document.getElementById("professores").value + "&page=cursos";
-                                }
-                            }
-                        }
-                    } else {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value + "&evento=" +
-                                        document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&desc=" + document.getElementById("descricao").value + "&page=cursos";
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (document.getElementById("professores").value != "") {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value + "&evento=" +
-                                        document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos";
-                                }
-                            }
-                        }
-                    } else {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value + "&evento=" +
-                                        document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&nome=" + document.getElementById("nome").value +
-                                        "&page=cursos";
-                                }
-                            }
-                        }
-                    }
-                }
-            } else {
-                if (document.getElementById("descricao").value != "") {
-                    if (document.getElementById("professores").value != "") {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value + "&evento=" +
-                                        document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&professores=" + document.getElementById("professores").value +
-                                        "&page=cursos";
-                                }
-                            }
-                        }
-                    } else {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value + "&evento=" +
-                                        document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&regime=" + document.getElementById("regime").value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&desc=" + document.getElementById("descricao").value +
-                                        "&page=cursos";
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (document.getElementById("professores").value != "") {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value + "&evento=" +
-                                        document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos&regime=" + document.getElementById("regime").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos&regime=" + document.getElementById("regime").value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos&unidade=" + document.getElementById("unidade")
-                                        .value + "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&professores=" + document.getElementById("professores")
-                                        .value + "&page=cursos";
-                                }
-                            }
-                        }
-                    } else {
-                        if (document.getElementById("regime").value != "") {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos&regime=" + document.getElementById("regime")
-                                        .value + "&unidade=" + document.getElementById("unidade").value +
-                                        "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos&regime=" + document.getElementById("regime")
-                                        .value + "&unidade=" + document.getElementById("unidade").value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos&regime=" + document.getElementById("regime")
-                                        .value + "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos&regime=" + document.getElementById("regime")
-                                        .value;
-                                }
-                            }
-                        } else {
-                            if (document.getElementById("unidade").value != "") {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos&unidade=" + document.getElementById("unidade")
-                                        .value + "&evento=" + document.getElementById("eventos").value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos&unidade=" + document.getElementById("unidade")
-                                        .value;
-                                }
-                            } else {
-                                if (document.getElementById("eventos").value != "") {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos&evento=" + document.getElementById("eventos")
-                                        .value;
-                                } else {
-                                    window.location.href = "../../database/animacao/get_animacao.php?id=" +
-                                        selectedValue + "&page=cursos";
-                                }
-                            }
-                        }
-                    }
-                }
+        // Get the select element safely (won't throw if missing)
+        const animacaoEl = document.getElementById("animacao");
+        animacaoEl?.addEventListener("change", () => {
+            const selectedValue = animacaoEl.value;
+
+            // Base URL
+            const url = new URL("../../database/animacoes/get_animacao.php", window.location.href);
+
+            // Always include these
+            url.searchParams.set("id", selectedValue);
+            url.searchParams.set("page", "cursos");
+
+            // Optional fields (only add if element exists and has a non-empty value)
+            const fields = {
+                nome: "nome",
+                desc: "descricao",
+                coordenador: "coordenador",
+                regime: "regime",
+                escola: "escola",
+                evento: "eventos", // GET param is "evento", input id is "eventos"
+            };
+
+            for (const [paramName, elementId] of Object.entries(fields)) {
+                const el = document.getElementById(elementId);
+                const value = el?.value?.trim();
+                if (value) url.searchParams.set(paramName, value);
             }
+
+            // Redirect
+            window.location.href = url.toString();
         });
 
         <?php
@@ -1024,25 +603,19 @@ if ($stmt) {
 
     <script>
         function setCreateModalText() {
-            if (!document.getElementById("unidade").value == "" && !document.getElementById("unidade").value == "" && !
-                document.getElementById("unidade").value == "" && !document.getElementById("unidade").value == "" && !
-                document.getElementById("unidade").value == "" && !document.getElementById("unidade").value == "") {
-                var string = "De certeza que quer criar o curso?</br>" +
-                    "Campos para o Curso</br>" +
-                    "Nome: " + document.getElementById("nome").value + "</br>" +
-                    "Descrição: " + document.getElementById("descricao").value + "</br>" +
-                    "Coordenador: " + document.getElementById("professores").options[document.getElementById("professores")
-                        .selectedIndex].text + "</br>" +
-                    "Regime: " + document.getElementById("regime").options[document.getElementById("regime").selectedIndex]
-                    .text + "</br>" +
-                    "Unidade: " + document.getElementById("unidade").options[document.getElementById("unidade")
-                        .selectedIndex].text + "</br>" +
-                    "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
-                        .selectedIndex].text;
-                document.getElementById("createModalBody").innerHTML = string;
-            } else {
-                document.getElementById("createModalBody").innerHTML = "Por favor preencha/selecione todos os campos!";
-            }
+            var string = "De certeza que quer criar o curso?</br>" +
+                "Campos para o Curso</br>" +
+                "Nome: " + document.getElementById("nome").value + "</br>" +
+                "Descrição: " + document.getElementById("descricao").value + "</br>" +
+                "Coordenador: " + document.getElementById("coordenador").options[document.getElementById("coordenador")
+                    .selectedIndex].text + "</br>" +
+                "Regime: " + document.getElementById("regime").options[document.getElementById("regime").selectedIndex]
+                .text + "</br>" +
+                "Escola: " + document.getElementById("escola").options[document.getElementById("escola")
+                    .selectedIndex].text + "</br>" +
+                "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                    .selectedIndex].text;
+            document.getElementById("createModalBody").innerHTML = string;
             document.getElementById("form").action = '../../database/cursos/create.php';
         }
     </script>

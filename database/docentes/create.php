@@ -4,7 +4,7 @@ session_start();
 // Check if the 'id' parameter is provided in the request
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['nomeProf'])) {
+    if (isset($_POST['nomeProf']) != "") {
         $nome = $_POST['nomeProf'];
         $sql = "INSERT INTO docentes (nome) VALUES (?)";
         $stmt = mysqli_prepare($conn, $sql);
@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION["exists"] = "Novo Professor adicionado!";
                 $_SESSION["color"] = "success";
             }
-            header('Location: ../../admin/professores/index.php');
+            header('Location: ../../admin/docentes/index.php');
             mysqli_stmt_close($stmt);
         }
     }
