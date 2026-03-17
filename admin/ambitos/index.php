@@ -366,7 +366,7 @@ if ($stmt) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                    <a id="aspagaAmbito" type="button" class="btn btn-primary">Sim</a>
+                    <a id="apagaAmbito" type="button" class="btn btn-primary">Sim</a>
                 </div>
             </div>
         </div>
@@ -409,6 +409,14 @@ if ($stmt) {
     <!-- Page level custom scripts -->
     <script src="../js/demo/datatables-demo.js"></script>
 
+    <script>
+        function setDeleteModalText(name, id) {
+            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o âmbito: \"" + name +
+                "\"?";
+            document.getElementById("apagaAmbito").setAttribute("href", "../../database/ambitos/delete_ambito.php?id=" +
+                id + "&start_page=index");
+        };
+    </script>
     <script type="module">
         import {
             objeto
@@ -425,13 +433,6 @@ if ($stmt) {
 
         const confirmText = document.getElementById('previewConfirmText');
         const statusText = document.getElementById('previewStatus');
-
-        function setDeleteModalText(name, id) {
-            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o âmbito: \"" + name +
-                "\"?";
-            document.getElementById("apagaAmbito").setAttribute("href", "../../database/ambitos/deleteAmbito.php?id=" +
-                id + "&start_page=index");
-        };
     </script>
 </body>
 <?php

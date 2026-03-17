@@ -363,7 +363,7 @@ if ($stmt) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                    <a id="apagaEvento" type="button" class="btn btn-primary">Sim</a>
+                    <a id="apagaAnim" type="button" class="btn btn-primary">Sim</a>
                 </div>
             </div>
         </div>
@@ -380,7 +380,6 @@ if ($stmt) {
 
                 <div class="modal-body">
 
-                    <!-- ✅ CONFIRMATION VIEW -->
                     <div id="previewConfirmView">
                         <p id="previewConfirmText"></p>
                         <div class="d-flex justify-content-end gap-2">
@@ -389,7 +388,6 @@ if ($stmt) {
                         </div>
                     </div>
 
-                    <!-- ✅ PREVIEW VIEW -->
                     <div id="previewCanvasView" class="d-none">
                         <div id="previewCanvas" style="width:100%; height:60vh; background:#eee;"></div>
                         <p id="previewStatus" class="text-muted mt-2">Loading…</p>
@@ -437,7 +435,14 @@ if ($stmt) {
 
     <!-- Page level custom scripts -->
     <script src="../js/demo/datatables-demo.js"></script>
-
+    <script>
+        function setDeleteModalText(name, id) {
+            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a animação: \"" + name +
+                "\"?";
+            document.getElementById("apagaAnim").setAttribute("href", "../../database/animacoes/delete_animacao.php?id=" +
+                id + "&start_page=index");
+        };
+    </script>
     <script type="module">
         import {
             objeto
@@ -455,12 +460,7 @@ if ($stmt) {
         const confirmText = document.getElementById('previewConfirmText');
         const statusText = document.getElementById('previewStatus');
 
-        function setDeleteModalText(name, id) {
-            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a animação: \"" + name +
-                "\"?";
-            document.getElementById("apagaEvento").setAttribute("href", "../../database/animacoes/delete_animacao.php?id=" +
-                id + "&start_page=index");
-        };
+
         window.openPreviewConfirm = function(name, id) {
             previewAnimId = id;
             previewAnimName = name;

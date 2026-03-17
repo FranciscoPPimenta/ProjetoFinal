@@ -37,7 +37,7 @@ if (isset($_GET['id'])) {
     mysqli_stmt_close($stmtCheck);
 
     if ($count > 0) {
-        $_SESSION["exists"] = "A tabela Cursos tem uma ligação com a animacao que deseja apagar.";
+        $_SESSION["exists"] = "Um curso está a usar esta animação, não podes apagar agora!";
         $_SESSION["color"] = "danger";
         if ($page == "index") {
             header("Location: ../../admin/animacoes/index.php");
@@ -63,7 +63,7 @@ if (isset($_GET['id'])) {
     mysqli_stmt_close($stmtCheck);
 
     if ($count > 0) {
-        $_SESSION["exists"] = "A tabela Eventos tem uma ligação com a animação que deseja apagar.";
+        $_SESSION["exists"] = "Um evento está a usar esta animação, não podes apagar agora!";
         $_SESSION["color"] = "danger";
         if ($page == "index") {
             header("Location: ../../admin/animacoes/index.php");
@@ -89,7 +89,7 @@ if (isset($_GET['id'])) {
     mysqli_stmt_close($stmtCheck);
 
     if ($count > 0) {
-        $_SESSION["exists"] = "A tabela Unidades Orgânicas tem uma ligação com a animação que deseja apagar.";
+        $_SESSION["exists"] = "Uma escola está a usar esta animação, não podes apagar agora!";
         $_SESSION["color"] = "danger";
         if ($page == "index") {
             header("Location: ../../admin/animacoes/index.php");
@@ -115,7 +115,7 @@ if (isset($_GET['id'])) {
     mysqli_stmt_close($stmtCheck);
 
     if ($count > 0) {
-        $_SESSION["exists"] = "A tabela Unidades Curriculares tem uma ligação com a animação que deseja apagar.";
+        $_SESSION["exists"] = "Uma unidade curricular está a usar esta animação, não podes apagar agora!";
         $_SESSION["color"] = "danger";
         if ($page == "index") {
             header("Location: ../../admin/animacoes/index.php");

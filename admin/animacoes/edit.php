@@ -298,7 +298,7 @@ if ($stmt) {
                                             </div>
                                         </form>
                                     </div>
-                                    <button class="btn btn-primary" id="editButton" onclick="editEvento()">Editar</button>
+                                    <button class="btn btn-primary" id="editButton" onclick="editAnim()">Editar</button>
                                     <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
                                         data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
@@ -399,7 +399,7 @@ if ($stmt) {
     if (isset($_SESSION['animacao'])) {
     ?>
         <script>
-            function editEvento() {
+            function editAnim() {
                 if (document.getElementById("Editing").hasAttribute("hidden")) {
                     document.getElementById("notEditing").setAttribute("hidden", "");
                     document.getElementById("editButton").setAttribute("hidden", "");
@@ -418,7 +418,7 @@ if ($stmt) {
 
             function setDeleteModalText() {
                 document.getElementById("deleteModalBody").innerHTML =
-                    "De certeza que quer apagar o evento: \"<?php echo $_SESSION['animacao']['nome']; ?>\"";
+                    "De certeza que quer apagar a animação: \"<?php echo $_SESSION['animacao']['nome']; ?>\"";
                 document.getElementById("apagaAnimacao").setAttribute("href",
                     "../../database/animacoes/delete_animacao.php?id=" +
                     <?php echo $_SESSION['animacao']['id_animacao']; ?> + "&start_page=edit");

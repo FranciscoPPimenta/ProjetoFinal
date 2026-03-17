@@ -4,6 +4,7 @@ session_start();
 // Check if the 'id' parameter is provided in the request
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
+    $page = $_GET['start_page'];
 
     // Prepare the SQL query with a parameterized statement
     $sql = "SELECT eventos.*,animacoes.nome as 'Animacao',animacoes.textura as 'Textura',animacoes.objeto as 'Objeto', ambitos.nome as 'Ambito' FROM eventos INNER JOIN animacoes ON eventos.id_animacao = animacoes.id_animacao INNER JOIN ambitos ON eventos.id_ambito = ambitos.id_ambito WHERE id_evento = ?";
@@ -24,7 +25,7 @@ if (isset($_GET['id'])) {
             $row = mysqli_fetch_assoc($result);
             $_SESSION["evento"] = $row;
         }
-        header('Location: ../../database/eventos/delete.php?id=' . $_SESSION["evento"]["id_evento"]);
+        header('Location: ../../database/eventos/delete.php?id=' . $_SESSION["evento"]["id_evento"] . '&start_page=' . $page);
         // Close the statement
         mysqli_stmt_close($stmt);
     } else {

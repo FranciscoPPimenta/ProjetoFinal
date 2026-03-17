@@ -29,9 +29,9 @@ if (isset($_GET['id'])) {
     if ($count > 0) {
         $_SESSION["exists"] = "A tabela Cursos tem uma ligação com o evento que deseja apagar.";
         if ($page == "index") {
-            //header("Location: ../../admin/eventos/index.php");
+            header("Location: ../../admin/eventos/index.php");
         } else {
-            //header("Location: ../../admin/eventos/edit.php?id=" . $id);
+            header("Location: ../../admin/eventos/edit.php?id=" . $id);
         }
     }
 
@@ -83,7 +83,7 @@ if (isset($_GET['id'])) {
         }
 
         mysqli_stmt_close($stmt);
-        //header("Location: ../../admin/eventos/index.php");
+        header("Location: ../../admin/eventos/index.php");
     } else {
         // Handle SQL preparation error
         echo json_encode(array("error" => "Failed to prepare SQL statement."));
