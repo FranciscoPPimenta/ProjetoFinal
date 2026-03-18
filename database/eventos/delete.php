@@ -63,7 +63,7 @@ if (isset($_GET['id'])) {
         // Handle SQL preparation error
         echo json_encode(array("error" => "Failed to prepare SQL statement."));
     }
-    $sql = "DELETE FROM eventos WHERE id_evento = ?";
+    $sql = "DELETE FROM escola_evento WHERE id_evento = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
@@ -83,7 +83,28 @@ if (isset($_GET['id'])) {
         }
 
         mysqli_stmt_close($stmt);
-        header("Location: ../../admin/eventos/index.php");
+        $sql = "DELETE FROM eventos WHERE id_evento = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+
+        if ($stmt) {
+            // Bind the 'id' parameter to the prepared statement
+
+            mysqli_stmt_bind_param($stmt, "i", $id);
+
+            // Execute the query
+            mysqli_stmt_execute($stmt);
+
+            // Get the result
+            $result = mysqli_stmt_get_result($stmt);
+
+            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                $_SESSION["deleted"] = "true";
+                $_SESSION["deletedObject"] = $deleted;
+            }
+
+            mysqli_stmt_close($stmt);
+            header("Location: ../../admin/eventos/index.php");
+        }
     } else {
         // Handle SQL preparation error
         echo json_encode(array("error" => "Failed to prepare SQL statement."));

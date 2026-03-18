@@ -19,7 +19,7 @@ session_start();
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
-    <title>Admin - Unidade</title>
+    <title>Admin - Escola</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
@@ -312,7 +312,7 @@ if ($stmt) {
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h1 class="modal-title fs-5" id="createModalLabel">Atualizar
-                                                                    Unidade</h1>
+                                                                    Escola</h1>
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
@@ -330,7 +330,7 @@ if ($stmt) {
                                     </form>
                                 </div>
                                 <button type="button" id="createButton" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#createModal" onclick="setCreateModalText()">Criar Unidade</button>
+                                    data-bs-target="#createModal" onclick="setCreateModalText()">Criar Escola</button>
                             </div>
 
                         </div>
@@ -445,7 +445,7 @@ if ($stmt) {
         function setCreateModalText() {
             var string = "De certeza que quer adicionar a escola " + document.getElementById("nomeEscola").value +
                 ".?</br>" +
-                "Campos para a Unidade Orgânica</br>" +
+                "Campos para a Escola</br>" +
                 "Nome: " + document.getElementById("nomeEscola").value + "</br>" +
                 "Descrição: " + document.getElementById("descricaoEscola").value + "</br>" +
                 "Animação: " + document.getElementById("animacaoEscola").options[document.getElementById("animacaoEscola")

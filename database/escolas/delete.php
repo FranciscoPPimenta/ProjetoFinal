@@ -48,34 +48,8 @@ if (isset($_GET['id'])) {
         exit();
     }
 
-    $sqlCheck = "SELECT COUNT(*) FROM eventos WHERE id_escola = ?";
-    $stmtCheck = mysqli_prepare($conn, $sqlCheck);
 
-    if (!$stmtCheck) {
-        echo "Error preparing the check query: " . mysqli_error($conn);
-    }
-
-    mysqli_stmt_bind_param($stmtCheck, "i", $id);
-
-    mysqli_stmt_execute($stmtCheck);
-    mysqli_stmt_bind_result($stmtCheck, $count);
-
-    mysqli_stmt_fetch($stmtCheck);
-
-    mysqli_stmt_close($stmtCheck);
-
-    if ($count > 0) {
-        $_SESSION["exists"] = "Ainda existem eventos associados a esta escola. Não pode apagá-la ainda!";
-        $_SESSION["color"] = "danger";
-        if ($page == "index") {
-            header("Location: ../../admin/escolas/index.php");
-        } else {
-            //header("Location: ../../admin/escolas/edit.php?id=" . $id);
-        }
-        exit();
-    }
-
-    $sql = "DELETE FROM escolas WHERE id_escola = ?";
+    $sql = "DELETE FROM escola_evento WHERE id_escola = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
@@ -89,12 +63,25 @@ if (isset($_GET['id'])) {
         // Get the result
         $result = mysqli_stmt_get_result($stmt);
 
-        if (mysqli_stmt_affected_rows($stmt) > 0) {
-            $_SESSION["deleted"] = "true";
-            $_SESSION["deletedObject"] = $deleted;
-        }
         mysqli_stmt_close($stmt);
-        header("Location: ../../admin/escolas/index.php");
+        $sql = "DELETE FROM escolas WHERE id_escola = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "i", $id);
+
+            // Execute the query
+            mysqli_stmt_execute($stmt);
+
+            // Get the result
+            $result = mysqli_stmt_get_result($stmt);
+
+            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                $_SESSION["deleted"] = "true";
+                $_SESSION["deletedObject"] = $deleted;
+            }
+            mysqli_stmt_close($stmt);
+            header("Location: ../../admin/escolas/index.php");
+        }
     } else {
         // Handle SQL preparation error
         echo json_encode(array("error" => "Failed to prepare SQL statement."));

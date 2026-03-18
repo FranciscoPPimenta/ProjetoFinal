@@ -32,24 +32,42 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if (mysqli_num_rows($result) > 0) {
             $_SESSION["exists"] = "Já existe um evento com esse nome!";
             $_SESSION["color"] = "danger";
-            echo "<script>alert('Já existe uma unidade com esse nome!');</script>";
             header('Location: ../../admin/eventos/create.php');
         } else {
-            $sqlInsert = "INSERT INTO eventos (nome,descricao,id_animacao,id_ambito,id_escola,dia,mes) VALUES (?,?,?,?,?,?,?)";
+            $sqlInsert = "INSERT INTO eventos (nome,descricao,id_animacao,id_ambito,dia,mes) VALUES (?,?,?,?,?,?)";
             $stmtInsert = mysqli_prepare($conn, $sqlInsert);
 
             if ($stmtInsert) {
                 // Bind parameters
-                mysqli_stmt_bind_param($stmtInsert, "ssiiiii", $nome, $desc, $animacao, $ambito, $escola, $dia, $mes);
+                mysqli_stmt_bind_param($stmtInsert, "ssiiii", $nome, $desc, $animacao, $ambito, $dia, $mes);
                 // Execute the statement
                 $resultInsert = mysqli_stmt_execute($stmtInsert);
+                if ($resultInsert) {
+                    $last_id = mysqli_insert_id($conn);
+                    mysqli_stmt_close($stmtInsert);
+                    $sqlInsert = "INSERT INTO escola_evento (id_evento,id_escola) VALUES (?,?)";
+                    $stmtInsert = mysqli_prepare($conn, $sqlInsert);
+
+                    if ($stmtInsert) {
+                        // Bind parameters
+                        mysqli_stmt_bind_param($stmtInsert, "ii", $last_id, $escola);
+                        // Execute the statement
+                        $resultInsert = mysqli_stmt_execute($stmtInsert);
+                        if ($resultInsert) {
+                            $_SESSION["exists"] = "Evento " . $nome . " criado com sucesso!";
+                            $_SESSION["color"] = "success";
+                            header('Location: ../../admin/eventos/index.php');
+                        }
+                        // Close the statement
+                        mysqli_stmt_close($stmtInsert);
+                    }
+                }
                 if ($resultInsert) {
                     $_SESSION["exists"] = "Evento " . $nome . " criado com sucesso!";
                     $_SESSION["color"] = "success";
                     header('Location: ../../admin/eventos/index.php');
                 }
                 // Close the statement
-                mysqli_stmt_close($stmtInsert);
             }
             // Close the statement
             mysqli_stmt_close($stmt);

@@ -297,7 +297,7 @@ if ($stmt) {
                                                 <td><?php echo $escola['nome']; ?></td>
                                                 <td><?php echo $escola['descricao']; ?></td>
                                                 <?php
-                                                $sql = "SELECT eventos.nome FROM eventos INNER JOIN escolas ON eventos.id_escola = escolas.id_escola WHERE escolas.id_escola = ?";
+                                                $sql = "SELECT eventos.nome FROM eventos INNER JOIN escola_evento ON eventos.id_evento = escola_evento.id_evento INNER JOIN escolas ON escolas.id_escola = escola_evento.id_escola WHERE escolas.id_escola = ?";
                                                 $stmt = mysqli_prepare($conn, $sql);
 
                                                 if ($stmt) {
@@ -311,17 +311,19 @@ if ($stmt) {
                                                         while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
                                                             $eventos[] = $row; // Assuming 'nome' is a column in the result set
                                                         }
-                                                    }
-                                                    $string = "";
-                                                    foreach ($eventos as $index => $evento) {
-                                                        if ($index == count($eventos) - 1) {
-                                                            $string .= $evento["nome"];
-                                                        } else {
-                                                            $string .= $evento["nome"] . ", ";
+                                                        $string = "";
+                                                        foreach ($eventos as $index => $evento) {
+                                                            if ($index == count($eventos) - 1) {
+                                                                $string .= $evento["nome"];
+                                                            } else {
+                                                                $string .= $evento["nome"] . ", ";
+                                                            }
                                                         }
+                                                        // Close the statement
+                                                        mysqli_stmt_close($stmt);
+                                                    } else {
+                                                        $string = "Esta escola não tem eventos!";
                                                     }
-                                                    // Close the statement
-                                                    mysqli_stmt_close($stmt);
                                                 }
                                                 ?>
                                                 <td><?php echo $string ?></td>
