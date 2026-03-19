@@ -283,10 +283,10 @@ if ($stmt) {
                                         <?php
                                         if (isset($_SESSION["uc_curso"])) {
                                         ?>
-                                            <select style="margin:5px;font-size:20px" class="form-control" name="curso"
-                                                id="curso" required>
-                                                <option value="">Selecione um curso</option>
-                                                <?php
+                                        <select style="margin:5px;font-size:20px" class="form-control" name="curso"
+                                            id="curso" required>
+                                            <option value="">Selecione um curso</option>
+                                            <?php
                                                 foreach ($cursos as $curso) {
                                                     if ($curso['id_curso'] == $_SESSION['id_curso']) {
                                                         echo '<option value="' . $curso['id_curso'] . '" selected>' . $curso["nome"] . '</option>';
@@ -296,17 +296,17 @@ if ($stmt) {
                                                 }
                                             } else {
                                                 ?>
-                                                <select style="margin:5px;font-size:20px" class="form-control"
-                                                    name="animacao" id="animacao" required>
-                                                    <option value="" selected>Selecione um curso</option>
+                                            <select style="margin:5px;font-size:20px" class="form-control"
+                                                name="curso_curso" id="curso" required>
+                                                <option value="" selected>Selecione um curso</option>
                                                 <?php
-                                                foreach ($data as $curso) {
+                                                foreach ($cursos as $curso) {
                                                     echo '<option value="' . $curso['id_curso'] . '">' . $curso["nome"] . '</option>';
                                                 }
                                             }
                                                 ?>
-                                                </select>
-                                                <?php
+                                            </select>
+                                            <?php
                                                 $sql = "SELECT * from animacoes";
                                                 $stmt = mysqli_prepare($conn, $sql);
 
@@ -323,13 +323,13 @@ if ($stmt) {
                                                     mysqli_stmt_close($stmt);
                                                 }
                                                 ?>
-                                                <?php
+                                            <?php
                                                 if (isset($_SESSION["animacao_textura"])) {
                                                 ?>
-                                                    <select style="margin:5px;font-size:20px" class="form-control"
-                                                        name="animacao" id="animacao" required>
-                                                        <option value="">Selecione uma animação</option>
-                                                        <?php
+                                            <select style="margin:5px;font-size:20px" class="form-control"
+                                                name="animacao" id="animacao" required>
+                                                <option value="">Selecione uma animação</option>
+                                                <?php
                                                         foreach ($data as $animacao) {
                                                             if ($animacao['id_animacao'] == $_SESSION['animacao_id']) {
                                                                 echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
@@ -339,56 +339,55 @@ if ($stmt) {
                                                         }
                                                     } else {
                                                         ?>
-                                                        <select style="margin:5px;font-size:20px" class="form-control"
-                                                            name="animacao" id="animacao" required>
-                                                            <option value="" selected>Selecione uma animação</option>
-                                                        <?php
+                                                <select style="margin:5px;font-size:20px" class="form-control"
+                                                    name="animacao" id="animacao" required>
+                                                    <option value="" selected>Selecione uma animação</option>
+                                                    <?php
                                                         foreach ($data as $animacao) {
                                                             echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
                                                         }
                                                     }
                                                         ?>
-                                                        </select>
-                                                        <div class="modal fade" id="createModal" tabindex="-1"
-                                                            aria-labelledby="createModalLabel" aria-hidden="true">
-                                                            <div class="modal-dialog modal-dialog-centered">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h1 class="modal-title fs-5" id="createModalLabel">
-                                                                            Criar
-                                                                            Unidade</h1>
-                                                                        <button type="button" class="btn-close"
-                                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                    <div class="modal-body" id="createModalBody">
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-secondary"
-                                                                            data-bs-dismiss="modal">Não</button>
-                                                                        <button id="createUnidade" type="submit"
-                                                                            class="btn btn-primary">Sim</button>
-                                                                    </div>
-                                                                </div>
+                                                </select>
+                                                <div class="modal fade" id="createModal" tabindex="-1"
+                                                    aria-labelledby="createModalLabel" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="createModalLabel"
+                                                                    onclick="createUC()">
+                                                                    Criar
+                                                                    Unidade Curricualr</h1>
+                                                                <button type="button" class="btn-close"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body" id="createModalBody">
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">Não</button>
+                                                                <button id="createUC" type="submit"
+                                                                    class="btn btn-primary">Sim</button>
                                                             </div>
                                                         </div>
-                                                        <div class="row">
-                                                            <div class="col-md-1"
-                                                                style="margin-top:5px;margin-left:5px;font-size:20px">
-                                                                <button type="button" class="btn btn-success" id="addBtn"
-                                                                    onclick="add()">+</button>
-                                                            </div>
-                                                            <div class="col-md-1"
-                                                                style="margin-top:5px;margin-left:-25px;font-size:20px">
-                                                                <input type="text" class="form-control" id="number_docentes"
-                                                                    value="1">
-                                                            </div>
-                                                            <div class="col-md-1" style="margin:5px;font-size:20px">
-                                                                <button type="button" class="btn btn-danger" id="removeBtn"
-                                                                    onclick="remove()">-</button>
-                                                            </div>
-                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                        <button type="button" class="btn btn-success" id="addBtn"
+                                                            onclick="add()">+</button>
+                                                    </div>
+                                                    <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                        <input type="text" class="form-control" id="number_docentes"
+                                                            value="1">
+                                                    </div>
+                                                    <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                        <button type="button" class="btn btn-danger" id="removeBtn"
+                                                            onclick="remove()">-</button>
+                                                    </div>
+                                                </div>
 
-                                                        <?php
+                                                <?php
                                                         $sql = "SELECT * from docentes";
                                                         $stmt = mysqli_prepare($conn, $sql);
 
@@ -405,24 +404,25 @@ if ($stmt) {
                                                             mysqli_stmt_close($stmt);
                                                         }
                                                         ?>
-                                                        <div class="row" id="totalDocentes">
-                                                            <div class="col-md-4">
-                                                                <select style="margin:5px;font-size:20px" class="form-control"
-                                                                    name="docentes" id="curso" required>
-                                                                    <option value="">Selecione um docente</option>
-                                                                    <?php
+                                                <div class="row" id="totalDocentes">
+                                                    <div class="col-md-4">
+                                                        <select style="margin:5px;font-size:20px" class="form-control"
+                                                            name="docentes" id="curso_totalDocentes" required>
+                                                            <option value="">Selecione um docente</option>
+                                                            <?php
                                                                     foreach ($docentes as $docente) {
                                                                         echo '<option value="' . $docente['id_curso'] . '">' . $docente["nome"] . '</option>';
                                                                     } ?>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <input type="hidden" name="docentes_selected" id="docentes_selected" />
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden" name="docentes_selected" id="docentes_selected" />
 
                                     </form>
                                 </div>
                                 <button type="button" id="createButton" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#createModal" onclick="setCreateModalText()">Criar Unidade</button>
+                                    data-bs-target="#createModal" onclick="setCreateModalText()">Criar Unidade
+                                    Curricular</button>
                             </div>
 
                         </div>
@@ -500,92 +500,108 @@ if ($stmt) {
 
     </script>
     <script type="module">
-        import {
-            objeto
-        } from '../js/3D/3D.js';
+    import {
+        objeto
+    } from '../js/3D/3D.js';
 
-        document.getElementById("animacao").addEventListener("change", function() {
-            // Get the selected value
-            var selectedValue = document.getElementById("animacao").value;
-            if (document.getElementById("nome").value != "") {
-                if (document.getElementById("descricao").value != "") {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&nome=" + document.getElementById("nome").value + "&desc=" + document.getElementById(
-                            "descricao").value + "&page=unidades";
-                } else {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&nome=" + document.getElementById("nome").value + "&page=unidades";
-                }
+    document.getElementById("animacao").addEventListener("change", function() {
+        // Get the selected value
+        var selectedValue = document.getElementById("animacao").value;
+        if (document.getElementById("nome").value != "") {
+            if (document.getElementById("descricao").value != "") {
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&nome=" + document.getElementById("nome").value + "&desc=" + document.getElementById(
+                        "descricao").value + "&page=ucs";
             } else {
-                if (document.getElementById("descricao").value != "") {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&desc=" + document.getElementById("descricao").value + "&page=unidades";
-                } else {
-                    window.location.href = "../../database/animacao/get_animacao.php?id=" + selectedValue +
-                        "&page=unidades";
-                }
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&nome=" + document.getElementById("nome").value + "&page=ucs";
             }
-        });
+        } else {
+            if (document.getElementById("descricao").value != "") {
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&desc=" + document.getElementById("descricao").value + "&page=ucs";
+            } else {
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&page=ucs";
+            }
+        }
+    });
 
-        <?php
+    <?php
         if (isset($_SESSION["animacao_textura"])) { ?>
-            console.log("aur");
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    objeto(<?php echo json_encode(base64_encode($_SESSION['animacao_textura'])) ?>, (
-                        <?php echo json_encode(base64_encode($_SESSION['animacao_objeto'])) ?>));
-                }, 1000); // Delay of 5 seconds
-            });
-        <?php
+    console.log("aur");
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            objeto(<?php echo json_encode(base64_encode($_SESSION['animacao_textura'])) ?>, (
+                <?php echo json_encode(base64_encode($_SESSION['animacao_objeto'])) ?>));
+        }, 1000); // Delay of 5 seconds
+    });
+    <?php
         }
         ?>
     </script>
 
     <script>
-        function setCreateModalText() {
-            var string = "De certeza que quer criar a UC?</br>" +
-                "Campos para a Unidade Curricular</br>" +
-                "Nome: " + document.getElementById("nome").value + "</br>" +
-                "Descrição: " + document.getElementById("descricao").value + "</br>" +
-                "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
-                    .selectedIndex].text;
-            document.getElementById("createModalBody").innerHTML = string;
-        }
+    function setCreateModalText() {
+        var string = "De certeza que quer criar a UC?</br>" +
+            "Campos para a Unidade Curricular</br>" +
+            "Nome: " + document.getElementById("nome").value + "</br>" +
+            "Descrição: " + document.getElementById("descricao").value + "</br>" +
+            "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                .selectedIndex].text;
+        document.getElementById("createModalBody").innerHTML = string;
+    }
 
-        document.getElementById("form").action = '../../database/ucs/create.php';
+    document.getElementById("form").action = '../../database/ucs/create.php';
 
-        let counter = document.getElementById("number_docentes");
+    let counter = document.getElementById("number_docentes");
 
-        const template = document.getElementById("foreach_docentes");
+    const template = document.getElementById("foreach_docentes");
 
-        const totalDocentes = document.getElementById("totalDocentes");
+    const totalDocentes = document.getElementById("totalDocentes");
 
-        function add() {
-            counter.value = Number(counter.value) + 1;
+    const selectedDocentes = document.getElementById("docentes_selected");
 
-            const col = document.createElement('div');
-            col.className = 'col-md-4';
+    const docentesListBefore = [];
 
-            const select = template.cloneNode(true);
-            select.setAttribute("id", counter.value);
-            select.style.display = "";
+    function add() {
+        counter.value = Number(counter.value) + 1;
 
-            col.appendChild(select);
-            totalDocentes.appendChild(col);
-        }
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
 
-        function remove() {
-            if (totalDocentes.children.length > 1) {
-                if (Number(counter.value) > 1) {
-                    counter.value = Number(counter.value) - 1;
-                    totalDocentes.removeChild(totalDocentes.lastElementChild);
-                }
+        const select = template.cloneNode(true);
+        select.setAttribute("id", counter.value);
+        select.setAttribute("name", counter.value + "_curso");
+        select.style.display = "";
+
+        col.appendChild(select);
+        totalDocentes.appendChild(col);
+    }
+
+    function remove() {
+        if (totalDocentes.children.length > 1) {
+            if (Number(counter.value) > 1) {
+                counter.value = Number(counter.value) - 1;
+                totalDocentes.removeChild(totalDocentes.lastElementChild);
             }
-
-            if (Number(counter.value) == 1) {
-                document.getElementById("numGenError").innerHTML = "";
-            }
         }
+
+        if (Number(counter.value) == 1) {
+            document.getElementById("numGenError").innerHTML = "";
+        }
+    }
+
+    function createUC() {
+        const selects = totalDocentes.querySelectorAll('select[name*="_curso"]');
+
+        selects.forEach(select => {
+            docentesListBefore.push(Number(select.value));
+        });
+
+        selectedDocentes.value = JSON.stringify(docentesListBefore);
+
+    }
     </script>
     <?php
     $keep = 'userID';
