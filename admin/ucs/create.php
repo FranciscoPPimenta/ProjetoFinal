@@ -264,16 +264,16 @@ if ($stmt) {
                                         }
                                         ?>
                                         <?php
-                                        $sql = "SELECT * from animacoes";
+                                        $sql = "SELECT * from cursos";
                                         $stmt = mysqli_prepare($conn, $sql);
 
                                         if ($stmt) {
                                             // Execute the statement
                                             mysqli_stmt_execute($stmt);
                                             $result = mysqli_stmt_get_result($stmt);
-                                            $data = array();
+                                            $cursos = array();
                                             while ($row = mysqli_fetch_assoc($result)) {
-                                                $data[] = $row;
+                                                $cursos[] = $row;
                                             }
 
                                             // Close the statement
@@ -281,52 +281,144 @@ if ($stmt) {
                                         }
                                         ?>
                                         <?php
-                                        if (isset($_SESSION["animacao_textura"])) {
+                                        if (isset($_SESSION["uc_curso"])) {
                                         ?>
-                                            <select style="margin:5px;font-size:20px" class="form-control" name="animacao"
-                                                id="animacao" required>
-                                                <option value="">Selecione uma animação</option>
+                                            <select style="margin:5px;font-size:20px" class="form-control" name="curso"
+                                                id="curso" required>
+                                                <option value="">Selecione um curso</option>
                                                 <?php
-                                                foreach ($data as $animacao) {
-                                                    if ($animacao['id_animacao'] == $_SESSION['animacao_id']) {
-                                                        echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
+                                                foreach ($cursos as $curso) {
+                                                    if ($curso['id_curso'] == $_SESSION['id_curso']) {
+                                                        echo '<option value="' . $curso['id_curso'] . '" selected>' . $curso["nome"] . '</option>';
                                                     } else {
-                                                        echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
+                                                        echo '<option value="' . $curso['id_curso'] . '">' . $curso["nome"] . '</option>';
                                                     }
                                                 }
                                             } else {
                                                 ?>
                                                 <select style="margin:5px;font-size:20px" class="form-control"
                                                     name="animacao" id="animacao" required>
-                                                    <option value="" selected>Selecione uma animação</option>
+                                                    <option value="" selected>Selecione um curso</option>
                                                 <?php
-                                                foreach ($data as $animacao) {
-                                                    echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
+                                                foreach ($data as $curso) {
+                                                    echo '<option value="' . $curso['id_curso'] . '">' . $curso["nome"] . '</option>';
                                                 }
                                             }
                                                 ?>
                                                 </select>
-                                                <div class="modal fade" id="createModal" tabindex="-1"
-                                                    aria-labelledby="createModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="createModalLabel">Criar
-                                                                    Unidade</h1>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body" id="createModalBody">
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Não</button>
-                                                                <button id="createUnidade" type="submit"
-                                                                    class="btn btn-primary">Sim</button>
+                                                <?php
+                                                $sql = "SELECT * from animacoes";
+                                                $stmt = mysqli_prepare($conn, $sql);
+
+                                                if ($stmt) {
+                                                    // Execute the statement
+                                                    mysqli_stmt_execute($stmt);
+                                                    $result = mysqli_stmt_get_result($stmt);
+                                                    $data = array();
+                                                    while ($row = mysqli_fetch_assoc($result)) {
+                                                        $data[] = $row;
+                                                    }
+
+                                                    // Close the statement
+                                                    mysqli_stmt_close($stmt);
+                                                }
+                                                ?>
+                                                <?php
+                                                if (isset($_SESSION["animacao_textura"])) {
+                                                ?>
+                                                    <select style="margin:5px;font-size:20px" class="form-control"
+                                                        name="animacao" id="animacao" required>
+                                                        <option value="">Selecione uma animação</option>
+                                                        <?php
+                                                        foreach ($data as $animacao) {
+                                                            if ($animacao['id_animacao'] == $_SESSION['animacao_id']) {
+                                                                echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
+                                                            } else {
+                                                                echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
+                                                            }
+                                                        }
+                                                    } else {
+                                                        ?>
+                                                        <select style="margin:5px;font-size:20px" class="form-control"
+                                                            name="animacao" id="animacao" required>
+                                                            <option value="" selected>Selecione uma animação</option>
+                                                        <?php
+                                                        foreach ($data as $animacao) {
+                                                            echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
+                                                        }
+                                                    }
+                                                        ?>
+                                                        </select>
+                                                        <div class="modal fade" id="createModal" tabindex="-1"
+                                                            aria-labelledby="createModalLabel" aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-centered">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h1 class="modal-title fs-5" id="createModalLabel">
+                                                                            Criar
+                                                                            Unidade</h1>
+                                                                        <button type="button" class="btn-close"
+                                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                    </div>
+                                                                    <div class="modal-body" id="createModalBody">
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">Não</button>
+                                                                        <button id="createUnidade" type="submit"
+                                                                            class="btn btn-primary">Sim</button>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                        <div class="row">
+                                                            <div class="col-md-1"
+                                                                style="margin-top:5px;margin-left:5px;font-size:20px">
+                                                                <button type="button" class="btn btn-success" id="addBtn"
+                                                                    onclick="add()">+</button>
+                                                            </div>
+                                                            <div class="col-md-1"
+                                                                style="margin-top:5px;margin-left:-25px;font-size:20px">
+                                                                <input type="text" class="form-control" id="number_docentes"
+                                                                    value="1">
+                                                            </div>
+                                                            <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                                <button type="button" class="btn btn-danger" id="removeBtn"
+                                                                    onclick="remove()">-</button>
+                                                            </div>
+                                                        </div>
+
+                                                        <?php
+                                                        $sql = "SELECT * from docentes";
+                                                        $stmt = mysqli_prepare($conn, $sql);
+
+                                                        if ($stmt) {
+                                                            // Execute the statement
+                                                            mysqli_stmt_execute($stmt);
+                                                            $result = mysqli_stmt_get_result($stmt);
+                                                            $docentes = array();
+                                                            while ($row = mysqli_fetch_assoc($result)) {
+                                                                $docentes[] = $row;
+                                                            }
+
+                                                            // Close the statement
+                                                            mysqli_stmt_close($stmt);
+                                                        }
+                                                        ?>
+                                                        <div class="row" id="totalDocentes">
+                                                            <div class="col-md-4">
+                                                                <select style="margin:5px;font-size:20px" class="form-control"
+                                                                    name="docentes" id="curso" required>
+                                                                    <option value="">Selecione um docente</option>
+                                                                    <?php
+                                                                    foreach ($docentes as $docente) {
+                                                                        echo '<option value="' . $docente['id_curso'] . '">' . $docente["nome"] . '</option>';
+                                                                    } ?>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <input type="hidden" name="docentes_selected" id="docentes_selected" />
+
                                     </form>
                                 </div>
                                 <button type="button" id="createButton" class="btn btn-success" data-bs-toggle="modal"
@@ -385,6 +477,15 @@ if ($stmt) {
         </div>
     </div>
 
+
+    <select class="form-select" id="foreach_docentes" style="display: none;margin:5px;font-size:20px">
+        <option value="">Selecione um docente</option>
+        <?php
+        foreach ($docentes as $docente) {
+            echo '<option value="' . $docente['id_curso'] . '">' . $docente["nome"] . '</option>';
+        } ?>
+    </select>
+
     <!-- Bootstrap core JavaScript-->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -398,7 +499,6 @@ if ($stmt) {
 
 
     </script>
-    <script type="module" src="../js/3D/3D.js"></script>
     <script type="module">
         import {
             objeto
@@ -452,7 +552,40 @@ if ($stmt) {
             document.getElementById("createModalBody").innerHTML = string;
         }
 
-        document.getElementById("form").action = '../../database/unidades/create.php';
+        document.getElementById("form").action = '../../database/ucs/create.php';
+
+        let counter = document.getElementById("number_docentes");
+
+        const template = document.getElementById("foreach_docentes");
+
+        const totalDocentes = document.getElementById("totalDocentes");
+
+        function add() {
+            counter.value = Number(counter.value) + 1;
+
+            const col = document.createElement('div');
+            col.className = 'col-md-4';
+
+            const select = template.cloneNode(true);
+            select.setAttribute("id", counter.value);
+            select.style.display = "";
+
+            col.appendChild(select);
+            totalDocentes.appendChild(col);
+        }
+
+        function remove() {
+            if (totalDocentes.children.length > 1) {
+                if (Number(counter.value) > 1) {
+                    counter.value = Number(counter.value) - 1;
+                    totalDocentes.removeChild(totalDocentes.lastElementChild);
+                }
+            }
+
+            if (Number(counter.value) == 1) {
+                document.getElementById("numGenError").innerHTML = "";
+            }
+        }
     </script>
     <?php
     $keep = 'userID';
