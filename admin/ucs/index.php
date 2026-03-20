@@ -301,24 +301,24 @@ if ($stmt) {
                                         <?php
                                         foreach ($ucs as $uc) {
                                         ?>
-                                            <tr>
-                                                <td><?php echo $uc['nome']; ?></td>
-                                                <td><?php echo $uc['descricao']; ?></td>
-                                                <td><?php echo $uc['Animacao']; ?></td>
-                                                <td><?php echo $uc['Curso']; ?></td>
-                                                <?php
-                                                $sql = "SELECT * FROM professores INNER JOIN uc_professor ON professores.id_professor = uc_professor.id_professor WHERE uc_professor.id_uc = $uc[id_uc]";
+                                        <tr>
+                                            <td><?php echo $uc['nome']; ?></td>
+                                            <td><?php echo $uc['descricao']; ?></td>
+                                            <td><?php echo $uc['Animacao']; ?></td>
+                                            <td><?php echo $uc['Curso']; ?></td>
+                                            <?php
+                                                $sql = "SELECT * FROM docentes INNER JOIN uc_docente ON docentes.id_docente = uc_docente.id_docente WHERE uc_docente.id_uc = $uc[id_uc]";
                                                 $stmt = mysqli_prepare($conn, $sql);
 
                                                 if ($stmt) {
                                                     // Execute the statement
                                                     mysqli_stmt_execute($stmt);
                                                     $result = mysqli_stmt_get_result($stmt);
-                                                    $profs = [];
+                                                    $docs = [];
                                                     // Get the result
                                                     if (mysqli_num_rows($result) > 0) {
                                                         while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                                            $profs[]  = $row; // Assuming 'nome' is a column in the result set
+                                                            $docs[]  = $row; // Assuming 'nome' is a column in the result set
                                                         }
                                                     } else {
                                                         echo "No records found."; // Handle case where no records are found
@@ -328,21 +328,19 @@ if ($stmt) {
                                                 }
 
                                                 ?>
-                                                <?php
-                                                foreach ($profs as $prof) {
+                                            <?php
+                                                $string = '';
+                                                $string = implode(', ', array_column($docs, 'nome'));
                                                 ?>
-                                                    <td><?php echo $prof['nome'] ?></td>
-                                                <?php
-                                                }
-                                                ?>
-                                                <td>
-                                                    <a class="btn btn-primary"
-                                                        href="../../database/ucs/editar_uc.php?id=<?php echo $uc["id_uc"] ?>">Editar</a>
-                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                        data-bs-target="#deleteModal"
-                                                        onclick="setDeleteModalText('<?php echo $uc['nome']; ?>','<?php echo $uc['id_uc'] ?>')">Apagar</button>
-                                                </td>
-                                            </tr>
+                                            <td><?php echo $string ?></td>
+                                            <td>
+                                                <a class="btn btn-primary"
+                                                    href="../../database/ucs/editar_uc.php?id=<?php echo $uc["id_uc"] ?>">Editar</a>
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    onclick="setDeleteModalText('<?php echo $uc['nome']; ?>','<?php echo $uc['id_uc'] ?>')">Apagar</button>
+                                            </td>
+                                        </tr>
                                         <?php
                                         }
                                         ?>
@@ -437,11 +435,11 @@ if ($stmt) {
     <!-- Page level custom scripts -->
     <script src="../js/demo/datatables-demo.js"></script>
     <script>
-        function setDeleteModalText(name, id) {
-            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a unidade: \"" + name + "\"";
-            document.getElementById("apagaUc").setAttribute("href", "../../database/ucs/delete_uc.php?id=" +
-                id + "&start_page=index");
-        }
+    function setDeleteModalText(name, id) {
+        document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a unidade: \"" + name + "\"";
+        document.getElementById("apagaUc").setAttribute("href", "../../database/ucs/delete_uc.php?id=" +
+            id + "&start_page=index");
+    }
     </script>
 </body>
 

@@ -284,7 +284,7 @@ if ($stmt) {
                                         if (isset($_SESSION["uc_curso"])) {
                                         ?>
                                         <select style="margin:5px;font-size:20px" class="form-control" name="curso"
-                                            id="curso" required>
+                                            id="curso_curso" required>
                                             <option value="">Selecione um curso</option>
                                             <?php
                                                 foreach ($cursos as $curso) {
@@ -354,10 +354,9 @@ if ($stmt) {
                                                     <div class="modal-dialog modal-dialog-centered">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="createModalLabel"
-                                                                    onclick="createUC()">
+                                                                <h1 class="modal-title fs-5" id="createModalLabel">
                                                                     Criar
-                                                                    Unidade Curricualr</h1>
+                                                                    Unidade Curricular</h1>
                                                                 <button type="button" class="btn-close"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
@@ -407,11 +406,11 @@ if ($stmt) {
                                                 <div class="row" id="totalDocentes">
                                                     <div class="col-md-4">
                                                         <select style="margin:5px;font-size:20px" class="form-control"
-                                                            name="docentes" id="curso_totalDocentes" required>
+                                                            name="docentes_curso" id="curso_totalDocentes" required>
                                                             <option value="">Selecione um docente</option>
                                                             <?php
                                                                     foreach ($docentes as $docente) {
-                                                                        echo '<option value="' . $docente['id_curso'] . '">' . $docente["nome"] . '</option>';
+                                                                        echo '<option value="' . $docente['id_docente'] . '">' . $docente["nome"] . '</option>';
                                                                     } ?>
                                                         </select>
                                                     </div>
@@ -421,7 +420,8 @@ if ($stmt) {
                                     </form>
                                 </div>
                                 <button type="button" id="createButton" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#createModal" onclick="setCreateModalText()">Criar Unidade
+                                    data-bs-target="#createModal" onclick="setCreateModalText();createUC()">Criar
+                                    Unidade
                                     Curricular</button>
                             </div>
 
@@ -482,7 +482,7 @@ if ($stmt) {
         <option value="">Selecione um docente</option>
         <?php
         foreach ($docentes as $docente) {
-            echo '<option value="' . $docente['id_curso'] . '">' . $docente["nome"] . '</option>';
+            echo '<option value="' . $docente['id_docente'] . '">' . $docente["nome"] . '</option>';
         } ?>
     </select>
 
@@ -600,7 +600,7 @@ if ($stmt) {
         });
 
         selectedDocentes.value = JSON.stringify(docentesListBefore);
-
+        console.log(selects);
     }
     </script>
     <?php
