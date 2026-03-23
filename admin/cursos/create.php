@@ -243,6 +243,7 @@ if ($stmt) {
                             <div class="col-md-8">
                                 <div class="card-body">
                                     <form id="form" method="POST">
+                                        <span style="margin:5px;font-size:20px">Nome:</span>
                                         <?php
                                         if (isset($_SESSION["create_nome"])) {
                                             echo '<input type="text" style="margin:5px;font-size:20px" class="form-control"value="' . $_SESSION["create_nome"] . '" name="nome" id="nome" required>';
@@ -250,6 +251,7 @@ if ($stmt) {
                                             echo '<input type="text" style="margin:5px;font-size:20px" class="form-control" name="nome" id="nome" required>';
                                         }
                                         ?>
+                                        <span style="margin:5px;font-size:20px">Descrição:</span>
                                         <?php
                                         if (isset($_SESSION["create_desc"])) {
                                             echo '<textarea style="margin:5px;font-size:20px" name="descricao" id="descricao" class="form-control" required>' . $_SESSION["create_desc"] . '</textarea>';
@@ -257,6 +259,7 @@ if ($stmt) {
                                             echo '<textarea style="margin:5px;font-size:20px" name="descricao" id="descricao" class="form-control" required></textarea>';
                                         }
                                         ?>
+                                        <span style="margin:5px;font-size:20px">Regime:</span>
                                         <select style="margin:5px;font-size:20px" class="form-control" name="regime"
                                             id="regime" required>
                                             <?php
@@ -298,6 +301,7 @@ if ($stmt) {
                                             mysqli_stmt_close($stmt);
                                         }
                                         ?>
+                                        <span style="margin:5px;font-size:20px">Coordenador:</span>
                                         <?php
                                         if (isset($_SESSION["coordenador_curso"])) {
                                         ?>
@@ -341,6 +345,7 @@ if ($stmt) {
                                                     mysqli_stmt_close($stmt);
                                                 }
                                                 ?>
+                                                <span style="margin:5px;font-size:20px">Escola:</span>
                                                 <?php
                                                 if (isset($_SESSION["escola_curso"])) {
                                                 ?>
@@ -385,8 +390,8 @@ if ($stmt) {
                                                             mysqli_stmt_close($stmt);
                                                         }
                                                         ?>
+                                                        <span style="margin:5px;font-size:20px">Evento:</span>
                                                         <?php
-
                                                         if (isset($_SESSION["evento_curso"])) {
                                                         ?>
                                                             <select style="margin:5px;font-size:20px" class="form-control"
@@ -429,6 +434,7 @@ if ($stmt) {
                                                                     mysqli_stmt_close($stmt);
                                                                 }
                                                                 ?>
+                                                                <span style="margin:5px;font-size:20px">Animação:</span>
                                                                 <?php
                                                                 if (isset($_SESSION["animacao_textura"])) {
                                                                 ?>

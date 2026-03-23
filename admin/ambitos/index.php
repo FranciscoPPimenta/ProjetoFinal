@@ -120,7 +120,7 @@ if ($stmt) {
                     <span>Docentes</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="../animacoes/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Animações</span></a>
             </li>
@@ -310,14 +310,14 @@ if ($stmt) {
                                         <?php
                                         foreach ($ambitos as $ambito) {
                                         ?>
-                                            <tr>
-                                                <td><?php echo $ambito['nome']; ?></td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                        data-bs-target="#deleteModal"
-                                                        onclick="setDeleteModalText('<?php echo $ambito['nome']; ?>','<?php echo $ambito['id_ambito'] ?>')">Apagar</button>
-                                                </td>
-                                            </tr>
+                                        <tr>
+                                            <td><?php echo $ambito['nome']; ?></td>
+                                            <td>
+                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal"
+                                                    onclick="setDeleteModalText('<?php echo $ambito['nome']; ?>','<?php echo $ambito['id_ambito'] ?>')">Apagar</button>
+                                            </td>
+                                        </tr>
                                         <?php
                                         }
                                         ?>
@@ -410,29 +410,29 @@ if ($stmt) {
     <script src="../js/demo/datatables-demo.js"></script>
 
     <script>
-        function setDeleteModalText(name, id) {
-            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o âmbito: \"" + name +
-                "\"?";
-            document.getElementById("apagaAmbito").setAttribute("href", "../../database/ambitos/delete_ambito.php?id=" +
-                id + "&start_page=index");
-        };
+    function setDeleteModalText(name, id) {
+        document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o âmbito: \"" + name +
+            "\"?";
+        document.getElementById("apagaAmbito").setAttribute("href", "../../database/ambitos/delete_ambito.php?id=" +
+            id + "&start_page=index");
+    };
     </script>
     <script type="module">
-        import {
-            objeto
-        } from '../js/3D/3D.js';
+    import {
+        objeto
+    } from '../js/3D/3D.js';
 
-        let previewAnimId = null;
-        let previewAnimName = '';
+    let previewAnimId = null;
+    let previewAnimName = '';
 
-        const modalEl = document.getElementById('previewModal');
-        const modal = new bootstrap.Modal(modalEl);
+    const modalEl = document.getElementById('previewModal');
+    const modal = new bootstrap.Modal(modalEl);
 
-        const confirmView = document.getElementById('previewConfirmView');
-        const canvasView = document.getElementById('previewCanvasView');
+    const confirmView = document.getElementById('previewConfirmView');
+    const canvasView = document.getElementById('previewCanvasView');
 
-        const confirmText = document.getElementById('previewConfirmText');
-        const statusText = document.getElementById('previewStatus');
+    const confirmText = document.getElementById('previewConfirmText');
+    const statusText = document.getElementById('previewStatus');
     </script>
 </body>
 <?php

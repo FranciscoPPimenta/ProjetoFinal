@@ -33,12 +33,10 @@ if (isset($_GET['id'])) {
         echo json_encode(array("error" => "Failed to prepare SQL statement."));
     }
 
-    $sql = "DELETE FROM uc_curso WHERE id_uc = ?";
+    $sql = "DELETE FROM uc_docente WHERE id_uc = ?";
     $stmt = mysqli_prepare($conn, $sql);
 
     if ($stmt) {
-        echo 'nigga3';
-        echo $id;
         // Bind the 'id' parameter to the prepared statement
 
         mysqli_stmt_bind_param($stmt, "i", $id);
@@ -48,11 +46,11 @@ if (isset($_GET['id'])) {
 
         // Get the result
         $result = mysqli_stmt_get_result($stmt);
-        echo mysqli_stmt_affected_rows($stmt);
+
         if (mysqli_stmt_affected_rows($stmt) > 0) {
-            echo 'nigga1';
+            echo 'nigga2';
             mysqli_stmt_close($stmt);
-            $sql = "DELETE FROM uc_docente WHERE id_uc = ?";
+            $sql = "DELETE FROM ucs WHERE id_uc = ?";
             $stmt = mysqli_prepare($conn, $sql);
 
             if ($stmt) {
@@ -67,40 +65,18 @@ if (isset($_GET['id'])) {
                 $result = mysqli_stmt_get_result($stmt);
 
                 if (mysqli_stmt_affected_rows($stmt) > 0) {
-                    echo 'nigga2';
-                    mysqli_stmt_close($stmt);
-                    $sql = "DELETE FROM ucs WHERE id_uc = ?";
-                    $stmt = mysqli_prepare($conn, $sql);
 
-                    if ($stmt) {
-                        // Bind the 'id' parameter to the prepared statement
-
-                        mysqli_stmt_bind_param($stmt, "i", $id);
-
-                        // Execute the query
-                        mysqli_stmt_execute($stmt);
-
-                        // Get the result
-                        $result = mysqli_stmt_get_result($stmt);
-
-                        if (mysqli_stmt_affected_rows($stmt) > 0) {
-
-                            $_SESSION["deleted"] = "true";
-                            $_SESSION["deletedObject"] = $deleted;
-                        }
-
-                        mysqli_stmt_close($stmt);
-                        header("Location: ../../admin/ucs/index.php");
-                    }
+                    $_SESSION["deleted"] = "true";
+                    $_SESSION["deletedObject"] = $deleted;
                 }
 
                 mysqli_stmt_close($stmt);
                 header("Location: ../../admin/ucs/index.php");
             }
         }
-    } else {
-        // Handle SQL preparation error
-        echo json_encode(array("error" => "Failed to prepare SQL statement."));
+
+        mysqli_stmt_close($stmt);
+        header("Location: ../../admin/ucs/index.php");
     }
 } else {
     // Handle missing 'id' parameter

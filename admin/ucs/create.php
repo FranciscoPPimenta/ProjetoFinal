@@ -420,7 +420,7 @@ if ($stmt) {
                                     </form>
                                 </div>
                                 <button type="button" id="createButton" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#createModal" onclick="setCreateModalText();createUC()">Criar
+                                    data-bs-target="#createModal" onclick="createUC();setCreateModalText()">Criar
                                     Unidade
                                     Curricular</button>
                             </div>
@@ -542,16 +542,6 @@ if ($stmt) {
     </script>
 
     <script>
-    function setCreateModalText() {
-        var string = "De certeza que quer criar a UC?</br>" +
-            "Campos para a Unidade Curricular</br>" +
-            "Nome: " + document.getElementById("nome").value + "</br>" +
-            "Descrição: " + document.getElementById("descricao").value + "</br>" +
-            "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
-                .selectedIndex].text;
-        document.getElementById("createModalBody").innerHTML = string;
-    }
-
     document.getElementById("form").action = '../../database/ucs/create.php';
 
     let counter = document.getElementById("number_docentes");
@@ -562,9 +552,26 @@ if ($stmt) {
 
     const selectedDocentes = document.getElementById("docentes_selected");
 
-    const docentesListBefore = [];
+    function setCreateModalText() {
+        var string = "De certeza que quer criar a UC?</br>" +
+            "Campos para a Unidade Curricular</br>" +
+            "Nome: " + document.getElementById("nome").value + "</br>" +
+            "Descrição: " + document.getElementById("descricao").value + "</br>" +
+            "Curso: " + document.getElementById("curso").options[document.getElementById("curso").selectedIndex].text +
+            "</br>" +
+            "Docentes: " + selectedDocentes.textContent + "</br>" +
+            "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                .selectedIndex].text;
+        document.getElementById("createModalBody").innerHTML = string;
+    }
+
+
+
+    let docentesListBefore = [];
 
     function add() {
+        console.log(selectedDocentes.value);
+
         counter.value = Number(counter.value) + 1;
 
         const col = document.createElement('div');
@@ -581,26 +588,29 @@ if ($stmt) {
 
     function remove() {
         if (totalDocentes.children.length > 1) {
+            console.log(totalDocentes.children.length);
             if (Number(counter.value) > 1) {
                 counter.value = Number(counter.value) - 1;
                 totalDocentes.removeChild(totalDocentes.lastElementChild);
             }
         }
-
-        if (Number(counter.value) == 1) {
-            document.getElementById("numGenError").innerHTML = "";
-        }
     }
 
     function createUC() {
+        selectedDocentes.value = "";
+        docentesListBefore = [];
+        const selectedNames = [];
         const selects = totalDocentes.querySelectorAll('select[name*="_curso"]');
 
         selects.forEach(select => {
             docentesListBefore.push(Number(select.value));
+            name = select.selectedOptions[0]?.text || '';
+            if (name) selectedNames.push(name);
         });
 
+        selectedDocentes.textContent = selectedNames.join(', ');
         selectedDocentes.value = JSON.stringify(docentesListBefore);
-        console.log(selects);
+        console.log(docentesListBefore);
     }
     </script>
     <?php

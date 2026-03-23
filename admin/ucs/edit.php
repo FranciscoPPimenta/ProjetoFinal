@@ -1,11 +1,10 @@
 <?php
 require_once("../../database/config.php");
 session_start();
-// if(!isset($_SESSION["userID"])){
+// if (!isset($_SESSION["userID"])) {
 //     header("Location: ../../login.php");
 // }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,21 +18,29 @@ session_start();
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
+    <link rel="stylesheet" href="../css/loading.css">
 
-    <title>Admin - Unidades Curriculares</title>
+    <title>Admin - UCS</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <!-- Custom fonts for this template -->
+
+    <!-- Custom fonts for this template-->
     <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <!-- Custom styles for this template -->
+    <!-- Custom styles for this template-->
     <link href="../css/sb-admin-2.min.css" rel="stylesheet">
 
-    <!-- Custom styles for this page -->
-    <link href="../vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <script type="importmap">
+        {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.149.0/examples/jsm/"
+      }
+    }
+  </script>
 
 </head>
 <?php
@@ -56,10 +63,18 @@ if ($stmt) {
     // Close the statement
     mysqli_stmt_close($stmt);
 }
+
 ?>
 
 <body id="page-top">
-
+    <div id="loading">
+        <div class="arc-loader" role="status" aria-label="Loading">
+            <svg viewBox="0 0 50 50" class="arc-svg">
+                <circle class="arc" cx="25" cy="25" r="20" fill="none" stroke-width="5" stroke-linecap="round" />
+            </svg>
+        </div>
+        <p class="mt-3 text-center">Loading animation...</p>
+    </div>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -67,7 +82,7 @@ if ($stmt) {
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -118,7 +133,7 @@ if ($stmt) {
                     <span>Animações</span></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="../ucs/index.php">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
             </li>
@@ -200,7 +215,7 @@ if ($stmt) {
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span
                                     class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row["admin_name"] ?></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -229,137 +244,123 @@ if ($stmt) {
 
                 </nav>
                 <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
+                <?php
+                if (isset($_SESSION["uc"])) {
+                    //echo base64_encode($_SESSION["evento"]['Textura']);
+                ?>
                 <div class="container-fluid">
-                    <?php
-                    $sql = "SELECT ucs.*,animacoes.nome as 'Animacao',cursos.nome as 'Curso' FROM ucs INNER JOIN animacoes ON ucs.id_animacao = animacoes.id_animacao INNER JOIN cursos ON ucs.id_curso = cursos.id_curso";
-                    $stmt = mysqli_prepare($conn, $sql);
-
-                    if ($stmt) {
-                        // Execute the statement
-                        mysqli_stmt_execute($stmt);
-                        $result = mysqli_stmt_get_result($stmt);
-                        $ucs = [];
-                        // Get the result
-                        if (mysqli_num_rows($result) > 0) {
-                            while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                $ucs[]  = $row; // Assuming 'nome' is a column in the result set
-                            }
-                        } else {
-                            echo "No records found."; // Handle case where no records are found
-                        }
-                        // Close the statement
-                        mysqli_stmt_close($stmt);
-                    }
-
-                    ?>
                     <!-- Page Heading -->
-                    <h1 class="h3 fs-1 text-gray-800 fw-bold">Unidades Curriculares</h1>
-                    <?php
-                    if (isset($_SESSION["deleted"])) {
-                        echo '<p class="fs-3 text-success">Unidade Curricular ' . $_SESSION["deletedObject"] . ' apagada com sucesso!</p>';
-                    }
-                    ?>
-                    <?php
-                    if (isset($_SESSION["exists"])) {
-                        echo '<p class="fs-3 text-' . $_SESSION["color"] . '">' . $_SESSION["exists"] . '</p>';
-                    }
-                    ?>
-
-                    <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
-                        <div class="card-header py-3">
-                            <h1 class="m-0 font-weight-bold text-primary">Tabela Unidades Curriculares</h1>
-                            <a class="btn btn-primary" href="../../admin/ucs/create.php">Criar Nova UC</a>
-                        </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Animação</th>
-                                            <th>Curso</th>
-                                            <th>Docentes</th>
-                                            <th>Edição</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Animação</th>
-                                            <th>Curso</th>
-                                            <th>Docentes</th>
-                                            <th>Edição</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <?php
-                                        foreach ($ucs as $uc) {
+                    <div class="card mb-12">
+                        <div class="row g-0">
+                            <div class="col-md-4" id="canvas" style="height:30vh">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body" id="notEditing">
+                                    <p style="font-size:80px" class="card-title">
+                                        <?php echo $_SESSION["uc"]["nome"]; ?></p>
+                                    <p style="font-size:45px" class="card-text">
+                                        <?php echo $_SESSION["uc"]["descricao"]; ?></p>
+                                    <p style="font-size:30px" class="card-text">Curso:
+                                        <?php echo $_SESSION["uc"]["Curso"]; ?></p>
+                                    <?php
+                                        $nomes = $_SESSION['nome_docentes'];
+                                        var_dump($nomes);
+                                        $string = implode(', ', array_column($nomes, 'nome'));
+                                        var_dump($string);
                                         ?>
-                                            <tr>
-                                                <td><?php echo $uc['nome']; ?></td>
-                                                <td><?php echo $uc['descricao']; ?></td>
-                                                <td><?php echo $uc['Animacao']; ?></td>
-                                                <td><?php echo $uc['Curso']; ?></td>
-                                                <?php
-                                                $sql = "SELECT * FROM docentes INNER JOIN uc_docente ON docentes.id_docente = uc_docente.id_docente WHERE uc_docente.id_uc = $uc[id_uc]";
-                                                $stmt = mysqli_prepare($conn, $sql);
+                                    <p style="font-size:30px" class="card-text">Docentes:
+                                        <?php echo $string ?></p>
+                                    <p style="font-size:30px" class="card-text">Animação:
+                                        <?php echo $_SESSION["uc"]["Animacao"]; ?></p>
 
-                                                if ($stmt) {
-                                                    // Execute the statement
-                                                    mysqli_stmt_execute($stmt);
-                                                    $result = mysqli_stmt_get_result($stmt);
-                                                    $docs = [];
-                                                    // Get the result
-                                                    if (mysqli_num_rows($result) > 0) {
-                                                        while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                                            $docs[]  = $row; // Assuming 'nome' is a column in the result set
-                                                        }
-                                                    } else {
-                                                        echo "No records found."; // Handle case where no records are found
-                                                    }
-                                                    // Close the statement
-                                                    mysqli_stmt_close($stmt);
+                                </div>
+                                <div class="card-body" id="Editing" hidden>
+                                    <form
+                                        action='../../database/ucs/edit.php?id=<?php echo $_SESSION['uc']['id_uc']; ?>'
+                                        method="POST">
+                                        <input type="text" style="margin:5px;font-size:20px" class="form-control"
+                                            name="nome" id="nome" value="<?php echo $_SESSION["uc"]["nome"]; ?>">
+                                        <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
+                                            class="form-control"><?php echo $_SESSION["uc"]["descricao"]; ?></textarea>
+                                        <?php
+                                            $sql = "SELECT * from animacoes";
+                                            $stmt = mysqli_prepare($conn, $sql);
+
+                                            if ($stmt) {
+                                                // Execute the statement
+                                                mysqli_stmt_execute($stmt);
+                                                $result = mysqli_stmt_get_result($stmt);
+                                                $data = array();
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $data[] = $row;
                                                 }
 
+                                                // Close the statement
+                                                mysqli_stmt_close($stmt);
+                                            }
+                                            ?>
+                                        <select style="margin:5px;font-size:20px" class="form-control" name="animacao"
+                                            id="animacao">
+                                            <?php
+                                                foreach ($data as $animacao) {
+                                                    if ($animacao['id_animacao'] == $_SESSION['uc']['id_animacao']) {
+                                                        echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
+                                                    } else {
+                                                        echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
+                                                    }
+                                                }
                                                 ?>
-                                                <?php
-                                                $string = '';
-                                                $string = implode(', ', array_column($docs, 'nome'));
-                                                ?>
-                                                <td><?php echo $string ?></td>
-                                                <td>
-                                                    <a class="btn btn-primary"
-                                                        href="../../database/ucs/editar_uc.php?id=<?php echo $uc["id_uc"] ?>">Editar</a>
-                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                        data-bs-target="#deleteModal"
-                                                        onclick="setDeleteModalText('<?php echo $uc['nome']; ?>','<?php echo $uc['id_uc'] ?>')">Apagar</button>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                        }
-                                        ?>
-                                    </tbody>
-                                </table>
+                                        </select>
+                                        <div class="modal fade" id="updateModal" tabindex="-1"
+                                            aria-labelledby="updateModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        Atualizar UC <button type="button" class="btn-close"
+                                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body" id="updateModalBody">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Não</button>
+                                                        <button id="updateUC" type="submit"
+                                                            class="btn btn-primary">Sim</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <button class="btn btn-primary" id="editButton" onclick="editUC()">Editar</button>
+                                <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
+                                <?php
+                                    if (isset($_SESSION["updated"])) {
+                                        echo '<p style="font-size:30px" class="card-text text-success" id="mensagemAtualizada">' . $_SESSION["updated"] . '</p>';
+                                    }
+                                    if (isset($_SESSION["exists"])) {
+                                        echo '<p style="font-size:30px" class="card-text text-danger" id="mensagemAtualizada">' . $_SESSION["exists"] . '</p>';
+                                    }
+                                    ?>
                             </div>
+
                         </div>
                     </div>
 
                 </div>
+                <?php
+                }
+                ?>
+                <!-- Begin Page Content -->
+
                 <!-- /.container-fluid -->
 
             </div>
-
-
             <!-- End of Main Content -->
-            <div class="modal-dialog modal-dialog-centered">
-                ...
-            </div>
+
             <!-- Footer -->
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
@@ -381,30 +382,13 @@ if ($stmt) {
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar Unidade Curricular</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body" id="deleteModalBody">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                    <a id="apagaUc" type="button" class="btn btn-primary">Sim</a>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel"
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="logoutModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -413,6 +397,24 @@ if ($stmt) {
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar UC</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="deleteModalBody">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                    <a id="apagaUC" type="button" class="btn btn-primary">Sim</a>
                 </div>
             </div>
         </div>
@@ -427,29 +429,62 @@ if ($stmt) {
 
     <!-- Custom scripts for all pages-->
     <script src="../js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="../vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="../vendor/datatables/dataTables.bootstrap4.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="../js/demo/datatables-demo.js"></script>
     <script>
-        function setDeleteModalText(name, id) {
-            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a unidade: \"" + name + "\"";
-            document.getElementById("apagaUc").setAttribute("href", "../../database/ucs/delete_uc.php?id=" +
-                id + "&start_page=index");
-        }
+
+
     </script>
+    <script type="module">
+    import {
+        objeto
+    } from '../js/3D/3D.js';
+
+    const tex = <?= json_encode(base64_encode($_SESSION['uc']['Textura'])) ?>;
+    const glb = <?= json_encode(base64_encode($_SESSION['uc']['Objeto'])) ?>;
+
+    try {
+        await objeto(tex, glb);
+    } catch (e) {
+        console.error(e);
+        document.getElementById('loading').textContent = 'Failed to load animation.';
+    } finally {
+        document.body.classList.add('ready');
+    }
+    </script>
+    <?php
+    if (isset($_SESSION["uc"])) {
+    ?>
+    <script>
+    function editUC() {
+        if (document.getElementById("Editing").hasAttribute("hidden")) {
+            document.getElementById("notEditing").setAttribute("hidden", "");
+            document.getElementById("updateButton").removeAttribute("hidden");
+            document.getElementById("Editing").removeAttribute("hidden");
+            document.getElementById("editButton").setAttribute("hidden", "");
+        }
+    }
+
+    function setUpdateModalText() {
+        var string = "De certeza que quer atualizar a Unidade Curricular?</br>" +
+            "Campos atualizados</br>" +
+            "Nome: " + document.getElementById("nome").value + "</br>" +
+            "Descrição: " + document.getElementById("descricao").value + "</br>" +
+            "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                .selectedIndex].text;
+        document.getElementById("updateModalBody").innerHTML = string;
+    }
+
+    function setDeleteModalText() {
+        document.getElementById("deleteModalBody").innerHTML =
+            "De certeza que quer apagar a Unidade Curricular: \"<?php echo $_SESSION['uc']['nome']; ?>\"";
+        document.getElementById("apagaEvento").setAttribute("href", "../../database/ucs/delete_uc.php?id=" +
+            <?php echo $_SESSION['uc']['id_uc']; ?> + "&start_page=edit");
+    }
+    </script>
+    <?php
+    }
+    $_SESSION["updated"] = null;
+    $_SESSION["exists"] = null;
+    ?>
 </body>
 
 </html>
-<?php
-$keep = 'userID';
-
-foreach ($_SESSION as $key => $value) {
-    if ($key !== $keep) {
-        unset($_SESSION[$key]);
-    }
-}
-?>
