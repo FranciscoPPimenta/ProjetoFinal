@@ -264,9 +264,7 @@ if ($stmt) {
                                         <?php echo $_SESSION["uc"]["Curso"]; ?></p>
                                     <?php
                                         $nomes = $_SESSION['nome_docentes'];
-                                        var_dump($nomes);
                                         $string = implode(', ', array_column($nomes, 'nome'));
-                                        var_dump($string);
                                         ?>
                                     <p style="font-size:30px" class="card-text">Docentes:
                                         <?php echo $string ?></p>
@@ -282,6 +280,61 @@ if ($stmt) {
                                             name="nome" id="nome" value="<?php echo $_SESSION["uc"]["nome"]; ?>">
                                         <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
                                             class="form-control"><?php echo $_SESSION["uc"]["descricao"]; ?></textarea>
+                                        <?php
+                                            $sql = "SELECT * from docentes";
+                                            $stmt = mysqli_prepare($conn, $sql);
+
+                                            if ($stmt) {
+                                                // Execute the statement
+                                                mysqli_stmt_execute($stmt);
+                                                $result = mysqli_stmt_get_result($stmt);
+                                                $docs = array();
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $docs[] = $row;
+                                                }
+
+                                                // Close the statement
+                                                mysqli_stmt_close($stmt);
+                                            }
+                                            ?>
+                                        <div class="row">
+                                            <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                <button type="button" class="btn btn-success" id="addBtn"
+                                                    onclick="add()">+</button>
+                                            </div>
+                                            <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                <input type="text" class="form-control" id="number_docentes"
+                                                    value="<?php echo count($nomes) ?>">
+                                            </div>
+                                            <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                <button type="button" class="btn btn-danger" id="removeBtn"
+                                                    onclick="remove()">-</button>
+                                            </div>
+                                        </div>
+                                        <div class="row" id="totalDocentes">
+                                            <?php
+                                                foreach ($nomes as $nome) {
+                                                ?>
+                                            <div class="col-md-4">
+                                                <select style="margin:5px;font-size:20px" class="form-control"
+                                                    name="animacao" id="animacao">
+                                                    <?php
+                                                            foreach ($docs as $doc) {
+                                                                if ($doc['id_docente'] == $_SESSION['nomes']['id_animacao']) {
+                                                                    echo '<option value="' . $doc['id_docente'] . '" selected>' . $doc["nome"] . '</option>';
+                                                                } else {
+                                                                    echo '<option value="' . $doc['id_docente'] . '">' . $doc["nome"] . '</option>';
+                                                                }
+                                                            }
+                                                            ?>
+                                                </select>
+                                            </div>
+                                            <?php
+                                                }
+                                                ?>
+                                            <input type="hidden" name="docentes_selected" id="docentes_selected" />
+
+                                        </div>
                                         <?php
                                             $sql = "SELECT * from animacoes";
                                             $stmt = mysqli_prepare($conn, $sql);
@@ -299,7 +352,7 @@ if ($stmt) {
                                                 mysqli_stmt_close($stmt);
                                             }
                                             ?>
-                                        <select style="margin:5px;font-size:20px" class="form-control" name="animacao"
+                                        <select style=" margin:5px;font-size:20px" class="form-control" name="animacao"
                                             id="animacao">
                                             <?php
                                                 foreach ($data as $animacao) {
@@ -460,6 +513,33 @@ if ($stmt) {
             document.getElementById("updateButton").removeAttribute("hidden");
             document.getElementById("Editing").removeAttribute("hidden");
             document.getElementById("editButton").setAttribute("hidden", "");
+        }
+    }
+
+    function add() {
+        console.log(selectedDocentes.value);
+
+        counter.value = Number(counter.value) + 1;
+
+        const col = document.createElement('div');
+        col.className = 'col-md-4';
+
+        const select = template.cloneNode(true);
+        select.setAttribute("id", counter.value);
+        select.setAttribute("name", counter.value + "_curso");
+        select.style.display = "";
+
+        col.appendChild(select);
+        totalDocentes.appendChild(col);
+    }
+
+    function remove() {
+        if (totalDocentes.children.length > 1) {
+            console.log(totalDocentes.children.length);
+            if (Number(counter.value) > 1) {
+                counter.value = Number(counter.value) - 1;
+                totalDocentes.removeChild(totalDocentes.lastElementChild);
+            }
         }
     }
 
