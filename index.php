@@ -1,3 +1,6 @@
+<?php
+require_once 'database/index/escolas.php';
+?>
 <!DOCTYPE html>
 
 <html lang="en">
