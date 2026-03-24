@@ -19,7 +19,7 @@ if (isset($_GET['id'])) {
                 mysqli_stmt_close($stmt);
                 $_SESSION["exists"] = "Já existe uma unidade curricular com esse nome no curso escolhido!";
                 $_SESSION["color"] = "danger";
-                header('Location: ../../admin/eventos/edit.php?id=' . $_SESSION["ucs"]["id_uc"]);
+                header('Location: ../../admin/eventos/edit.php?id=' . $_SESSION["uc"]["id_uc"]);
                 mysqli_stmt_close($stmt);
             } else {
                 $nome = $_POST["nome"];
@@ -34,89 +34,209 @@ if (isset($_GET['id'])) {
                     $_SESSION["color"] = "danger";
                     header('Location: ../../admin/ucs/create.php');
                 } else {
-                    $sql = "DELETE FROM uc_docente WHERE id_uc = ?";
+                    $sql = "UPDATE ucs SET nome = ? , descricao = ?, id_animacao = ?, id_curso = ? WHERE id_uc = ?";
                     $stmt = mysqli_prepare($conn, $sql);
-
                     if ($stmt) {
-                        // Bind the 'id' parameter to the prepared statement
-
-                        mysqli_stmt_bind_param($stmt, "i", $id);
-
-                        // Execute the query
+                        // Bind parameters
+                        mysqli_stmt_bind_param($stmt, "ssiii", $nome, $desc, $animacao, $curso, $id);
+                        // Execute the statement
                         mysqli_stmt_execute($stmt);
-
-                        // Get the result
-                        $result = mysqli_stmt_get_result($stmt);
-
                         if (mysqli_stmt_affected_rows($stmt) > 0) {
                             mysqli_stmt_close($stmt);
-                        }
-                        $sql = "UPDATE ucs SET nome = ? , descricao = ?, id_animacao = ?, id_curso = ? WHERE id_uc = ?";
-                        $stmt = mysqli_prepare($conn, $sql);
-                        if ($stmt) {
-                            // Bind parameters
-                            mysqli_stmt_bind_param($stmt, "ssiii", $nome, $descricao, $animacao, $curso, $id);
-                            // Execute the statement
-                            mysqli_stmt_execute($stmt);
-                            if (mysqli_stmt_affected_rows($stmt) > 0) {
-                                mysqli_stmt_close($stmt);
-                                foreach ($newDocentes as $docente) {
-                                    $sqlInsert = "INSERT INTO uc_docente (id_uc,id_docente) VALUES (?,?)";
-                                    $stmtInsert = mysqli_prepare($conn, $sqlInsert);
-                                    if ($stmtInsert) {
-                                        mysqli_stmt_bind_param($stmtInsert, 'ii', $id, $docente);
-                                        $resultInsert = mysqli_stmt_execute($stmtInsert);
-                                        if ($resultInsert) {
-                                            $_SESSION["updated"] = "Unidade Curricular " . $nome . " atualizado com sucesso!";
-                                            $_SESSION["color"] = "success";
-                                            header('Location: ../../admin/ucs/edit.php');
+                            $sql = "DELETE FROM uc_docente WHERE id_uc = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+
+                            if ($stmt) {
+                                // Bind the 'id' parameter to the prepared statement
+
+                                mysqli_stmt_bind_param($stmt, "i", $id);
+
+                                // Execute the query
+                                mysqli_stmt_execute($stmt);
+
+                                // Get the result
+                                $result = mysqli_stmt_get_result($stmt);
+
+                                if (mysqli_stmt_affected_rows($stmt) > 0) {
+                                    mysqli_stmt_close($stmt);
+                                    foreach ($newDocentes as $docente) {
+                                        $sqlInsert = "INSERT INTO uc_docente (id_uc,id_docente) VALUES (?,?)";
+                                        $stmtInsert = mysqli_prepare($conn, $sqlInsert);
+                                        if ($stmtInsert) {
+                                            mysqli_stmt_bind_param($stmtInsert, 'ii', $id, $docente);
+                                            $resultInsert = mysqli_stmt_execute($stmtInsert);
+                                            if ($resultInsert) {
+                                                $_SESSION["updated"] = "Unidade Curricular " . $nome . " atualizado com sucesso!";
+                                                $_SESSION["color"] = "success";
+                                                //header('Location: ../../admin/ucs/edit.php?id=' . $_SESSION["uc"]["id_uc"]);
+                                            }
+                                            mysqli_stmt_close($stmtInsert);
                                         }
-                                        mysqli_stmt_close($stmtInsert);
                                     }
                                 }
                             }
-                            header('Location: ../../admin/ucs/edit.php?id=' . $_SESSION["uc"]["id_uc"]);
+                            //header('Location: ../../admin/ucs/edit.php?id=' . $_SESSION["uc"]["id_uc"]);
                             // Close the statement
-                            mysqli_stmt_close($stmt);
+                        } elseif (mysqli_stmt_affected_rows($stmt) == 0) {
+                            $sql = "SELECT * FROM uc_docente WHERE id_uc = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            if ($stmt) {
+                                mysqli_stmt_bind_param($stmt, 'i', $id);
+                                mysqli_stmt_execute($stmt);
+                                $result = mysqli_stmt_get_result($stmt);
+                                if (mysqli_num_rows($result) !== count($newDocentes)) {
+                                    mysqli_stmt_close($stmt);
+                                    $sql = "DELETE FROM uc_docente WHERE id_uc = ?";
+                                    $stmt = mysqli_prepare($conn, $sql);
+
+                                    if ($stmt) {
+                                        // Bind the 'id' parameter to the prepared statement
+
+                                        mysqli_stmt_bind_param($stmt, "i", $id);
+
+                                        // Execute the query
+                                        mysqli_stmt_execute($stmt);
+
+                                        // Get the result
+                                        $result = mysqli_stmt_get_result($stmt);
+
+                                        if (mysqli_stmt_affected_rows($stmt) > 0) {
+                                            mysqli_stmt_close($stmt);
+                                            foreach ($newDocentes as $docente) {
+                                                $sqlInsert = "INSERT INTO uc_docente (id_uc,id_docente) VALUES (?,?)";
+                                                $stmtInsert = mysqli_prepare($conn, $sqlInsert);
+                                                if ($stmtInsert) {
+                                                    mysqli_stmt_bind_param($stmtInsert, 'ii', $id, $docente);
+                                                    $resultInsert = mysqli_stmt_execute($stmtInsert);
+                                                    if ($resultInsert) {
+                                                        $_SESSION["updated"] = "Unidade Curricular " . $nome . " atualizado com sucesso!";
+                                                        $_SESSION["color"] = "success";
+                                                        //header('Location: ../../admin/ucs/edit.php?id=' . $_SESSION["uc"]["id_uc"]);
+                                                    }
+                                                    mysqli_stmt_close($stmtInsert);
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else {
+                                    mysqli_stmt_close($stmt);
+                                    $countEqual = 0;
+                                    foreach ($newDocentes as $docente) {
+                                        $sqlInsert = "SELECT * FROM uc_docente WHERE id_docente = ?";
+                                        $stmtInsert = mysqli_prepare($conn, $sqlInsert);
+                                        if ($stmtInsert) {
+                                            mysqli_stmt_bind_param($stmtInsert, 'i', $docente);
+                                            mysqli_stmt_execute($stmtInsert);
+                                            $resultInsert = mysqli_stmt_get_result($stmtInsert);
+                                            if (mysqli_num_rows($resultInsert) > 0) {
+                                                $countEqual++;
+                                            }
+                                            mysqli_stmt_close($stmtInsert);
+                                        }
+                                    }
+                                    if ($countEqual !== count($newDocentes)) {
+                                        $sql = "DELETE FROM uc_docente WHERE id_uc = ?";
+                                        $stmt = mysqli_prepare($conn, $sql);
+
+                                        if ($stmt) {
+                                            // Bind the 'id' parameter to the prepared statement
+
+                                            mysqli_stmt_bind_param($stmt, "i", $id);
+
+                                            // Execute the query
+                                            mysqli_stmt_execute($stmt);
+
+                                            // Get the result
+                                            $result = mysqli_stmt_get_result($stmt);
+
+                                            if (mysqli_stmt_affected_rows($stmt) > 0) {
+                                                mysqli_stmt_close($stmt);
+                                                foreach ($newDocentes as $docente) {
+                                                    $sqlInsert = "INSERT INTO uc_docente (id_uc,id_docente) VALUES (?,?)";
+                                                    $stmtInsert = mysqli_prepare($conn, $sqlInsert);
+                                                    if ($stmtInsert) {
+                                                        mysqli_stmt_bind_param($stmtInsert, 'ii', $id, $docente);
+                                                        $resultInsert = mysqli_stmt_execute($stmtInsert);
+                                                        if ($resultInsert) {
+                                                            $_SESSION["updated"] = "Unidade Curricular " . $nome . " atualizado com sucesso!";
+                                                            $_SESSION["color"] = "success";
+                                                            //header('Location: ../../admin/ucs/edit.php?id=' . $_SESSION["uc"]["id_uc"]);
+                                                        }
+                                                        mysqli_stmt_close($stmtInsert);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        $_SESSION["updated"] = "Não houve alterações!";
+                                        $_SESSION["color"] = "success";
+                                    }
+                                }
+                            }
                         } else {
                             echo json_encode(array("error" => "Failed to prepare SQL statement."));
                         }
                     }
                 }
             }
+        } else {
+            // Handle the case where the form was not submitted
+            echo "Please submit the form.";
+        }
+
+        $sql = "SELECT ucs.*,animacoes.nome as 'Animacao',animacoes.textura as 'Textura', cursos.nome as 'Curso',animacoes.objeto as 'Objeto' FROM ucs INNER JOIN animacoes ON ucs.id_animacao = animacoes.id_animacao INNER JOIN cursos ON ucs.id_curso = cursos.id_curso WHERE id_uc = ?";
+        $stmt = mysqli_prepare($conn, $sql);
+
+        if ($stmt) {
+            // Bind the 'id' parameter to the prepared statement
+
+            mysqli_stmt_bind_param($stmt, "i", $id);
+
+            // Execute the query
+            mysqli_stmt_execute($stmt);
+
+            // Get the result
+            $result = mysqli_stmt_get_result($stmt);
+
+            if (mysqli_num_rows($result) > 0) {
+                $row = mysqli_fetch_assoc($result);
+                $_SESSION["uc"] = $row;
+            }
+            mysqli_stmt_close($stmt);
+            $sql = "SELECT COUNT(*) FROM uc_docente WHERE id_uc = ?";
+            $stmt = mysqli_prepare($conn, $sql);
+            if ($stmt) {
+                mysqli_stmt_bind_param($stmt, 'i', $id);
+                mysqli_stmt_execute($stmt);
+                $result = mysqli_stmt_get_result($stmt);
+                if (mysqli_num_rows($result) > 0) {
+                    $row = mysqli_fetch_assoc($result);
+                    mysqli_stmt_close($stmt);
+                    $sql = "SELECT * FROM docentes INNER JOIN uc_docente ON docentes.id_docente = uc_docente.id_docente WHERE id_uc = ?";
+                    $stmt = mysqli_prepare($conn, $sql);
+                    if ($stmt) {
+                        mysqli_stmt_bind_param($stmt, 'i', $id);
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            $nomes[] = $row;
+                        }
+                        $_SESSION['nome_docentes'] = $nomes;
+                        header('Location: ../../admin/ucs/edit.php?id=' . $_SESSION["uc"]["id_uc"]);
+                        // Close the statement
+                        mysqli_stmt_close($stmt);
+                    }
+                }
+            }
+            // Close the statement
+
+        } else {
+            // Handle SQL preparation error
+            echo json_encode(array("error" => "Failed to prepare SQL statement."));
         }
     } else {
-        // Handle the case where the form was not submitted
-        echo "Please submit the form.";
+        // Handle missing 'id' parameter
+        echo json_encode(array("error" => "No 'id' parameter provided."));
     }
-    // Prepare the SQL query with a parameterized statement
-    $sql = "SELECT eventos.*,animacoes.nome as 'Animacao',animacoes.textura as 'Textura',animacoes.objeto as 'Objeto', ambitos.nome as 'Ambito' FROM eventos INNER JOIN animacoes ON eventos.id_animacao = animacoes.id_animacao INNER JOIN ambitos ON eventos.id_ambito = ambitos.id_ambito WHERE id_evento = ?";
-    $stmt = mysqli_prepare($conn, $sql);
-
-    if ($stmt) {
-        // Bind the 'id' parameter to the prepared statement
-
-        mysqli_stmt_bind_param($stmt, "i", $id);
-
-        // Execute the query
-        mysqli_stmt_execute($stmt);
-
-        // Get the result
-        $result = mysqli_stmt_get_result($stmt);
-
-        if (mysqli_num_rows($result) > 0) {
-            $row = mysqli_fetch_assoc($result);
-            $_SESSION["evento"] = $row;
-        }
-        //header('Location: ../../admin/eventos/edit.php?id='.$_SESSION["evento"]["id_evento"]);
-        // Close the statement
-        mysqli_stmt_close($stmt);
-    } else {
-        // Handle SQL preparation error
-        echo json_encode(array("error" => "Failed to prepare SQL statement."));
-    }
-} else {
-    // Handle missing 'id' parameter
-    echo json_encode(array("error" => "No 'id' parameter provided."));
+    mysqli_close($conn);
 }
-mysqli_close($conn);

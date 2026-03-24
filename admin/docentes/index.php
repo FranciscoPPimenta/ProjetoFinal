@@ -322,7 +322,7 @@ if ($stmt) {
                                             <tr>
                                                 <td><?php echo $prof['nome']; ?></td>
                                                 <?php
-                                                $sql = "SELECT * FROM cursos INNER JOIN docentes ON cursos.id_coordenador = docentes.id_docente WHERE id_coordenador = $prof[id_docente]";
+                                                $sql = "SELECT *, cursos.nome as 'Curso' FROM cursos INNER JOIN docentes ON cursos.id_coordenador = docentes.id_docente WHERE id_coordenador = $prof[id_docente]";
                                                 $stmt = mysqli_prepare($conn, $sql);
                                                 if ($stmt) {
                                                     mysqli_stmt_execute($stmt);
@@ -336,9 +336,8 @@ if ($stmt) {
                                                 }
                                                 mysqli_stmt_close($stmt);
                                                 $string = "";
-
-                                                $nomes = array_column($cursos, 'nome');
-                                                $string = implode(', ', $nomes);
+                                                $coordenador = array_column($cursos, 'Curso');
+                                                $string = implode(', ', $coordenador);
 
                                                 ?>
 

@@ -248,41 +248,40 @@ if ($stmt) {
                 if (isset($_SESSION["uc"])) {
                     //echo base64_encode($_SESSION["evento"]['Textura']);
                 ?>
-                <div class="container-fluid">
-                    <!-- Page Heading -->
-                    <div class="card mb-12">
-                        <div class="row g-0">
-                            <div class="col-md-4" id="canvas" style="height:30vh">
-                            </div>
-                            <div class="col-md-8">
-                                <div class="card-body" id="notEditing">
-                                    <p style="font-size:80px" class="card-title">
-                                        <?php echo $_SESSION["uc"]["nome"]; ?></p>
-                                    <p style="font-size:45px" class="card-text">
-                                        <?php echo $_SESSION["uc"]["descricao"]; ?></p>
-                                    <p style="font-size:30px" class="card-text">Curso:
-                                        <?php echo $_SESSION["uc"]["Curso"]; ?></p>
-                                    <?php
+                    <div class="container-fluid">
+                        <!-- Page Heading -->
+                        <div class="card mb-12">
+                            <div class="row g-0">
+                                <div class="col-md-4" id="canvas" style="height:30vh">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body" id="notEditing">
+                                        <p style="font-size:80px" class="card-title">
+                                            <?php echo $_SESSION["uc"]["nome"]; ?></p>
+                                        <p style="font-size:45px" class="card-text">
+                                            <?php echo $_SESSION["uc"]["descricao"]; ?></p>
+                                        <p style="font-size:30px" class="card-text">Curso:
+                                            <?php echo $_SESSION["uc"]["Curso"]; ?></p>
+                                        <?php
                                         $nomes = $_SESSION['nome_docentes'];
-                                        var_dump($nomes);
                                         $string = implode(', ', array_column($nomes, 'nome'));
                                         ?>
-                                    <p style="font-size:30px" class="card-text">Docentes:
-                                        <?php echo $string ?></p>
-                                    <p style="font-size:30px" class="card-text">Animação:
-                                        <?php echo $_SESSION["uc"]["Animacao"]; ?></p>
+                                        <p style="font-size:30px" class="card-text">Docentes:
+                                            <?php echo $string ?></p>
+                                        <p style="font-size:30px" class="card-text">Animação:
+                                            <?php echo $_SESSION["uc"]["Animacao"]; ?></p>
 
-                                </div>
-                                <div class="card-body" id="Editing" hidden>
-                                    <form
-                                        action='../../database/ucs/edit.php?id=<?php echo $_SESSION['uc']['id_uc']; ?>'
-                                        method="POST">
-                                        <input type="text" style="margin:5px;font-size:20px" class="form-control"
-                                            name="nome" id="nome" value="<?php echo $_SESSION["uc"]["nome"]; ?>">
-                                        <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
-                                            class="form-control"><?php echo $_SESSION["uc"]["descricao"]; ?></textarea>
+                                    </div>
+                                    <div class="card-body" id="Editing" hidden>
+                                        <form
+                                            action='../../database/ucs/edit.php?id=<?php echo $_SESSION['uc']['id_uc']; ?>'
+                                            method="POST">
+                                            <input type="text" style="margin:5px;font-size:20px" class="form-control"
+                                                name="nome" id="nome" value="<?php echo $_SESSION["uc"]["nome"]; ?>">
+                                            <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
+                                                class="form-control"><?php echo $_SESSION["uc"]["descricao"]; ?></textarea>
 
-                                        <?php
+                                            <?php
                                             $sql = "SELECT * from docentes";
                                             $stmt = mysqli_prepare($conn, $sql);
 
@@ -299,28 +298,28 @@ if ($stmt) {
                                                 mysqli_stmt_close($stmt);
                                             }
                                             ?>
-                                        <div class="row">
-                                            <div class="col-md-1" style="margin:5px;font-size:20px">
-                                                <button type="button" class="btn btn-success" id="addBtn"
-                                                    onclick="add()">+</button>
+                                            <div class="row">
+                                                <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                    <button type="button" class="btn btn-success" id="addBtn"
+                                                        onclick="add()">+</button>
+                                                </div>
+                                                <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                    <input type="text" class="form-control" id="number_docentes"
+                                                        value="<?php echo count($nomes) ?>">
+                                                </div>
+                                                <div class="col-md-1" style="margin:5px;font-size:20px">
+                                                    <button type="button" class="btn btn-danger" id="removeBtn"
+                                                        onclick="remove()">-</button>
+                                                </div>
                                             </div>
-                                            <div class="col-md-1" style="margin:5px;font-size:20px">
-                                                <input type="text" class="form-control" id="number_docentes"
-                                                    value="<?php echo count($nomes) ?>">
-                                            </div>
-                                            <div class="col-md-1" style="margin:5px;font-size:20px">
-                                                <button type="button" class="btn btn-danger" id="removeBtn"
-                                                    onclick="remove()">-</button>
-                                            </div>
-                                        </div>
-                                        <div class="row" id="totalDocentes">
-                                            <?php
+                                            <div class="row" id="totalDocentes">
+                                                <?php
                                                 foreach ($nomes as $nome) {
                                                 ?>
-                                            <div class="col-md-4">
-                                                <select style="margin:5px;font-size:20px" class="form-control"
-                                                    name="docentes_curso" id="docentes_curso">
-                                                    <?php
+                                                    <div class="col-md-4">
+                                                        <select style="margin:5px;font-size:20px" class="form-control"
+                                                            name="docentes_curso" id="docentes_curso">
+                                                            <?php
                                                             foreach ($docs as $doc) {
                                                                 if ($doc['id_docente'] == $nome['id_docente']) {
                                                                     echo '<option value="' . $doc['id_docente'] . '" selected>' . $doc["nome"] . '</option>';
@@ -329,15 +328,15 @@ if ($stmt) {
                                                                 }
                                                             }
                                                             ?>
-                                                </select>
-                                            </div>
-                                            <?php
+                                                        </select>
+                                                    </div>
+                                                <?php
                                                 }
                                                 ?>
+                                            </div>
                                             <input type="hidden" name="docentes_selected" id="docentes_selected" />
 
-                                        </div>
-                                        <?php
+                                            <?php
                                             $sql = "SELECT * from cursos";
                                             $stmt = mysqli_prepare($conn, $sql);
 
@@ -354,9 +353,9 @@ if ($stmt) {
                                                 mysqli_stmt_close($stmt);
                                             }
                                             ?>
-                                        <select style=" margin:5px;font-size:20px" class="form-control" name="curso"
-                                            readonly id="curso">
-                                            <?php
+                                            <select style=" margin:5px;font-size:20px" class="form-control" name="curso"
+                                                readonly id="curso">
+                                                <?php
                                                 foreach ($cursos as $curso) {
                                                     if ($curso['id_curso'] == $_SESSION['uc']['Curso']) {
                                                         echo '<option value="' . $curso['id_curso'] . '" selected>' . $curso["nome"] . '</option>';
@@ -365,8 +364,8 @@ if ($stmt) {
                                                     }
                                                 }
                                                 ?>
-                                        </select>
-                                        <?php
+                                            </select>
+                                            <?php
                                             $sql = "SELECT * from animacoes";
                                             $stmt = mysqli_prepare($conn, $sql);
 
@@ -383,9 +382,9 @@ if ($stmt) {
                                                 mysqli_stmt_close($stmt);
                                             }
                                             ?>
-                                        <select style=" margin:5px;font-size:20px" class="form-control" name="animacao"
-                                            id="animacao">
-                                            <?php
+                                            <select style=" margin:5px;font-size:20px" class="form-control" name="animacao"
+                                                id="animacao">
+                                                <?php
                                                 foreach ($data as $animacao) {
                                                     if ($animacao['id_animacao'] == $_SESSION['uc']['id_animacao']) {
                                                         echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
@@ -394,35 +393,36 @@ if ($stmt) {
                                                     }
                                                 }
                                                 ?>
-                                        </select>
-                                        <div class="modal fade" id="updateModal" tabindex="-1"
-                                            aria-labelledby="updateModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        Atualizar UC <button type="button" class="btn-close"
-                                                            data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body" id="updateModalBody">
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary"
-                                                            data-bs-dismiss="modal">Não</button>
-                                                        <button id="updateUC" type="submit"
-                                                            class="btn btn-primary">Sim</button>
+                                            </select>
+                                            <div class="modal fade" id="updateModal" tabindex="-1"
+                                                aria-labelledby="updateModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            Atualizar UC <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body" id="updateModalBody">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Não</button>
+                                                            <button id="updateUC" type="submit"
+                                                                class="btn btn-primary">Sim</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <button class="btn btn-primary" id="editButton" onclick="editUC()">Editar</button>
-                                <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#updateModal" onclick="UCedit();setUpdateModalText()"
-                                    hidden>Gravar</button>
-                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                    data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
-                                <?php
+                                        </form>
+                                    </div>
+                                    <button class="btn btn-primary" id="editButton" onclick="editUC()">Editar</button>
+                                    <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#updateModal" onclick="UCedit();setUpdateModalText()"
+                                        hidden>Gravar</button>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal"
+                                        onclick="setDeleteModalText('<?php echo $_SESSION['uc']['nome']; ?>','<?php echo $_SESSION['uc']['id_uc'] ?>')">Apagar</button>
+                                    <?php
                                     if (isset($_SESSION["updated"])) {
                                         echo '<p style="font-size:30px" class="card-text text-success" id="mensagemAtualizada">' . $_SESSION["updated"] . '</p>';
                                     }
@@ -430,12 +430,12 @@ if ($stmt) {
                                         echo '<p style="font-size:30px" class="card-text text-danger" id="mensagemAtualizada">' . $_SESSION["exists"] . '</p>';
                                     }
                                     ?>
+                                </div>
+
                             </div>
-
                         </div>
-                    </div>
 
-                </div>
+                    </div>
                 <?php
                 }
                 ?>
@@ -447,7 +447,7 @@ if ($stmt) {
             <!-- End of Main Content -->
 
             <!-- Footer -->
-            <footer class="sticky-footer bg-white">
+            <footer class=" sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Your Website 2020</span>
@@ -527,108 +527,109 @@ if ($stmt) {
 
     </script>
     <script type="module">
-    import {
-        objeto
-    } from '../js/3D/3D.js';
+        import {
+            objeto
+        } from '../js/3D/3D.js';
 
-    const tex = <?= json_encode(base64_encode($_SESSION['uc']['Textura'])) ?>;
-    const glb = <?= json_encode(base64_encode($_SESSION['uc']['Objeto'])) ?>;
+        const tex = <?= json_encode(base64_encode($_SESSION['uc']['Textura'])) ?>;
+        const glb = <?= json_encode(base64_encode($_SESSION['uc']['Objeto'])) ?>;
 
-    try {
-        await objeto(tex, glb);
-    } catch (e) {
-        console.error(e);
-        document.getElementById('loading').textContent = 'Failed to load animation.';
-    } finally {
-        document.body.classList.add('ready');
-    }
+        try {
+            await objeto(tex, glb);
+        } catch (e) {
+            console.error(e);
+            document.getElementById('loading').textContent = 'Failed to load animation.';
+        } finally {
+            document.body.classList.add('ready');
+        }
     </script>
     <?php
     if (isset($_SESSION["uc"])) {
     ?>
-    <script>
-    let counter = document.getElementById("number_docentes");
+        <script>
+            let counter = document.getElementById("number_docentes");
 
-    const template = document.getElementById("foreach_docentes");
+            const template = document.getElementById("foreach_docentes");
 
-    const totalDocentes = document.getElementById("totalDocentes");
+            const totalDocentes = document.getElementById("totalDocentes");
 
-    const selectedDocentes = document.getElementById("docentes_selected");
-
-    function editUC() {
-        if (document.getElementById("Editing").hasAttribute("hidden")) {
-            document.getElementById("notEditing").setAttribute("hidden", "");
-            document.getElementById("updateButton").removeAttribute("hidden");
-            document.getElementById("Editing").removeAttribute("hidden");
-            document.getElementById("editButton").setAttribute("hidden", "");
-        }
-    }
-
-    function add() {
-        console.log(selectedDocentes.value);
-
-        counter.value = Number(counter.value) + 1;
-
-        const col = document.createElement('div');
-        col.className = 'col-md-4';
-
-        const select = template.cloneNode(true);
-        select.setAttribute("id", counter.value);
-        select.setAttribute("name", counter.value + "_curso");
-        select.style.display = "";
-
-        col.appendChild(select);
-        totalDocentes.appendChild(col);
-    }
-
-    function remove() {
-        if (totalDocentes.children.length > 1) {
+            const selectedDocentes = document.getElementById("docentes_selected");
             console.log(totalDocentes.children.length);
-            if (Number(counter.value) > 1) {
-                counter.value = Number(counter.value) - 1;
-                totalDocentes.removeChild(totalDocentes.lastElementChild);
+
+            function editUC() {
+                if (document.getElementById("Editing").hasAttribute("hidden")) {
+                    document.getElementById("notEditing").setAttribute("hidden", "");
+                    document.getElementById("updateButton").removeAttribute("hidden");
+                    document.getElementById("Editing").removeAttribute("hidden");
+                    document.getElementById("editButton").setAttribute("hidden", "");
+                }
             }
-        }
-    }
 
-    function setUpdateModalText() {
-        var string = "De certeza que quer criar a UC?</br>" +
-            "Campos para a Unidade Curricular</br>" +
-            "Nome: " + document.getElementById("nome").value + "</br>" +
-            "Descrição: " + document.getElementById("descricao").value + "</br>" +
-            "Curso: " + document.getElementById("curso").options[document.getElementById("curso")
-                .selectedIndex].text +
-            "</br>" +
-            "Docentes: " + selectedDocentes.textContent + "</br>" +
-            "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
-                .selectedIndex].text;
-        document.getElementById("updateModalBody").innerHTML = string;
-    }
+            function add() {
+                console.log(selectedDocentes.value);
 
-    function UCedit() {
-        selectedDocentes.value = "";
-        docentesListBefore = [];
-        const selectedNames = [];
-        const selects = totalDocentes.querySelectorAll('select[name*="_curso"]');
+                counter.value = Number(counter.value) + 1;
 
-        selects.forEach(select => {
-            docentesListBefore.push(Number(select.value));
-            name = select.selectedOptions[0]?.text || '';
-            if (name) selectedNames.push(name);
-        });
+                const col = document.createElement('div');
+                col.className = 'col-md-4';
 
-        selectedDocentes.textContent = selectedNames.join(', ');
-        selectedDocentes.value = JSON.stringify(docentesListBefore);
-        console.log(docentesListBefore);
-    }
+                const select = template.cloneNode(true);
+                select.setAttribute("id", counter.value);
+                select.setAttribute("name", counter.value + "_curso");
+                select.style.display = "";
 
-    function setDeleteModalText() {
-        document.getElementById("deleteModalBody").innerHTML =
-            "De certeza que quer apagar a Unidade Curricular: \"<?php echo $_SESSION['uc']['nome']; ?>\"";
-        document.getElementById("apagaEvento").setAttribute("href", "../../database/ucs/delete_uc.php?id=" +
-            <?php echo $_SESSION['uc']['id_uc']; ?> + "&start_page=edit");
-    }
-    </script>
+                col.appendChild(select);
+                totalDocentes.appendChild(col);
+            }
+
+            function remove() {
+                if (totalDocentes.children.length > 1) {
+                    console.log(totalDocentes.children.length);
+                    if (Number(counter.value) > 1) {
+                        counter.value = Number(counter.value) - 1;
+                        totalDocentes.removeChild(totalDocentes.lastElementChild);
+                    }
+                }
+                console.log(totalDocentes.children.length);
+            }
+
+            function setUpdateModalText() {
+                var string = "De certeza que quer criar a UC?</br>" +
+                    "Campos para a Unidade Curricular</br>" +
+                    "Nome: " + document.getElementById("nome").value + "</br>" +
+                    "Descrição: " + document.getElementById("descricao").value + "</br>" +
+                    "Curso: " + document.getElementById("curso").options[document.getElementById("curso")
+                        .selectedIndex].text +
+                    "</br>" +
+                    "Docentes: " + selectedDocentes.textContent + "</br>" +
+                    "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                        .selectedIndex].text;
+                document.getElementById("updateModalBody").innerHTML = string;
+            }
+
+            function UCedit() {
+                selectedDocentes.value = "";
+                docentesListBefore = [];
+                const selectedNames = [];
+                const selects = totalDocentes.querySelectorAll('select[name*="_curso"]');
+
+                selects.forEach(select => {
+                    docentesListBefore.push(Number(select.value));
+                    name = select.selectedOptions[0]?.text || '';
+                    if (name) selectedNames.push(name);
+                });
+
+                selectedDocentes.textContent = selectedNames.join(', ');
+                selectedDocentes.value = JSON.stringify(docentesListBefore);
+                console.log(docentesListBefore);
+            }
+
+            function setDeleteModalText(name, id) {
+                document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a unidade: \"" + name + "\"";
+                document.getElementById("apagaUC").setAttribute("href", "../../database/ucs/delete_uc.php?id=" +
+                    id + "&start_page=index");
+            }
+        </script>
     <?php
     }
     $_SESSION["updated"] = null;

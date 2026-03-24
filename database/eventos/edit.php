@@ -47,7 +47,7 @@ if (isset($_GET['id'])) {
                     if (mysqli_stmt_affected_rows($stmt) > 0) {
                         $_SESSION["updated"] = "Evento " . $nome . " atualizado com sucesso!";
                     }
-                    header('Location: ../../admin/eventos/edit.php?id=' . $_SESSION["evento"]["id_evento"]);
+                    //header('Location: ../../admin/eventos/edit.php?id=' . $_SESSION["evento"]["id_evento"]);
                     // Close the statement
                     mysqli_stmt_close($stmt);
                 } else {
@@ -78,7 +78,7 @@ if (isset($_GET['id'])) {
             $row = mysqli_fetch_assoc($result);
             $_SESSION["evento"] = $row;
         }
-        //header('Location: ../../admin/eventos/edit.php?id='.$_SESSION["evento"]["id_evento"]);
+        header('Location: ../../admin/eventos/edit.php?id=' . $_SESSION["evento"]["id_evento"]);
         // Close the statement
         mysqli_stmt_close($stmt);
     } else {
