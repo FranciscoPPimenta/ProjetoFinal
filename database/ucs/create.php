@@ -28,51 +28,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 mysqli_stmt_bind_param($stmt, "i", $curso);
                 mysqli_stmt_execute($stmt);
                 $result = mysqli_stmt_get_result($stmt);
-                if (mysqli_num_rows($result) > 0) {
-                    $_SESSION["exists"] = "Já existe uma unidade nesse curso com o mesmo nome!";
+                if ($result) {
+                    $_SESSION["exists"] = "Já existe uma unidade curricular com esse nome no curso escolhido!";
                     $_SESSION["color"] = "danger";
                     header('Location: ../../admin/ucs/create.php');
-                } else {
-                    $newDocentes = json_decode($docentes);
-                    $newDocentes = array_map('intval', $newDocentes);
-                    mysqli_stmt_close($stmt);
-                    if (count($newDocentes) !== count(array_unique($newDocentes))) {
-                        $_SESSION["exists"] = "Não pode adicionar o mesmo docente mais que uma vez!";
-                        $_SESSION["color"] = "danger";
-                        header('Location: ../../admin/ucs/create.php');
-                    } else {
-                        foreach ($newDocentes as $docente) {
-                            $sqlInsert = "INSERT INTO ucs (nome,descricao,id_animacao,id_curso) VALUES (?,?,?,?)";
-                            $stmtInsert = mysqli_prepare($conn, $sqlInsert);
-                            if ($stmtInsert) {
-                                // Bind parameters
-                                mysqli_stmt_bind_param($stmtInsert, "ssii", $nome, $desc, $animacao, $curso);
-                                // Execute the statement
-                                $resultInsert = mysqli_stmt_execute($stmtInsert);
-                                if ($resultInsert) {
-                                    $last_id = mysqli_insert_id($conn);
-                                    mysqli_stmt_close($stmtInsert);
-                                    foreach ($newDocentes as $docente) {
-                                        $sqlInsert = "INSERT INTO uc_docente (id_uc,id_docente) VALUES (?,?)";
-                                        $stmtInsert = mysqli_prepare($conn, $sqlInsert);
-                                        if ($stmtInsert) {
-                                            mysqli_stmt_bind_param($stmtInsert, 'ii', $last_id, $docente);
-                                            $resultInsert = mysqli_stmt_execute($stmtInsert);
-                                            if ($resultInsert) {
-                                                $_SESSION["exists"] = "Unidade Curricular " . $nome . " criada com sucesso!";
-                                                $_SESSION["color"] = "success";
-                                                header('Location: ../../admin/ucs/index.php');
-                                            }
-                                            mysqli_stmt_close($stmtInsert);
-                                        }
-                                    }
-                                }
-                            }
-                            // Close the statement
-                            mysqli_stmt_close($stmt);
-                        }
-                    }
                 }
+                mysqli_stmt_close($stmtInsert);
             }
         } else {
             $newDocentes = json_decode($docentes);
@@ -92,7 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     if ($resultInsert) {
                         $last_id = mysqli_insert_id($conn);
                         mysqli_stmt_close($stmtInsert);
-                        var_dump($newDocentes);
                         foreach ($newDocentes as $docente) {
                             $sqlInsert = "INSERT INTO uc_docente (id_uc,id_docente) VALUES (?,?)";
                             $stmtInsert = mysqli_prepare($conn, $sqlInsert);

@@ -48,7 +48,6 @@ if (isset($_GET['id'])) {
         $result = mysqli_stmt_get_result($stmt);
 
         if (mysqli_stmt_affected_rows($stmt) > 0) {
-            echo 'nigga2';
             mysqli_stmt_close($stmt);
             $sql = "DELETE FROM ucs WHERE id_uc = ?";
             $stmt = mysqli_prepare($conn, $sql);

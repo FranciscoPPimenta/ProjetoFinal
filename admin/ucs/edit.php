@@ -264,6 +264,7 @@ if ($stmt) {
                                         <?php echo $_SESSION["uc"]["Curso"]; ?></p>
                                     <?php
                                         $nomes = $_SESSION['nome_docentes'];
+                                        var_dump($nomes);
                                         $string = implode(', ', array_column($nomes, 'nome'));
                                         ?>
                                     <p style="font-size:30px" class="card-text">Docentes:
@@ -280,6 +281,7 @@ if ($stmt) {
                                             name="nome" id="nome" value="<?php echo $_SESSION["uc"]["nome"]; ?>">
                                         <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
                                             class="form-control"><?php echo $_SESSION["uc"]["descricao"]; ?></textarea>
+
                                         <?php
                                             $sql = "SELECT * from docentes";
                                             $stmt = mysqli_prepare($conn, $sql);
@@ -317,10 +319,10 @@ if ($stmt) {
                                                 ?>
                                             <div class="col-md-4">
                                                 <select style="margin:5px;font-size:20px" class="form-control"
-                                                    name="animacao" id="animacao">
+                                                    name="docentes_curso" id="docentes_curso">
                                                     <?php
                                                             foreach ($docs as $doc) {
-                                                                if ($doc['id_docente'] == $_SESSION['nomes']['id_animacao']) {
+                                                                if ($doc['id_docente'] == $nome['id_docente']) {
                                                                     echo '<option value="' . $doc['id_docente'] . '" selected>' . $doc["nome"] . '</option>';
                                                                 } else {
                                                                     echo '<option value="' . $doc['id_docente'] . '">' . $doc["nome"] . '</option>';
@@ -335,6 +337,35 @@ if ($stmt) {
                                             <input type="hidden" name="docentes_selected" id="docentes_selected" />
 
                                         </div>
+                                        <?php
+                                            $sql = "SELECT * from cursos";
+                                            $stmt = mysqli_prepare($conn, $sql);
+
+                                            if ($stmt) {
+                                                // Execute the statement
+                                                mysqli_stmt_execute($stmt);
+                                                $result = mysqli_stmt_get_result($stmt);
+                                                $cursos = array();
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $cursos[] = $row;
+                                                }
+
+                                                // Close the statement
+                                                mysqli_stmt_close($stmt);
+                                            }
+                                            ?>
+                                        <select style=" margin:5px;font-size:20px" class="form-control" name="curso"
+                                            readonly id="curso">
+                                            <?php
+                                                foreach ($cursos as $curso) {
+                                                    if ($curso['id_curso'] == $_SESSION['uc']['Curso']) {
+                                                        echo '<option value="' . $curso['id_curso'] . '" selected>' . $curso["nome"] . '</option>';
+                                                    } else {
+                                                        echo '<option value="' . $curso['id_curso'] . '">' . $curso["nome"] . '</option>';
+                                                    }
+                                                }
+                                                ?>
+                                        </select>
                                         <?php
                                             $sql = "SELECT * from animacoes";
                                             $stmt = mysqli_prepare($conn, $sql);
@@ -387,7 +418,8 @@ if ($stmt) {
                                 </div>
                                 <button class="btn btn-primary" id="editButton" onclick="editUC()">Editar</button>
                                 <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
+                                    data-bs-target="#updateModal" onclick="UCedit();setUpdateModalText()"
+                                    hidden>Gravar</button>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                     data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
                                 <?php
@@ -473,6 +505,14 @@ if ($stmt) {
         </div>
     </div>
 
+    <select class="form-select" id="foreach_docentes" style="display: none;margin:5px;font-size:20px">
+        <option value="">Selecione um docente</option>
+        <?php
+        foreach ($docentes as $docente) {
+            echo '<option value="' . $docente['id_docente'] . '">' . $docente["nome"] . '</option>';
+        } ?>
+    </select>
+
     <!-- Bootstrap core JavaScript-->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -507,6 +547,14 @@ if ($stmt) {
     if (isset($_SESSION["uc"])) {
     ?>
     <script>
+    let counter = document.getElementById("number_docentes");
+
+    const template = document.getElementById("foreach_docentes");
+
+    const totalDocentes = document.getElementById("totalDocentes");
+
+    const selectedDocentes = document.getElementById("docentes_selected");
+
     function editUC() {
         if (document.getElementById("Editing").hasAttribute("hidden")) {
             document.getElementById("notEditing").setAttribute("hidden", "");
@@ -544,13 +592,34 @@ if ($stmt) {
     }
 
     function setUpdateModalText() {
-        var string = "De certeza que quer atualizar a Unidade Curricular?</br>" +
-            "Campos atualizados</br>" +
+        var string = "De certeza que quer criar a UC?</br>" +
+            "Campos para a Unidade Curricular</br>" +
             "Nome: " + document.getElementById("nome").value + "</br>" +
             "Descrição: " + document.getElementById("descricao").value + "</br>" +
+            "Curso: " + document.getElementById("curso").options[document.getElementById("curso")
+                .selectedIndex].text +
+            "</br>" +
+            "Docentes: " + selectedDocentes.textContent + "</br>" +
             "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
                 .selectedIndex].text;
         document.getElementById("updateModalBody").innerHTML = string;
+    }
+
+    function UCedit() {
+        selectedDocentes.value = "";
+        docentesListBefore = [];
+        const selectedNames = [];
+        const selects = totalDocentes.querySelectorAll('select[name*="_curso"]');
+
+        selects.forEach(select => {
+            docentesListBefore.push(Number(select.value));
+            name = select.selectedOptions[0]?.text || '';
+            if (name) selectedNames.push(name);
+        });
+
+        selectedDocentes.textContent = selectedNames.join(', ');
+        selectedDocentes.value = JSON.stringify(docentesListBefore);
+        console.log(docentesListBefore);
     }
 
     function setDeleteModalText() {

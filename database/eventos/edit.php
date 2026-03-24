@@ -34,13 +34,14 @@ if (isset($_GET['id'])) {
                     $mes = $dataInteira->format('m');
                 }
                 $ambito = $_POST["ambito"];
+                $animacao = $_POST["animacao"];
                 //Prepare the SQL statement
-                $sql = "UPDATE eventos SET nome = ? , descricao = ?, dia = ?, mes = ? , id_ambito = ? WHERE id_evento = ?";
+                $sql = "UPDATE eventos SET nome = ? , descricao = ?, dia = ?, mes = ? , id_ambito = ?, id_animacao = ? WHERE id_evento = ?";
                 $stmt = mysqli_prepare($conn, $sql);
 
                 if ($stmt) {
                     // Bind parameters
-                    mysqli_stmt_bind_param($stmt, "ssiiii", $nome, $descricao, $dia, $mes, $ambito, $id);
+                    mysqli_stmt_bind_param($stmt, "ssiiiii", $nome, $descricao, $dia, $mes, $ambito, $animacao, $id);
                     // Execute the statement
                     mysqli_stmt_execute($stmt);
                     if (mysqli_stmt_affected_rows($stmt) > 0) {

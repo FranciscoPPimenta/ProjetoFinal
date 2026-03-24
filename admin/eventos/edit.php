@@ -240,38 +240,38 @@ $textura = $_SESSION['evento']['Textura'];
                 if (isset($_SESSION["evento"])) {
                     //echo base64_encode($_SESSION["evento"]['Textura']);
                 ?>
-                    <div class="container-fluid">
-                        <!-- Page Heading -->
-                        <div class="card mb-12">
-                            <div class="row g-0">
-                                <div class="col-md-4" id="canvas" style="height:30vh">
-                                    <!-- <?php echo '<img src="data:image/jpeg;base64,' . base64_encode($_SESSION["evento"]['Textura']) . '" class="img-fluid rounded-start"/>'; ?> -->
+                <div class="container-fluid">
+                    <!-- Page Heading -->
+                    <div class="card mb-12">
+                        <div class="row g-0">
+                            <div class="col-md-4" id="canvas" style="height:30vh">
+                                <!-- <?php echo '<img src="data:image/jpeg;base64,' . base64_encode($_SESSION["evento"]['Textura']) . '" class="img-fluid rounded-start"/>'; ?> -->
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body" id="notEditing">
+                                    <p style="font-size:80px" class="card-title">
+                                        <?php echo $_SESSION["evento"]["nome"]; ?></p>
+                                    <p style="font-size:45px" class="card-text">
+                                        <?php echo $_SESSION["evento"]["descricao"]; ?></p>
+                                    <p style="font-size:30px" class="card-text">Data:
+                                        <?php echo $_SESSION["evento"]["dia"]; ?>/<?php echo $_SESSION["evento"]["mes"]; ?>
+                                    </p>
+                                    <p style="font-size:30px" class="card-text">Âmbito:
+                                        <?php echo $_SESSION["evento"]["Ambito"] ?></p>
+                                    <p style="font-size:30px" class="card-text">Animação:
+                                        <?php echo $_SESSION["evento"]["Animacao"] ?></p>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="card-body" id="notEditing">
-                                        <p style="font-size:80px" class="card-title">
-                                            <?php echo $_SESSION["evento"]["nome"]; ?></p>
-                                        <p style="font-size:45px" class="card-text">
-                                            <?php echo $_SESSION["evento"]["descricao"]; ?></p>
-                                        <p style="font-size:30px" class="card-text">Data:
-                                            <?php echo $_SESSION["evento"]["dia"]; ?>/<?php echo $_SESSION["evento"]["mes"]; ?>
-                                        </p>
-                                        <p style="font-size:30px" class="card-text">Âmbito:
-                                            <?php echo $_SESSION["evento"]["Ambito"] ?></p>
-                                        <p style="font-size:30px" class="card-text">Animação:
-                                            <?php echo $_SESSION["evento"]["Animacao"] ?></p>
-                                    </div>
-                                    <div class="card-body" id="Editing" hidden>
-                                        <form
-                                            action='../../database/eventos/edit.php?id=<?php echo $_SESSION['evento']['id_evento']; ?>'
-                                            method="POST">
-                                            <input type="text" style="margin:5px;font-size:20px" class="form-control"
-                                                name="nome" id="nome" value="<?php echo $_SESSION["evento"]["nome"]; ?>">
-                                            <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
-                                                class="form-control"><?php echo $_SESSION["evento"]["descricao"]; ?></textarea>
-                                            <input type="date" style="margin:5px;font-size:20px" class="form-control"
-                                                name="data" id="data">
-                                            <?php
+                                <div class="card-body" id="Editing" hidden>
+                                    <form
+                                        action='../../database/eventos/edit.php?id=<?php echo $_SESSION['evento']['id_evento']; ?>'
+                                        method="POST">
+                                        <input type="text" style="margin:5px;font-size:20px" class="form-control"
+                                            name="nome" id="nome" value="<?php echo $_SESSION["evento"]["nome"]; ?>">
+                                        <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
+                                            class="form-control"><?php echo $_SESSION["evento"]["descricao"]; ?></textarea>
+                                        <input type="date" style="margin:5px;font-size:20px" class="form-control"
+                                            name="data" id="data">
+                                        <?php
                                             $sql = "SELECT * from ambitos";
                                             $stmt = mysqli_prepare($conn, $sql);
 
@@ -288,9 +288,9 @@ $textura = $_SESSION['evento']['Textura'];
                                                 mysqli_stmt_close($stmt);
                                             }
                                             ?>
-                                            <select style="margin:5px;font-size:20px" class="form-control" name="ambito"
-                                                id="ambito">
-                                                <?php
+                                        <select style="margin:5px;font-size:20px" class="form-control" name="ambito"
+                                            id="ambito">
+                                            <?php
                                                 foreach ($data as $ambito) {
                                                     if ($ambito['id_ambito'] == $_SESSION['evento']['id_ambito']) {
                                                         echo '<option value="' . $ambito['id_ambito'] . '" selected>' . $ambito["nome"] . '</option>';
@@ -299,37 +299,65 @@ $textura = $_SESSION['evento']['Textura'];
                                                     }
                                                 }
                                                 ?>
-                                            </select>
+                                        </select>
+                                        <?php
+                                            $sql = "SELECT * from animacoes";
+                                            $stmt = mysqli_prepare($conn, $sql);
 
-                                            <div class="modal fade" id="updateModal" tabindex="-1"
-                                                aria-labelledby="updateModalLabel" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h1 class="modal-title fs-5" id="updateModalLabel">Atualizar
-                                                                Evento</h1>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body" id="updateModalBody">
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Não</button>
-                                                            <button id="updateEvento" type="submit"
-                                                                class="btn btn-primary">Sim</button>
-                                                        </div>
+                                            if ($stmt) {
+                                                // Execute the statement
+                                                mysqli_stmt_execute($stmt);
+                                                $result = mysqli_stmt_get_result($stmt);
+                                                $animacoes = array();
+                                                while ($row = mysqli_fetch_assoc($result)) {
+                                                    $animacoes[] = $row;
+                                                }
+
+                                                // Close the statement
+                                                mysqli_stmt_close($stmt);
+                                            }
+                                            ?>
+                                        <select style="margin:5px;font-size:20px" class="form-control" name="animacao"
+                                            id="animacao">
+                                            <?php
+                                                foreach ($animacoes as $animacao) {
+                                                    if ($animacao['id_animacao'] == $_SESSION['evento']['id_animacao']) {
+                                                        echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
+                                                    } else {
+                                                        echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
+                                                    }
+                                                }
+                                                ?>
+                                        </select>
+                                        <div class="modal fade" id="updateModal" tabindex="-1"
+                                            aria-labelledby="updateModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="updateModalLabel">Atualizar
+                                                            Evento</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body" id="updateModalBody">
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Não</button>
+                                                        <button id="updateEvento" type="submit"
+                                                            class="btn btn-primary">Sim</button>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </form>
-                                    </div>
-                                    <button class="btn btn-primary" id="editButton" onclick="editEvento()">Editar</button>
-                                    <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
-                                        data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
-                                    <?php
+                                        </div>
+                                    </form>
+                                </div>
+                                <button class="btn btn-primary" id="editButton" onclick="editEvento()">Editar</button>
+                                <button type="button" id="updateButton" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#updateModal" onclick="setUpdateModalText()" hidden>Gravar</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#deleteModal" onclick="setDeleteModalText()">Apagar</button>
+                                <?php
                                     if (isset($_SESSION["updated"])) {
                                         echo '<p style="font-size:30px" class="card-text text-success" id="mensagemAtualizada">' . $_SESSION["updated"] . '</p>';
                                     }
@@ -337,12 +365,12 @@ $textura = $_SESSION['evento']['Textura'];
                                         echo '<p style="font-size:30px" class="card-text text-danger" id="mensagemAtualizada">' . $_SESSION["exists"] . '</p>';
                                     }
                                     ?>
-                                </div>
-
                             </div>
-                        </div>
 
+                        </div>
                     </div>
+
+                </div>
                 <?php
                 }
                 ?>
@@ -427,63 +455,64 @@ $textura = $_SESSION['evento']['Textura'];
     </script>
     <script type="module" src="../js/3D/3D.js"></script>
     <script type="module">
-        import {
-            objeto
-        } from '../js/3D/3D.js';
-        // Call the objeto function after the DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(function() {
-                console.log("<?php echo 'aaa' ?>");
-                objeto(<?php echo json_encode(base64_encode($_SESSION['evento']['Textura'])) ?>, (
-                    <?php echo json_encode(base64_encode($_SESSION['evento']['Objeto'])) ?>));
+    import {
+        objeto
+    } from '../js/3D/3D.js';
+    // Call the objeto function after the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            console.log("<?php echo 'aaa' ?>");
+            objeto(<?php echo json_encode(base64_encode($_SESSION['evento']['Textura'])) ?>, (
+                <?php echo json_encode(base64_encode($_SESSION['evento']['Objeto'])) ?>));
 
-            }, 1000); // Delay of 5 seconds
-        });
+        }, 1000); // Delay of 5 seconds
+    });
     </script>
     <?php
     if (isset($_SESSION["evento"])) {
     ?>
-        <script>
-            function editEvento() {
-                if (document.getElementById("Editing").hasAttribute("hidden")) {
-                    document.getElementById("notEditing").setAttribute("hidden", "");
-                    const date = new Date();
-                    let data = "";
-                    if (<?php echo $_SESSION['evento']['dia']; ?> == 1) {
-                        data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?> - 1,
-                            <?php $_SESSION['evento']['dia']; ?>);
-                    } else {
-                        data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?>,
-                            <?php $_SESSION['evento']['dia']; ?>);
-                    }
-                    //codigo toISOString server para obter a primeira parte da data sendo que no seu formato está como YYYY-MM-DDTHH:mm:sssZ entao 
-                    //fazemos a divisao no T e tiramos a primeira parte [0]
-                    document.getElementById("data").value = data.toISOString().split('T')[0];
-                    document.getElementById("editButton").setAttribute("hidden", "");
-                    document.getElementById("Editing").removeAttribute("hidden");
-                    document.getElementById("updateButton").removeAttribute("hidden");
-                }
+    <script>
+    function editEvento() {
+        if (document.getElementById("Editing").hasAttribute("hidden")) {
+            document.getElementById("notEditing").setAttribute("hidden", "");
+            const date = new Date();
+            let data = "";
+            if (<?php echo $_SESSION['evento']['dia']; ?> == 1) {
+                data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?> - 1,
+                    <?php $_SESSION['evento']['dia']; ?>);
+            } else {
+                data = new Date(date.getFullYear(), <?php echo $_SESSION['evento']['mes']; ?>,
+                    <?php $_SESSION['evento']['dia']; ?>);
             }
+            //codigo toISOString server para obter a primeira parte da data sendo que no seu formato está como YYYY-MM-DDTHH:mm:sssZ entao 
+            //fazemos a divisao no T e tiramos a primeira parte [0]
+            document.getElementById("data").value = data.toISOString().split('T')[0];
+            document.getElementById("editButton").setAttribute("hidden", "");
+            document.getElementById("Editing").removeAttribute("hidden");
+            document.getElementById("updateButton").removeAttribute("hidden");
+        }
+    }
 
-            function setUpdateModalText() {
-                const data = new Date(document.getElementById("data").value);
-                const id = <?php echo $_SESSION['evento']['id_evento']; ?>;
-                console.log(id);
-                var string = "De certeza que quer atualizar o evento?</br>Campos atualizados</br>Nome: " + document
-                    .getElementById("nome").value + "</br>Descrição: " + document.getElementById("descricao").value +
-                    "</br>Dia: " +
-                    +data.getDate() + "</br>Mês: " + data.getMonth() + "<br>Âmbito: " + document.getElementById("ambito")
-                    .options[document.getElementById("ambito").selectedIndex].text;
-                document.getElementById("updateModalBody").innerHTML = string;
-            }
+    function setUpdateModalText() {
+        const data = new Date(document.getElementById("data").value);
+        const id = <?php echo $_SESSION['evento']['id_evento']; ?>;
+        console.log(id);
+        var string = "De certeza que quer atualizar o evento?</br>Campos atualizados</br>Nome: " + document
+            .getElementById("nome").value + "</br>Descrição: " + document.getElementById("descricao").value +
+            "</br>Dia: " +
+            +data.getDate() + "</br>Mês: " + data.getMonth() + "<br>Âmbito: " + document.getElementById("ambito")
+            .options[document.getElementById("ambito").selectedIndex].text + "<br>Animação: " + document.getElementById(
+                "animacao").options[document.getElementById("animacao").selectedIndex].text;
+        document.getElementById("updateModalBody").innerHTML = string;
+    }
 
-            function setDeleteModalText() {
-                document.getElementById("deleteModalBody").innerHTML =
-                    "De certeza que quer apagar o evento: \"<?php echo $_SESSION['evento']['nome']; ?>\"";
-                document.getElementById("apagaEvento").setAttribute("href", "../../database/eventos/delete_evento.php?id=" +
-                    <?php echo $_SESSION['evento']['id_evento']; ?> + "&start_page=edit");
-            }
-        </script>
+    function setDeleteModalText() {
+        document.getElementById("deleteModalBody").innerHTML =
+            "De certeza que quer apagar o evento: \"<?php echo $_SESSION['evento']['nome']; ?>\"";
+        document.getElementById("apagaEvento").setAttribute("href", "../../database/eventos/delete_evento.php?id=" +
+            <?php echo $_SESSION['evento']['id_evento']; ?> + "&start_page=edit");
+    }
+    </script>
     <?php
     }
     ?>
