@@ -90,15 +90,15 @@ if ($stmt) {
 
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Tables -->
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="eventos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Eventos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="unidades/index.php">
+                <a class="nav-link" href="escolas/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Unidades</span></a>
+                    <span>Escolas</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="cursos/index.php">

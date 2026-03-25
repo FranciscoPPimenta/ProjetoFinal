@@ -277,6 +277,7 @@ if ($stmt) {
                                             <th>Descrição</th>
                                             <th>Evento(s)</th>
                                             <th>Animação</th>
+                                            <th>Imagem</th>
                                             <th>Edição</th>
                                         </tr>
                                     </thead>
@@ -286,6 +287,7 @@ if ($stmt) {
                                             <th>Descrição</th>
                                             <th>Evento(s)</th>
                                             <th>Animação</th>
+                                            <th>Imagem</th>
                                             <th>Edição</th>
                                         </tr>
                                     </tfoot>
@@ -328,6 +330,11 @@ if ($stmt) {
                                                 ?>
                                                 <td><?php echo $string ?></td>
                                                 <td><?php echo $escola['Animacao']; ?></td>
+                                                <td><button type="button" class="btn btn-warning" data-bs-toggle="modal"
+                                                        data-bs-target="#previewModal"
+                                                        onclick="setPreviewModalText(<?php echo $escola['id_escola'] ?>)">Ver
+                                                        Imagem</button>
+                                                </td>
                                                 <td>
                                                     <a class="btn btn-primary"
                                                         href="../../database/escolas/editar_escola.php?id=<?php echo $escola["id_escola"] ?>">Editar</a>
@@ -375,6 +382,24 @@ if ($stmt) {
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
+
+    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="previewModalLabel">Image Preview</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body text-center" id="previewModalBody">
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -435,6 +460,12 @@ if ($stmt) {
                 name + "\"";
             document.getElementById("apagaEscola").setAttribute("href", "../../database/escolas/delete_escola.php?id=" +
                 id + "&start_page=index");
+        }
+
+        function setPreviewModalText(id) {
+            document.getElementById("previewModalBody").innerHTML =
+                '<img src="../../database/escolas/get_image.php?id=' + id +
+                '"alt = "Imagem" style = "max-width: 100%; height: auto; border-radius: 6px;" > ';
         }
     </script>
 </body>

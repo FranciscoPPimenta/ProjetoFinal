@@ -248,7 +248,7 @@ if ($stmt) {
                             </div>
                             <div class="col-md-8">
                                 <div class="card-body">
-                                    <form id="form" method="POST">
+                                    <form id="form" method="POST" enctype="multipart/form-data">
                                         <?php
                                         if (isset($_SESSION["create_nome"])) {
                                             echo '<input type="text" style="margin:5px;font-size:20px" class="form-control"value="' . $_SESSION["create_nome"] . '" name="nomeEscola" id="nomeEscola" required>';
@@ -306,6 +306,8 @@ if ($stmt) {
                                             }
                                                 ?>
                                                 </select>
+                                                <input type="file" style="margin:5px;font-size:20px" class="form-control"
+                                                    name="imageEscola" id="imageEscola" required>
                                                 <div class="modal fade" id="createModal" tabindex="-1"
                                                     aria-labelledby="createModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered">
@@ -443,13 +445,18 @@ if ($stmt) {
 
     <script>
         function setCreateModalText() {
+            const fileInput = document.getElementById("imageEscola");
+            const file = fileInput.files && fileInput.files[0];
+
+            const objectUrl = URL.createObjectURL(file);
             var string = "De certeza que quer adicionar a escola " + document.getElementById("nomeEscola").value +
                 ".?</br>" +
                 "Campos para a Escola</br>" +
                 "Nome: " + document.getElementById("nomeEscola").value + "</br>" +
                 "Descrição: " + document.getElementById("descricaoEscola").value + "</br>" +
                 "Animação: " + document.getElementById("animacaoEscola").options[document.getElementById("animacaoEscola")
-                    .selectedIndex].text;
+                    .selectedIndex].text + '</br> Imagem: </br> <div style="margin-top:8px"><img src="' + objectUrl +
+                '" alt="visualizar" style="max-width:100%;height:auto;border: 1px solid #ddd;border-radius:6px"/></div>'
             document.getElementById("createModalBody").innerHTML = string;
         }
 

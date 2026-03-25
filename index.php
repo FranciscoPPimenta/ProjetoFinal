@@ -44,10 +44,25 @@ require_once 'database/index/escolas.php';
                             <strong>TEU</strong> ponto de partida.
                         </p>
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-bottom: 120px;">
                         <h2 id="schools" class="text-center">Escolas</h2>
                     </div>
-                    <div class="row"></div>
+                    <div class="row">
+                        <?php
+                        foreach ($schools as $school) {
+                            echo '
+                        <div class="col-md-4">
+                            <div class="card text-bg-dark">
+                                <img src="assets/estg-entrada.jpg" class="card-img" alt="' . $school["nome"] . '">
+                                <div class="card-img-overlay">
+                                    <h5 class="card-title">' . $school["nome"] . '</h5>
+                                    <p class="card-text">' . $school["descricao"] . '</p>
+                                </div>
+                            </div>
+                        </div>';
+                        }
+                        ?>
+                    </div>
                 </div>
             </div>
         </div>

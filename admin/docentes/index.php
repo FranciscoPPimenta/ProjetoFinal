@@ -108,7 +108,7 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="../professores/index.php">
+                <a class="nav-link" href="../docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Docentes</span></a>
             </li>

@@ -24,22 +24,52 @@ if (isset($_GET['id'])) {
                 $descricao = $_POST["descricao"];
 
                 //Prepare the SQL statement
-                $sql = "UPDATE escolas SET nome = ? , descricao = ?, id_animacao = ? WHERE id_escola = ?";
-                $stmt = mysqli_prepare($conn, $sql);
+                if (hasUploadedFile($_FILES["imageEscola"])) {
 
-                if ($stmt) {
-                    // Bind parameters
-                    mysqli_stmt_bind_param($stmt, "ssii", $nome, $descricao, $animacao, $id);
-                    // Execute the statement
-                    mysqli_stmt_execute($stmt);
-                    if (mysqli_stmt_affected_rows($stmt) > 0) {
-                        $_SESSION["updated"] = "Escola " . $nome . " atualizada com sucesso!";
+                    $sql = "UPDATE escolas SET nome = ? , descricao = ?, id_animacao = ?, imagem = ?, mime_type = ?, imagem_name = ? WHERE id_escola = ?";
+                    $stmt = mysqli_prepare($conn, $sql);
+
+                    if ($stmt) {
+                        // Bind parameters
+                        $imagem = file_get_contents($_FILES['imageEscola']['tmp_name']);
+                        $mimeType = mime_content_type($_FILES['imageEscola']['tmp_name']);
+                        $imageName = $_FILES["imageEscola"]['name'];
+                        mysqli_stmt_bind_param($stmt, "ssibbsi", $nome, $descricao, $animacao, $null, $null, $imageName, $id);
+                        $null = NULL;
+                        mysqli_stmt_send_long_data($stmt, 3, $imagem);
+                        mysqli_stmt_send_long_data($stmt, 4, $mimeType);
+                        // Execute the statement
+                        mysqli_stmt_execute($stmt);
+                        if (mysqli_stmt_affected_rows($stmt) > 0) {
+                            $_SESSION["updated"] = "Escola " . $nome . " atualizada com sucesso!";
+                        }
+                        header('Location: ../../admin/escolas/edit.php?id=' . $_SESSION["escolas"]["id_escola"]);
+                        // Close the statement
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        echo json_encode(array("error" => "Failed to prepare SQL statement."));
                     }
-                    header('Location: ../../admin/escolas/edit.php?id=' . $_SESSION["escolas"]["id_escola"]);
-                    // Close the statement
-                    mysqli_stmt_close($stmt);
                 } else {
-                    echo json_encode(array("error" => "Failed to prepare SQL statement."));
+                    $sql = "UPDATE escolas SET nome = ? , descricao = ?, id_animacao = ? WHERE id_escola = ?";
+                    $stmt = mysqli_prepare($conn, $sql);
+
+                    if ($stmt) {
+                        // Bind parameters
+                        mysqli_stmt_bind_param($stmt, "ssii", $nome, $descricao, $animacao, $id);
+
+                        // Execute the statement
+                        mysqli_stmt_execute($stmt);
+                        if (mysqli_stmt_affected_rows($stmt) > 0) {
+                            $_SESSION["updated"] = "Escola " . $nome . " atualizada com sucesso!";
+                        } else {
+                            $_SESSION["updated"] = "Sem Mudanças!";
+                        }
+                        header('Location: ../../admin/escolas/edit.php?id=' . $_SESSION["escolas"]["id_escola"]);
+                        // Close the statement
+                        mysqli_stmt_close($stmt);
+                    } else {
+                        echo json_encode(array("error" => "Failed to prepare SQL statement."));
+                    }
                 }
             }
         }
@@ -78,3 +108,13 @@ if (isset($_GET['id'])) {
     echo json_encode(array("error" => "No 'id' parameter provided."));
 }
 mysqli_close($conn);
+
+
+
+function hasUploadedFile(array $f): bool
+{
+    return isset($f['error'], $f['tmp_name']) &&
+        $f['error'] === UPLOAD_ERR_OK &&
+        is_uploaded_file($f['tmp_name']) &&
+        ($f['size'] ?? 0) > 0;
+}

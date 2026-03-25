@@ -252,7 +252,7 @@ if ($stmt) {
                         <!-- Page Heading -->
                         <div class="card mb-12">
                             <div class="row g-0">
-                                <div class="col-md-4" id="canvas" style="height:30vh">
+                                <div class="col-md-4" id="canvas" style="height:50vh">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body" id="notEditing">
@@ -262,16 +262,22 @@ if ($stmt) {
                                             <?php echo $_SESSION["escola"]["descricao"]; ?></p>
                                         <p style="font-size:30px" class="card-text">Animação:
                                             <?php echo $_SESSION["escola"]["Animacao"]; ?></p>
+                                        <p style="font-size:30px" class="card-text">Imagem:</br>
+                                            <img src="../../database/escolas/get_image.php?id=<?php echo $_SESSION["escola"]["id_escola"] ?>"
+                                                alt="Imagem" style="max-width: 624px; height: auto; border-radius: 6px;">
 
                                     </div>
-                                    <div class="card-body" id="Editing" hidden>
+                                    <div class=" card-body" id="Editing" hidden>
                                         <form
                                             action='../../database/escolas/edit.php?id=<?php echo $_SESSION['escola']['id_escola']; ?>'
-                                            method="POST">
+                                            method="POST" enctype="multipart/form-data">
                                             <input type="text" style="margin:5px;font-size:20px" class="form-control"
                                                 name="nome" id="nome" value="<?php echo $_SESSION["escola"]["nome"]; ?>">
                                             <textarea style="margin:5px;font-size:20px" name="descricao" id="descricao"
                                                 class="form-control"><?php echo $_SESSION["escola"]["descricao"]; ?></textarea>
+
+                                            <input type="file" style="margin:5px;font-size:20px" class="form-control"
+                                                name="imageEscola" id="imageEscola" />
                                             <?php
                                             $sql = "SELECT * from animacoes";
                                             $stmt = mysqli_prepare($conn, $sql);
@@ -456,13 +462,28 @@ if ($stmt) {
             }
 
             function setUpdateModalText() {
-                var string = "De certeza que quer atualizar a escola?</br>" +
-                    "Campos atualizados</br>" +
-                    "Nome: " + document.getElementById("nome").value + "</br>" +
-                    "Descrição: " + document.getElementById("descricao").value + "</br>" +
-                    "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
-                        .selectedIndex].text;
-                document.getElementById("updateModalBody").innerHTML = string;
+                const fileInput = document.getElementById("imageEscola");
+                const file = fileInput.files && fileInput.files[0];
+
+                if (file) {
+                    const objectUrl = URL.createObjectURL(file);
+                    var string = "De certeza que quer atualizar a escola?</br>" +
+                        "Campos atualizados</br>" +
+                        "Nome: " + document.getElementById("nome").value + "</br>" +
+                        "Descrição: " + document.getElementById("descricao").value + "</br>" +
+                        "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                            .selectedIndex].text + '</br> Imagem: </br> <div style="margin-top:8px"><img src="' + objectUrl +
+                        '" alt="visualizar" style="max-width:100%;height:auto;border: 1px solid #ddd;border-radius:6px"/></div>';
+                    document.getElementById("updateModalBody").innerHTML = string;
+                } else {
+                    var string = "De certeza que quer atualizar a escola?</br>" +
+                        "Campos atualizados</br>" +
+                        "Nome: " + document.getElementById("nome").value + "</br>" +
+                        "Descrição: " + document.getElementById("descricao").value + "</br>" +
+                        "Animação: " + document.getElementById("animacao").options[document.getElementById("animacao")
+                            .selectedIndex].text + '</br> Imagem: Não mudar!</div>';
+                    document.getElementById("updateModalBody").innerHTML = string;
+                }
             }
 
             function setDeleteModalText() {
