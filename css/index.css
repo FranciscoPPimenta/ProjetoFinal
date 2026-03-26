@@ -59,9 +59,60 @@ html, body {
 .col-md-2 .card img {
   transition: opacity 2000ms;
   opacity: 35%;
+  min-height: 140px;
 }
 
 .col-md-8 .card img {
-  transition: opacity 2000ms;
   opacity: 100%;
+  transition: opacity 2000ms;
+  min-height: 250px;
+}
+
+.col-md-4 .card img{
+    min-height: 250px;
+}
+
+
+.col-md-2 > .card > .card-img-overlay > .card-title,
+.col-md-2 > .card > .card-img-overlay > .card-text{
+    font-size: 8px;
+    transition: font-size 2000ms;
+}
+
+.col-md-8 > .card > .card-img-overlay > .card-title,
+.col-md-8 > .card > .card-img-overlay > .card-text{
+    font-size: 20px;
+    transition: font-size 2000ms;
+}
+
+.btn-lg{
+    flex-grow: 1;
+    transition: all 2000ms ease;
+}
+
+.btn-sm{
+    flex-shrink: 1;
+    transition: all 2000ms ease;
+}
+
+
+#schoolRowSize{
+    margin: 20px;
+}
+
+
+.fade-element-hidden {
+    opacity: 0;
+    transition: opacity 2000ms ease;
+    flex-shrink: 1;
+    transition: all 2000ms ease;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.fade-element {
+    opacity: 1;
+    transition: opacity 2000ms ease;
+    flex-grow: 1;
+    transition: all 2000ms ease;
 }

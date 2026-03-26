@@ -1,5 +1,6 @@
 <?php
 require_once 'database/index/escolas.php';
+require_once 'database/index/cursos.php';
 ?>
 <!DOCTYPE html>
 
@@ -47,28 +48,36 @@ require_once 'database/index/escolas.php';
                     <div class="row" style="margin-bottom: 120px;">
                         <h2 id="schools" class="text-center">Escolas</h2>
                     </div>
-                    <div class="row g-3 d-flex flex-wrap" id="schoolsRow">
-                        <?php foreach ($schools as $school): ?>
-                            <div class="col-md-4" id="escola_<?= $school['id_escola'] ?>">
-                                <div class="card h-100 text-bg-dark">
-                                    <img src="database/escolas/get_image.php?id=<?= $school['id_escola'] ?>"
-                                        class="card-img" alt="<?= $school['nome'] ?>"
-                                        style="width:100%; height:100%; border-radius:5px; object-fit:cover;">
+                    <?php foreach (array_chunk($schools, 3) as $schoolsRow): ?>
+                        <div id="schoolRowSize" class="row d-flex flex-wrap align-items-start">
+                            <?php foreach ($schoolsRow as $school): ?>
+                                <div class="col-md-4" id="escola_<?= $school['id_escola'] ?>">
+                                    <div class="card h-100 text-bg-dark">
+                                        <img src="database/escolas/get_image.php?id=<?= $school['id_escola'] ?>"
+                                            class="card-img"
+                                            style="width:100%; height:100%; border-radius:5px; object-fit:cover;">
 
-                                    <div class="card-img-overlay">
-                                        <h5 class="card-title"><?= $school['nome'] ?></h5>
-                                        <p class="card-text"><?= $school['descricao'] ?></p>
+                                        <div class=" card-img-overlay">
+                                            <h5 class="card-title"><?= $school['nome'] ?></h5>
+                                            <p class="card-text"><?= $school['descricao'] ?></p>
 
-                                        <button class="btn btn-primary" onclick="changeSize(<?= $school['id_escola'] ?>)">
-                                            Ver detalhes
-                                        </button>
+                                            <button id="btn_<?= $school['id_escola'] ?>" class="btn btn-primary"
+                                                onclick="changeSize(<?= $school['id_escola'] ?>)">
+                                                Ver detalhes
+                                            </button>
+                                            <a href="database/index/cursos.php?id=<?= $school['id_escola'] ?>"
+                                                id="details_<?= $school['id_escola'] ?>"
+                                                class="btn btn-warning fade-element-hidden">Ver
+                                                Detalhes</a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
-                    </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endforeach; ?>
                 </div>
             </div>
+            <div id="content"></div>
         </div>
     </div>
 
@@ -79,11 +88,47 @@ require_once 'database/index/escolas.php';
     <script>
         function changeSize(id) {
             const targetId = `escola_${id}`;
+            const buttonTargetId = `btn_${id}`;
+            const detailsTargetId = `details_${id}`;
             document.querySelectorAll('[id^="escola_"]').forEach(div => {
                 div.classList.remove('col-md-2', 'col-md-4', 'col-md-8');
                 div.classList.add(div.id === targetId ? 'col-md-8' : 'col-md-2');
             });
+            document.querySelectorAll('[id^="btn_"]').forEach(btn => {
+                btn.classList.remove('btn-sm', 'btn-lg');
+                btn.classList.add(btn.id !== buttonTargetId ? 'btn-sm' : 'btn-lg');
+            });
+            document.querySelectorAll('[id^="details_"]').forEach(btn => {
+                btn.classList.remove('fade-element-hidden', 'fade-element', 'btn-sm', 'btn-lg');
+                /**... -> operador spread -> expande o array em argumentos separados
+                neste caso com o ... é como se tivesse
+                "add('fade-element-hidden','btn-sm')"
+                ou
+                add('fade-element','btn-lg')
+                **/
+                btn.classList.add(
+                    ...(btn.id !== detailsTargetId ? ['fade-element-hidden', 'btn-sm'] : ['fade-element',
+                        'btn-lg'
+                    ])
+                );
+
+            });
+
         }
+
+        document.querySelectorAll('[id^="details_"]').forEach(btn => {
+            btn.addEventListener('click', e => {
+                e.preventDefault(); // stop normal page reload
+
+                const url = btn.getAttribute('href'); // e.g. details.php?id=X
+                console.log(url);
+                fetch(url)
+                    .then(res => res.text())
+                    .then(html => {
+                        document.getElementById('content').innerHTML = html;
+                    });
+            });
+        });
     </script>
 </body>
 

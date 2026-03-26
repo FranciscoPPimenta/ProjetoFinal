@@ -234,7 +234,7 @@ if ($stmt) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <?php
-                    $sql = "SELECT cursos.*,animacoes.nome as 'Animacao',escolas.nome as 'Unidade' FROM cursos INNER JOIN animacoes ON cursos.id_animacao = animacoes.id_animacao INNER JOIN escolas ON cursos.id_escola = escolas.id_escola";
+                    $sql = "SELECT cursos.*,animacoes.nome as 'Animacao',escolas.nome as 'Escolas' FROM cursos INNER JOIN animacoes ON cursos.id_animacao = animacoes.id_animacao INNER JOIN escolas ON cursos.id_escola = escolas.id_escola";
                     $stmt = mysqli_prepare($conn, $sql);
 
                     if ($stmt) {
@@ -279,7 +279,7 @@ if ($stmt) {
                                             <th>Descrição</th>
                                             <th>Evento</th>
                                             <th>Animação</th>
-                                            <th>Unidade Orgânica</th>
+                                            <th>Escola</th>
                                             <th>Coordenador de Curso</th>
                                             <th>Edição</th>
                                         </tr>
@@ -291,7 +291,7 @@ if ($stmt) {
                                             <th>Descrição</th>
                                             <th>Evento</th>
                                             <th>Animação</th>
-                                            <th>Unidade Orgânica</th>
+                                            <th>Escola</th>
                                             <th>Coordenador de Curso</th>
                                             <th>Edição</th>
                                         </tr>
@@ -335,22 +335,22 @@ if ($stmt) {
                                                     // Execute the statement
                                                     mysqli_stmt_execute($stmt);
                                                     $result = mysqli_stmt_get_result($stmt);
-                                                    $unidades = [];
+                                                    $escolas = [];
                                                     // Get the result
                                                     if (mysqli_num_rows($result) > 0) {
                                                         while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                                            $unidades[] = $row;
+                                                            $escolas[] = $row;
                                                         }
                                                     }
-                                                    $nome_unidade = "";
-                                                    foreach ($unidades as $unidade) {
-                                                        $nome_unidade = $unidade["nome"];
+                                                    $nome_escola = "";
+                                                    foreach ($escolas as $escola) {
+                                                        $nome_escola = $escola["nome"];
                                                     }
                                                     // Close the statement
                                                     mysqli_stmt_close($stmt);
                                                 }
                                                 ?>
-                                                <td><?php echo $nome_unidade ?></td>
+                                                <td><?php echo $nome_escola ?></td>
                                                 <?php
                                                 $sql = "SELECT docentes.nome FROM docentes INNER JOIN cursos ON docentes.id_docente = cursos.id_coordenador WHERE cursos.id_coordenador = ?";
                                                 $stmt = mysqli_prepare($conn, $sql);
@@ -437,7 +437,7 @@ if ($stmt) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                    <a id="apagaUnidade" type="button" class="btn btn-primary">Sim</a>
+                    <a id="apagaCurso" type="button" class="btn btn-primary">Sim</a>
                 </div>
             </div>
         </div>
@@ -481,7 +481,7 @@ if ($stmt) {
     <script>
         function setDeleteModalText(name, id) {
             document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o curso: \"" + name + "\"";
-            document.getElementById("apagaUnidade").setAttribute("href", "../../database/cursos/delete_curso.php?id=" + id +
+            document.getElementById("apagaCurso").setAttribute("href", "../../database/cursos/delete_curso.php?id=" + id +
                 "&start_page=index");
         }
     </script>
