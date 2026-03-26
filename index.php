@@ -47,27 +47,44 @@ require_once 'database/index/escolas.php';
                     <div class="row" style="margin-bottom: 120px;">
                         <h2 id="schools" class="text-center">Escolas</h2>
                     </div>
-                    <div class="row">
-                        <?php
-                        foreach ($schools as $school) {
-                            echo '
-                        <div class="col-md-4">
-                            <div class="card text-bg-dark">
-                                <img src="assets/estg-entrada.jpg" class="card-img" alt="' . $school["nome"] . '">
-                                <div class="card-img-overlay">
-                                    <h5 class="card-title">' . $school["nome"] . '</h5>
-                                    <p class="card-text">' . $school["descricao"] . '</p>
+                    <div class="row g-3 d-flex flex-wrap" id="schoolsRow">
+                        <?php foreach ($schools as $school): ?>
+                            <div class="col-md-4" id="escola_<?= $school['id_escola'] ?>">
+                                <div class="card h-100 text-bg-dark">
+                                    <img src="database/escolas/get_image.php?id=<?= $school['id_escola'] ?>"
+                                        class="card-img" alt="<?= $school['nome'] ?>"
+                                        style="width:100%; height:100%; border-radius:5px; object-fit:cover;">
+
+                                    <div class="card-img-overlay">
+                                        <h5 class="card-title"><?= $school['nome'] ?></h5>
+                                        <p class="card-text"><?= $school['descricao'] ?></p>
+
+                                        <button class="btn btn-primary" onclick="changeSize(<?= $school['id_escola'] ?>)">
+                                            Ver detalhes
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>';
-                        }
-                        ?>
+                        <?php endforeach; ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+
     <script type="module" src="js/index.js"></script>
+    </script>
+    <script>
+        function changeSize(id) {
+            const targetId = `escola_${id}`;
+            document.querySelectorAll('[id^="escola_"]').forEach(div => {
+                div.classList.remove('col-md-2', 'col-md-4', 'col-md-8');
+                div.classList.add(div.id === targetId ? 'col-md-8' : 'col-md-2');
+            });
+        }
+    </script>
 </body>
 
 </html>

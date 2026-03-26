@@ -45,3 +45,23 @@ html, body {
 #schools{
     margin-top: 70px;
 }
+
+.col-md-8 {
+  flex-grow: 1;
+  transition: all 2000ms ease;
+}
+
+.col-md-2 {
+  flex-shrink: 1;
+  transition: all 2000ms ease;
+}
+
+.col-md-2 .card img {
+  transition: opacity 2000ms;
+  opacity: 35%;
+}
+
+.col-md-8 .card img {
+  transition: opacity 2000ms;
+  opacity: 100%;
+}

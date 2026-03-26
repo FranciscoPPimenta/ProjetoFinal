@@ -488,7 +488,6 @@ if ($stmt) {
 
 
     </script>
-    <script type="module" src="../js/3D/3D.js"></script>
     <script type="module">
         import {
             objeto
