@@ -47,25 +47,33 @@ html, body {
 }
 
 .col-md-8 {
-  flex-grow: 1;
-  transition: all 2000ms ease;
+    flex-grow: 1;
+    flex-shrink: 1;
+    transition: all 2000ms ease;
 }
 
 .col-md-2 {
-  flex-shrink: 1;
-  transition: all 2000ms ease;
+    flex-shrink: 1;
+    flex-grow: 1;
+    transition: all 2000ms ease;
+}
+
+.col-md-11{
+    flex-grow: 1;
+    transition: all 2000ms ease;
 }
 
 .col-md-2 .card img {
-  transition: opacity 2000ms;
-  opacity: 35%;
-  min-height: 140px;
+    transition: opacity 2000ms;
+    opacity: 35%;
+    visibility: show;
+    min-height: 250px;
 }
 
 .col-md-8 .card img {
   opacity: 100%;
   transition: opacity 2000ms;
-  min-height: 250px;
+  min-height: 290px;
 }
 
 .col-md-4 .card img{
@@ -85,6 +93,12 @@ html, body {
     transition: font-size 2000ms;
 }
 
+.col-md-11 > .card > .card-img-overlay > .card-title,
+.col-md-11 > .card > .card-img-overlay > .card-text{
+    font-size: 40px;
+    transition: font-size 2000ms;
+}
+
 .btn-lg{
     flex-grow: 1;
     transition: all 2000ms ease;
@@ -100,19 +114,39 @@ html, body {
     margin: 20px;
 }
 
+.col-md-1{
+    opacity: 0;
+    flex-shrink: 1;
+    transition: opacity 2000ms ease,all 2000ms ease;
+    pointer-events: none;
+}
+
+
+.span{
+    display: inline-block;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 2000ms ease, transform 2000ms ease;
+}
+
+.span.out{
+  opacity:0;
+  transform: translateY(-6px);
+  transition: all 2000ms ease;
+}
+
+
 
 .fade-element-hidden {
     opacity: 0;
-    transition: opacity 2000ms ease;
     flex-shrink: 1;
-    transition: all 2000ms ease;
+    transition: opacity 2000ms ease,all 2000ms ease;
     visibility: hidden;
     pointer-events: none;
 }
 
 .fade-element {
     opacity: 1;
-    transition: opacity 2000ms ease;
     flex-grow: 1;
-    transition: all 2000ms ease;
+    transition: opacity 2000ms ease,all 2000ms ease;
 }
