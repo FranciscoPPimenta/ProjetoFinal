@@ -18,3 +18,22 @@
   + GSAP.js
 
   
+### **JavaScript**
+
+  Usado para interações dentro do Website, exemplo:
+  + Clicar num botão adiciona/remove uma classe de um certo elemento
+  + Linguagem base a modelação 3D existente
+
+### **PHPP**
+  Comunicação com a base de dados:
+  + Busca de Informação
+  + Criação de Informação
+  + Edição de Informação
+  + Destruição de Informação
+
+### **HTML**
+  "Linguagem" usada para a visualização do Website da parte do Utilziador, não há mais que se possa dizer
+
+### **CSS E SCSS**
+  Styling do HTML do website
+  
