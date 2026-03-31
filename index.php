@@ -61,8 +61,9 @@ require_once 'database/index/cursos.php';
                                             <h5 class="card-title"><?= $school['nome'] ?></h5>
                                             <p class="card-text"><?= $school['descricao'] ?></p>
 
-                                            <button id="btn_<?= $school['id_escola'] ?>" class="btn btn-primary"
-                                                onclick="changeSize(<?= $school['id_escola'] ?>)">
+                                            <button data-name="<?= $school["nome"] ?>" id="btn_<?= $school['id_escola'] ?>"
+                                                class="btn btn-primary"
+                                                onclick="changeSize(<?= $school['id_escola'] ?>);zoomTo(this.id,this.dataset.name)">
                                                 <span class="span" id="span_<?= $school['id_escola'] ?>">Ver
                                                     Detalhes</span></button>
                                             <a href="database/index/cursos.php?id=<?= $school['id_escola'] ?>"
@@ -124,10 +125,9 @@ require_once 'database/index/cursos.php';
             if (document.getElementById(spanTarget).innerHTML == "Voltar Atrás") {
                 let on = true;
 
-                // animate out
 
                 const span = document.getElementById(spanTarget);
-                const D = 2000; // ms - match your CSS transition duration
+                const D = 2000;
 
                 span.classList.add("out");
 
@@ -170,10 +170,8 @@ require_once 'database/index/cursos.php';
             });
             let on = true;
 
-            // animate out
-
             const span = document.getElementById(spanTarget);
-            const D = 2000; // ms - match your CSS transition duration
+            const D = 2000;
 
             span.classList.add("out");
 
@@ -188,9 +186,9 @@ require_once 'database/index/cursos.php';
 
         document.querySelectorAll('[id^="details_"]').forEach(btn => {
             btn.addEventListener('click', e => {
-                e.preventDefault(); // stop normal page reload
+                e.preventDefault();
 
-                const url = btn.getAttribute('href'); // e.g. details.php?id=X
+                const url = btn.getAttribute('href');
                 console.log(url);
                 fetch(url)
                     .then(res => res.text())
