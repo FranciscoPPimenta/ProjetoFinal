@@ -18,27 +18,26 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
     }
 }
 
-// IMPORTANT: output only the partial (no <html>, no headers)
 ?>
-<div class="cursos-list">
+<div>
     <?php if (!empty($cursos)): ?>
-    <div style="margin:20px" class="row g-3">
-        <?php foreach ($cursos as $curso): ?>
-        <div class="col-md-6">
-            <div class="card h-100">
-                <div class="card-body">
-                    <h5 class="card-title">
-                        <?= htmlspecialchars($curso['nome'] ?? 'Curso', ENT_QUOTES, 'UTF-8') ?>
-                    </h5>
-                    <?php if (!empty($curso['descricao'])): ?>
-                    <p class="card-text">
-                        <?= nl2br(htmlspecialchars($curso['descricao'], ENT_QUOTES, 'UTF-8')) ?>
-                    </p>
-                    <?php endif; ?>
+        <div style="margin:20px" class="row g-3">
+            <?php foreach ($cursos as $curso): ?>
+                <div id="curso" class="col-md-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <?= htmlspecialchars($curso['nome'] ?? 'Curso', ENT_QUOTES, 'UTF-8') ?>
+                            </h5>
+                            <?php if (!empty($curso['descricao'])): ?>
+                                <p class="card-text">
+                                    <?= nl2br(htmlspecialchars($curso['descricao'], ENT_QUOTES, 'UTF-8')) ?>
+                                </p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            <?php endforeach; ?>
         </div>
-        <?php endforeach; ?>
-    </div>
     <?php endif; ?>
 </div>

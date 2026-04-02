@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../config.php';
 
 $school = [];
-$sql = "SELECT * FROM escolas";
+$sql = "SELECT escolas.* , animacoes.textura as 'Textura', animacoes.objeto as 'Objeto' FROM escolas INNER JOIN animacoes ON escolas.id_animacao = animacoes.id_animacao";
 $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {

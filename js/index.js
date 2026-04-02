@@ -1,23 +1,39 @@
 import * as THREE from 'three';
 import * as Text from './text.js';
 import * as NewText from './newText.js';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as Model from './3D/3D.js';
 // import * as Moving from './movingobjects.js';
 export let camera,scene, renderer, canvas,cubeSize=2,clock,controls,sphere,loader3D = new GLTFLoader(),loaderText = new FontLoader(),negative_infinity = -100000,model,models=[],movingmodels=[],buttonZoom;
-let getEventos = false,getUO=false;
-let variableButton,container,firstPart,secondPart; 
+let transformControls;
+let firstPart,secondPart; 
+let variableButton;
 const startPosition = new THREE.Vector3(0,0,45);
+let ThreeDModel = null;
 let start = true,change = false;
 const textGroup = new THREE.Group();
+let buttons = document.querySelectorAll('button[id*="btn_"]');
 
+let isRotatingModel = false;
+let lastMouseX = 0;
+let lastMouseY = 0;
+const rotationSpeed = 0.005;
+let small = false;
+let wheelTimeout = null; 
+let zPos;
 
 
 function init( ){
+    
+    
+    buttons.forEach(button => {
+    console.log(button.id);
+    console.log(buttons.length);
+    });
+
     canvas = document.getElementById('c');
     const leftSide = document.getElementById("left");
-    console.log(startPosition);
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xD9D9D9);
 
@@ -26,7 +42,23 @@ function init( ){
 
     camera = new THREE.PerspectiveCamera(45,2,0.1,45);
     camera.position.copy(startPosition);
-    console.log(camera.position)
+
+    const light = new THREE.DirectionalLight(0xffffff,2);
+    light.position.set(20,20,50);
+    scene.add(light);
+
+    renderer?.domElement?.addEventListener('mousedown', (e) => {
+        console.log(e);
+        if (!ThreeDModel) return;
+
+        isRotatingModel = true;
+        lastMouseX = e.clientX;
+        lastMouseY = e.clientY;
+
+        // Disable transform controls while rotating
+        if (transformControls) transformControls.enabled = false;
+    });
+
 
     resizeToLeft();
 
@@ -77,6 +109,7 @@ function init( ){
 
     scene.add(textGroup);
 
+    
     animate();
     
 }
@@ -99,33 +132,57 @@ function clearTextGroup(group) {
 }
 
 
-globalThis.zoomTo = function(buttonID,buttonName) {
+globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
+    console.log(small);
     let space;
     
-    console.log(firstPart);
-    if(firstPart !== ""){
-        console.log(firstPart);
-    }
-    const buttons = document.querySelectorAll('button[data-id^="initial-"]')
-    buttons.forEach(button=>{
-        button.setAttribute("disabled","");
-        fade(button);     
-    });
+    buttons.forEach(b => b.disabled = true);
+
     if (buttonName.includes(' ')) {
         space = true;
         [firstPart, secondPart] = buttonName.split(' ');
     }
+
     variableButton = buttonID;
 
 
     if(textGroup.children.length > 0){
-        console.log(textGroup.children[0].name);
         if(textGroup.children[0].name === buttonName && change === false){
-            console.log("mesmo nome");
             return;
         }
     }
 
+    
+    if (ThreeDModel) {
+        console.log('retard'+small);
+        gsap.to(ThreeDModel.position, {
+            z: ThreeDModel.position.z-10,
+            duration: 0.8,
+            ease: "power3.out"
+        });
+        gsap.to(ThreeDModel.scale, {
+            x: 0.001,
+            y: 0.001,
+            z: 0.001,
+            duration: 0.8,
+            ease: "power3.out",
+            onComplete:function(){
+                small = true;
+            }
+        });
+
+        if(small === true){
+            console.log(small+' niggachan');
+            scene.remove(ThreeDModel);
+            ThreeDModel = null;
+            console.log(small+' niggakun');
+        }
+    }
+
+    if(!ThreeDModel){
+        console.log("preto");
+        small = false;
+    }
 
     clearTextGroup(textGroup);
 
@@ -137,6 +194,10 @@ globalThis.zoomTo = function(buttonID,buttonName) {
                 z: -35,
                 duration: 2,
                 onStart:function(){
+                    
+                    console.log('disabling buttons:', buttons.length);
+                    buttons.forEach(b => b.disabled = true);
+
                     loaderText.load('fonts/Kanit_Regular.json', function(font) {
                         const matLite = new THREE.MeshBasicMaterial({
                             color: 0x006699,
@@ -156,8 +217,42 @@ globalThis.zoomTo = function(buttonID,buttonName) {
                         });
                 },
                 onComplete: function(){
+                    buttons.forEach(b => b.disabled = false);
                     start = false;
                     change = false;
+                    Model.objeto(texture, object).then((loadedModel) => {
+                        
+                        ThreeDModel = loadedModel;
+
+                            const finalPos = { x: 0.2, y: -0.2, z: -43 };
+                            const finalScale = 0.02;
+                            const finalRotY = -1.5;
+
+                            ThreeDModel.position.set(finalPos.x, finalPos.y, finalPos.z - 10);
+                            ThreeDModel.scale.set(0.001, 0.001, 0.001);
+                            ThreeDModel.rotation.set(0, finalRotY, 0);
+
+                            zPos = ThreeDModel.position.z;
+                            console.log(zPos);
+
+                            scene.add(ThreeDModel);
+
+                            gsap.to(ThreeDModel.position, {
+                                z: finalPos.z,
+                                duration: 0.8,
+                                ease: "power3.out"
+                            });
+
+                            gsap.to(ThreeDModel.scale, {
+                                x: finalScale,
+                                y: finalScale,
+                                z: finalScale,
+                                duration: 0.8,
+                                ease: "power3.out"
+                            });
+                                
+                    }).catch(console.error);
+                    
                 }
             });
     }
@@ -167,14 +262,89 @@ globalThis.zoomTo = function(buttonID,buttonName) {
             y: startPosition.y,
             z: startPosition.z,
             duration: 1,
+            onStart:function(){
+                                
+                console.log('disabling buttons:', buttons.length);
+                buttons.forEach(b => b.disabled = true);
+
+            },
             onComplete:function(){
+                buttons.forEach(b => b.disabled = false);
                 start = true;
                 change = true;
-                zoomTo(buttonID,buttonName);
+                zoomTo(buttonID,buttonName,texture,object);
             }
         });
     }  
 };
+
+
+globalThis.addEventListener('mouseup', () => {
+    isRotatingModel = false;
+    if (!ThreeDModel) return;
+
+    gsap.to(ThreeDModel.rotation, {
+        x: 0, 
+        y: -1.5,
+        z: 0,
+        duration: 0.4,
+        ease: "power2.out"
+    });
+});
+
+
+globalThis.addEventListener('wheel', (e) => {
+    
+    if (e.deltaY > 0) {
+        console.log('scroll down');
+        if (!ThreeDModel) return;
+        
+        ThreeDModel.position.z -= 1;
+    } else {
+        console.log('scroll up');
+        if (!ThreeDModel) return;
+        
+        ThreeDModel.position.z += 1;
+    }
+
+    
+    wheelTimeout = setTimeout(() => {
+        // After 0.5s no wheel events, animate back to start
+        gsap.to(ThreeDModel.position, {
+            x: ThreeDModel.position.x,
+            y: ThreeDModel.position.y,
+            z: zPos+10,
+            duration: 0.6,
+            ease: "power2.out",
+            onUpdate: render
+        });
+    }, 500);
+
+    console.log(zPos);
+    
+});
+
+
+globalThis.addEventListener('mousemove', (e) => {
+    if (!isRotatingModel || !ThreeDModel) return;
+
+    const dx = e.clientX - lastMouseX;
+    const dy = e.clientY - lastMouseY;
+
+    ThreeDModel.rotation.y += dx * rotationSpeed;
+
+    ThreeDModel.rotation.x += dy * rotationSpeed;
+
+    ThreeDModel.rotation.x = Math.max(
+        -Math.PI / 2,
+        Math.min(Math.PI / 2, ThreeDModel.rotation.x)
+    );
+
+    lastMouseX = e.clientX;
+    lastMouseY = e.clientY;
+
+    render();
+});
 
 
 

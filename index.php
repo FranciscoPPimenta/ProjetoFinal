@@ -32,7 +32,16 @@ require_once 'database/index/cursos.php';
     <div class="container-fluid" id="main">
         <div class="row">
             <div class="col-6 min-vh-100" id="left">
-                <canvas id="c"></canvas>
+
+                <div id="scene-container">
+                    <canvas id="c"></canvas>
+
+                    <!-- HTML TEXT OVER THE CANVAS -->
+                    <div id="overlay-text">
+                        (para movimentar o objeto use o rato)
+                    </div>
+                </div>
+
             </div>
             <!-- justify-content-center centrado horizontalmente align-items-start para nao ocupar o espaco todo da col-->
             <div class="col-6 min-vh-100 d-flex justify-content-center align-items-start" id="right">
@@ -63,7 +72,9 @@ require_once 'database/index/cursos.php';
 
                                             <button data-name="<?= $school["nome"] ?>" id="btn_<?= $school['id_escola'] ?>"
                                                 class="btn btn-primary"
-                                                onclick="changeSize(<?= $school['id_escola'] ?>);zoomTo(this.id,this.dataset.name)">
+                                                data-textura="<?= htmlspecialchars(base64_encode($school['Textura']), ENT_QUOTES, 'UTF-8') ?>"
+                                                data-objeto="<?= htmlspecialchars(base64_encode($school['Objeto']), ENT_QUOTES, 'UTF-8') ?>"
+                                                onclick="changeSize(<?= $school['id_escola'] ?>);zoomTo(this.id,this.dataset.name,this.dataset.textura,this.dataset.objeto)">
                                                 <span class="span" id="span_<?= $school['id_escola'] ?>">Ver
                                                     Detalhes</span></button>
                                             <a href="database/index/cursos.php?id=<?= $school['id_escola'] ?>"
@@ -77,7 +88,7 @@ require_once 'database/index/cursos.php';
                             <?php endforeach; ?>
                         </div>
                     <?php endforeach; ?>
-                    <div class="row" id="content">
+                    <div class="row cursos-list" id="cursos-list">
                     </div>
                 </div>
             </div>
@@ -118,8 +129,8 @@ require_once 'database/index/cursos.php';
 
             });
 
-            if (document.getElementById('content').textContent.trim() !== "") {
-                document.getElementById('content').textContent = "";
+            if (document.getElementById('cursos-list').textContent.trim() !== "") {
+                document.getElementById('cursos-list').textContent = "";
             }
 
             if (document.getElementById(spanTarget).innerHTML == "Voltar Atrás") {
@@ -127,7 +138,7 @@ require_once 'database/index/cursos.php';
 
 
                 const span = document.getElementById(spanTarget);
-                const D = 2000;
+                const D = 1000;
 
                 span.classList.add("out");
 
@@ -171,7 +182,7 @@ require_once 'database/index/cursos.php';
             let on = true;
 
             const span = document.getElementById(spanTarget);
-            const D = 2000;
+            const D = 1000;
 
             span.classList.add("out");
 
@@ -189,12 +200,22 @@ require_once 'database/index/cursos.php';
                 e.preventDefault();
 
                 const url = btn.getAttribute('href');
-                console.log(url);
                 fetch(url)
                     .then(res => res.text())
                     .then(html => {
-                        document.getElementById('content').innerHTML = html;
+                        document.getElementById('cursos-list').innerHTML = html;
                     });
+
+
+                const cursosList = document.getElementById('cursos-list');
+                if (!cursosList) return;
+
+                cursosList.classList.remove('is-visible');
+
+                requestAnimationFrame(() => {
+                    cursosList.classList.add('is-visible');
+                });
+
             });
         });
     </script>

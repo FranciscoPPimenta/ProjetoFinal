@@ -6,7 +6,6 @@ export function createText(Text,posX,posY,posZ,rotY,size,font,matDark){
         geometry.computeBoundingBox();
         const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
         geometry.translate( xMid, posY, posZ );
-        console.log(geometry);
         // make shape ( N.B. edge view not visible )
         // const text = new THREE.Mesh( geometry, matLite );
         // text.position.z = - 150;

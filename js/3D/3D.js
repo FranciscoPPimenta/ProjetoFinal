@@ -22,7 +22,7 @@ function initThreeIfNeeded(containerId) {
     container = target;
 
     if (renderer.domElement.parentElement !== container) {
-      container.innerHTML = '';               // clear previous children (optional)
+      container.innerHTML = '';
       container.appendChild(renderer.domElement);
     }
 
@@ -79,7 +79,7 @@ function onResize() {
   camera.updateProjectionMatrix();
 }
 
-export async function objeto(texturaBase64, objetoBase64, containerId = 'canvas') {
+export async function objeto(texturaBase64, objetoBase64, containerId = 'c') {
   initThreeIfNeeded(containerId);
 
   if (model) {
@@ -118,8 +118,6 @@ export async function objeto(texturaBase64, objetoBase64, containerId = 'canvas'
     const box = new THREE.Box3().setFromObject(model);
     const size = box.getSize(new THREE.Vector3());
     if (size.x > 10) model.scale.set(0.05, 0.05, 0.05);
-
-    scene.add(model);
 
     onResize();
 
