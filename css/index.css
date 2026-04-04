@@ -187,8 +187,7 @@ html, body {
     opacity: 0;
     transform: translateY(10px);
     pointer-events: none;
-
-    transition: opacity 3000ms ease, transform 3000ms ease;
+    transition: opacity 2000ms ease, transform 2000ms ease;
 }
 
 .cursos-list.is-visible {

@@ -129,9 +129,7 @@ require_once 'database/index/cursos.php';
 
             });
 
-            if (document.getElementById('cursos-list').textContent.trim() !== "") {
-                document.getElementById('cursos-list').textContent = "";
-            }
+
 
             if (document.getElementById(spanTarget).innerHTML == "Voltar Atrás") {
                 let on = true;
@@ -148,6 +146,12 @@ require_once 'database/index/cursos.php';
 
                     requestAnimationFrame(() => span.classList.remove("out"));
                 }, D);
+
+                const cursosList = document.getElementById('cursos-list');
+                if (!cursosList) return;
+
+                cursosList.classList.remove('is-visible');
+
             }
         }
 

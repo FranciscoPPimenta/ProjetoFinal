@@ -275,7 +275,6 @@ if ($stmt) {
                                         <tr>
                                             <th>Nome</th>
                                             <th>Descrição</th>
-                                            <th>Evento(s)</th>
                                             <th>Animação</th>
                                             <th>Imagem</th>
                                             <th>Edição</th>
@@ -285,7 +284,6 @@ if ($stmt) {
                                         <tr>
                                             <th>Nome</th>
                                             <th>Descrição</th>
-                                            <th>Evento(s)</th>
                                             <th>Animação</th>
                                             <th>Imagem</th>
                                             <th>Edição</th>
@@ -298,37 +296,6 @@ if ($stmt) {
                                             <tr>
                                                 <td><?php echo $escola['nome']; ?></td>
                                                 <td><?php echo $escola['descricao']; ?></td>
-                                                <?php
-                                                $sql = "SELECT eventos.nome FROM eventos INNER JOIN escola_evento ON eventos.id_evento = escola_evento.id_evento INNER JOIN escolas ON escolas.id_escola = escola_evento.id_escola WHERE escolas.id_escola = ?";
-                                                $stmt = mysqli_prepare($conn, $sql);
-
-                                                if ($stmt) {
-                                                    mysqli_stmt_bind_param($stmt, "i", $escola["id_escola"]);
-                                                    // Execute the statement
-                                                    mysqli_stmt_execute($stmt);
-                                                    $result = mysqli_stmt_get_result($stmt);
-                                                    $eventos = [];
-                                                    // Get the result
-                                                    if (mysqli_num_rows($result) > 0) {
-                                                        while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                                            $eventos[] = $row; // Assuming 'nome' is a column in the result set
-                                                        }
-                                                        $string = "";
-                                                        foreach ($eventos as $index => $evento) {
-                                                            if ($index == count($eventos) - 1) {
-                                                                $string .= $evento["nome"];
-                                                            } else {
-                                                                $string .= $evento["nome"] . ", ";
-                                                            }
-                                                        }
-                                                        // Close the statement
-                                                        mysqli_stmt_close($stmt);
-                                                    } else {
-                                                        $string = "Esta escola não tem eventos!";
-                                                    }
-                                                }
-                                                ?>
-                                                <td><?php echo $string ?></td>
                                                 <td><?php echo $escola['Animacao']; ?></td>
                                                 <td><button type="button" class="btn btn-warning" data-bs-toggle="modal"
                                                         data-bs-target="#previewModal"

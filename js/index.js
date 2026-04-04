@@ -26,11 +26,6 @@ let zPos;
 
 function init( ){
     
-    
-    buttons.forEach(button => {
-    console.log(button.id);
-    console.log(buttons.length);
-    });
 
     canvas = document.getElementById('c');
     const leftSide = document.getElementById("left");
@@ -48,7 +43,6 @@ function init( ){
     scene.add(light);
 
     renderer?.domElement?.addEventListener('mousedown', (e) => {
-        console.log(e);
         if (!ThreeDModel) return;
 
         isRotatingModel = true;
@@ -133,7 +127,6 @@ function clearTextGroup(group) {
 
 
 globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
-    console.log(small);
     let space;
     
     buttons.forEach(b => b.disabled = true);
@@ -154,7 +147,6 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
 
     
     if (ThreeDModel) {
-        console.log('retard'+small);
         gsap.to(ThreeDModel.position, {
             z: ThreeDModel.position.z-10,
             duration: 0.8,
@@ -172,15 +164,12 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
         });
 
         if(small === true){
-            console.log(small+' niggachan');
             scene.remove(ThreeDModel);
             ThreeDModel = null;
-            console.log(small+' niggakun');
         }
     }
 
     if(!ThreeDModel){
-        console.log("preto");
         small = false;
     }
 
@@ -195,7 +184,6 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
                 duration: 2,
                 onStart:function(){
                     
-                    console.log('disabling buttons:', buttons.length);
                     buttons.forEach(b => b.disabled = true);
 
                     loaderText.load('fonts/Kanit_Regular.json', function(font) {
@@ -233,7 +221,6 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
                             ThreeDModel.rotation.set(0, finalRotY, 0);
 
                             zPos = ThreeDModel.position.z;
-                            console.log(zPos);
 
                             scene.add(ThreeDModel);
 
@@ -264,7 +251,6 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
             duration: 1,
             onStart:function(){
                                 
-                console.log('disabling buttons:', buttons.length);
                 buttons.forEach(b => b.disabled = true);
 
             },
@@ -296,12 +282,10 @@ globalThis.addEventListener('mouseup', () => {
 globalThis.addEventListener('wheel', (e) => {
     
     if (e.deltaY > 0) {
-        console.log('scroll down');
         if (!ThreeDModel) return;
-        
+    
         ThreeDModel.position.z -= 1;
     } else {
-        console.log('scroll up');
         if (!ThreeDModel) return;
         
         ThreeDModel.position.z += 1;
@@ -320,7 +304,6 @@ globalThis.addEventListener('wheel', (e) => {
         });
     }, 500);
 
-    console.log(zPos);
     
 });
 

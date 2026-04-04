@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../config.php';
 
 $cursos = [];
+$events = [];
 $sql = "SELECT * FROM cursos WHERE id_escola = ?";
 $stmt = mysqli_prepare($conn, $sql);
 
