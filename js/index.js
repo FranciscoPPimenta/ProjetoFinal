@@ -128,8 +128,6 @@ function clearTextGroup(group) {
 
 globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
     let space;
-    
-    buttons.forEach(b => b.disabled = true);
 
     if (buttonName.includes(' ')) {
         space = true;
