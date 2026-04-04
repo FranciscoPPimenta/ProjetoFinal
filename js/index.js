@@ -2,10 +2,8 @@ import * as THREE from 'three';
 import * as Text from './text.js';
 import * as NewText from './newText.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as Model from './3D/3D.js';
-// import * as Moving from './movingobjects.js';
-export let camera,scene, renderer, canvas,cubeSize=2,clock,controls,sphere,loader3D = new GLTFLoader(),loaderText = new FontLoader(),negative_infinity = -100000,model,models=[],movingmodels=[],buttonZoom;
+let camera,scene, renderer, canvas,loaderText = new FontLoader();
 let transformControls;
 let firstPart,secondPart; 
 let variableButton;
@@ -25,13 +23,12 @@ let zPos;
 
 
 function init( ){
-    
-
+    const geometry = new THREE.BoxGeometry( 1, 1, 3 );
+    const material = new THREE.MeshBasicMaterial( { color: 0x000 } );
     canvas = document.getElementById('c');
     const leftSide = document.getElementById("left");
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xD9D9D9);
-
     renderer = new THREE.WebGLRenderer({canvas, antialias: true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 
@@ -94,15 +91,42 @@ function init( ){
         } );
 
 
-        Text.createText('Instituto Politécnico de Viana do Castelo',0,4,0,0,1,font,matLite);
-        Text.createText('IPVC',0,-2,0,0,1,font,matLite);
-        Text.createText('O teu ponto de partida!',0,-4,0,0,1,font,matLite);
+        scene.add(Text.createText(['Instituto Politécnico de Viana do Castelo',0,4,0,0,1,font,matLite]));
+        scene.add(Text.createText(['IPVC',0,-2,0,0,1,font,matLite]));
+        scene.add(Text.createText(['O teu ponto de partida!',0,-4,0,0,1,font,matLite]));
         render();
 
     } ); 
 
     scene.add(textGroup);
 
+    // Parameters
+        const count = 15;
+        const radius = 5;
+        const spacingZ = 2;
+
+        // Group to hold cubes
+        const cubeGroup = new THREE.Group();
+        scene.add(cubeGroup);
+
+        // Create cubes
+        for (let i = 0; i < count; i++) {
+            const cube = new THREE.Mesh(geometry, material);
+
+            const t = i * 0.5 + Math.PI;
+
+            cube.position.x = Math.cos(t) * radius;
+            cube.position.y = Math.sin(t) * radius;
+
+            const zOffset = -2;
+            cube.position.z = -i * spacingZ + zOffset;
+
+            cubeGroup.add(cube);
+        }
+
+        // Toggle logic
+        let visible = true;
+        cubeGroup.visible = visible;
     
     animate();
     
@@ -127,6 +151,7 @@ function clearTextGroup(group) {
 
 
 globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
+    
     let space;
 
     if (buttonName.includes(' ')) {
@@ -193,10 +218,10 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
                         });
 
                         if (space) {
-                            textGroup.add(NewText.createText(firstPart, 0, 0, -60, 0.05, 0.2, font, matLite));
-                            textGroup.add(NewText.createText(secondPart, 0, -0.3, -60, 0.05, 0.2, font, matLite));
+                            textGroup.add(NewText.createText([firstPart, 0, 0, -60, 0.05, 0.2, font, matLite]));
+                            textGroup.add(NewText.createText([secondPart, 0, -0.3, -60, 0.05, 0.2, font, matLite]));
                         } else {
-                            textGroup.add(NewText.createText(buttonName, 0.5, 0, -42, 0.05, 0.3, font, matLite));
+                            textGroup.add(NewText.createText([buttonName, 0.5, 0, -42, 0.05, 0.3, font, matLite]));
                         }
 
                         render();

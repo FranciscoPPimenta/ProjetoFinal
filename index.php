@@ -43,7 +43,7 @@ require_once 'database/index/cursos.php';
                 </div>
 
             </div>
-            <!-- justify-content-center centrado horizontalmente align-items-start para nao ocupar o espaco todo da col-->
+            <!-- Usei justify-conten-center para centrar horizontalmente e align-items-start para não ocupar o espaço inteiro da col -->
             <div class="col-6 min-vh-100 d-flex justify-content-center align-items-start" id="right">
                 <div class="container">
                     <div class="row">
@@ -99,7 +99,12 @@ require_once 'database/index/cursos.php';
 
     <script type="module" src="js/index.js"></script>
     <script>
+        function test() {
+            const targetId = "batatas";
+        }
+
         function changeSize(id) {
+
             const targetId = `escola_${id}`;
             const buttonTargetId = `btn_${id}`;
             const detailsTargetId = `details_${id}`;

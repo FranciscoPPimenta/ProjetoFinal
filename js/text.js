@@ -1,55 +1,50 @@
 import * as THREE from 'three';
-import * as Main from './index.js';
-export function createText(Text,posX,posY,posZ,rotY,size,font,matDark){
-        const shapes = font.generateShapes( Text, size );
+export function createText(var_arr_texto){
+        let var_text = var_arr_texto[0];
+        let posX = var_arr_texto[1];
+        let posY = var_arr_texto[2];
+        let posZ = var_arr_texto[3];
+        let rotY = var_arr_texto[4];
+        let size = var_arr_texto[5];
+        let font = var_arr_texto[6];
+        let matDark = var_arr_texto[7]
+        const shapes = font.generateShapes( var_text, size );
         const geometry = new THREE.ShapeGeometry( shapes );
         geometry.computeBoundingBox();
         const xMid = - 0.5 * ( geometry.boundingBox.max.x - geometry.boundingBox.min.x );
         geometry.translate( xMid, posY, posZ );
-        // make shape ( N.B. edge view not visible )
-        // const text = new THREE.Mesh( geometry, matLite );
-        // text.position.z = - 150;
-        // scene.add( text );
-
-        // make line shape ( N.B. edge view remains visible )
 
         const holeShapes = [];
 
-        for ( let i = 0; i < shapes.length; i ++ ) {
+        for (const shape of shapes) {
 
-            const shape = shapes[ i ];
+            if (shape.holes && shape.holes.length > 0) {
 
-            if ( shape.holes && shape.holes.length > 0 ) {
-
-                for ( let j = 0; j < shape.holes.length; j ++ ) {
-
-                    const hole = shape.holes[ j ];
-                    holeShapes.push( hole );
-
+                for (const hole of shape.holes) {
+                holeShapes.push(hole);
                 }
 
             }
 
         }
 
-        shapes.push.apply( shapes, holeShapes );
+        shapes.push(...holeShapes );
 
         const lineText = new THREE.Object3D();
 
-        for ( let i = 0; i < shapes.length; i ++ ) {
-
-            const shape = shapes[ i ];
+        for (const shape of shapes) {
 
             const points = shape.getPoints();
-            const geometry = new THREE.BufferGeometry().setFromPoints( points );
+            const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-            geometry.translate( xMid+posX, posY, posZ );
+            geometry.translate(xMid + posX, posY, posZ);
 
-            const lineMesh = new THREE.Line( geometry, matDark );
-            lineText.add( lineMesh );
+            const lineMesh = new THREE.Line(geometry, matDark);
+            lineText.add(lineMesh);
 
         }
         lineText.rotation.y= rotY;
-        Main.scene.add( lineText );
+        lineText.name = var_text;
+        return lineText;
 }
 

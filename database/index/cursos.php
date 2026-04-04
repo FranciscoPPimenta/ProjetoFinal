@@ -24,7 +24,7 @@ if (isset($_GET['id']) && ctype_digit($_GET['id'])) {
     <?php if (!empty($cursos)): ?>
         <div style="margin:20px" class="row g-3">
             <?php foreach ($cursos as $curso): ?>
-                <div id="curso" class="col-md-6">
+                <div id="curso" class="col-md-4">
                     <div class="card h-100">
                         <div class="card-body">
                             <h5 class="card-title">

@@ -9,7 +9,7 @@ let model = null;
 function base64ToObjectURL(base64, mimeType) {
   const binary = atob(base64);
   const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.codePointAt(i);
   const blob = new Blob([bytes], { type: mimeType });
   return URL.createObjectURL(blob);
 }
