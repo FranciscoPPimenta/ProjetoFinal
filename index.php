@@ -99,10 +99,6 @@ require_once 'database/index/cursos.php';
 
     <script type="module" src="js/index.js"></script>
     <script>
-        function test() {
-            const targetId = "batatas";
-        }
-
         function changeSize(id) {
 
             const targetId = `escola_${id}`;

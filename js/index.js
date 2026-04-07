@@ -20,15 +20,19 @@ const rotationSpeed = 0.005;
 let small = false;
 let wheelTimeout = null; 
 let zPos;
+const cubeGroup = new THREE.Group();
+const geometry = new THREE.BoxGeometry( 1, 1, 3 );
+const material = new THREE.MeshBasicMaterial( { color: 0x000 } );
 
 
 function init( ){
-    const geometry = new THREE.BoxGeometry( 1, 1, 3 );
-    const material = new THREE.MeshBasicMaterial( { color: 0x000 } );
+    
     canvas = document.getElementById('c');
     const leftSide = document.getElementById("left");
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xD9D9D9);
+    scene.remove(cubeGroup);
+
     renderer = new THREE.WebGLRenderer({canvas, antialias: true});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
 
@@ -76,6 +80,7 @@ function init( ){
 
     function animate(){
         requestAnimationFrame(animate);
+        
         renderer.render(scene,camera);
     }
 
@@ -101,32 +106,8 @@ function init( ){
     scene.add(textGroup);
 
     // Parameters
-        const count = 15;
-        const radius = 5;
-        const spacingZ = 2;
+        
 
-        // Group to hold cubes
-        const cubeGroup = new THREE.Group();
-        scene.add(cubeGroup);
-
-        // Create cubes
-        for (let i = 0; i < count; i++) {
-            const cube = new THREE.Mesh(geometry, material);
-
-            const t = i * 0.5 + Math.PI;
-
-            cube.position.x = Math.cos(t) * radius;
-            cube.position.y = Math.sin(t) * radius;
-
-            const zOffset = -2;
-            cube.position.z = -i * spacingZ + zOffset;
-
-            cubeGroup.add(cube);
-        }
-
-        // Toggle logic
-        let visible = true;
-        cubeGroup.visible = visible;
     
     animate();
     
@@ -206,6 +187,28 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
                 z: -35,
                 duration: 2,
                 onStart:function(){
+                    const count = 25;
+                    const radius = 5;
+                    const spacingZ = 2;
+
+                    // Group to hold cubes
+                    
+                    scene.add(cubeGroup);
+
+                    // Create cubes
+                    for (let i = 0; i < count; i++) {
+                        const cube = new THREE.Mesh(geometry, material);
+
+                        const t = i * 0.5 + Math.PI;
+
+                        cube.position.x = Math.cos(t) * radius;
+                        cube.position.y = Math.sin(t) * radius;
+
+                        const zOffset = -4;
+                        cube.position.z = -i * spacingZ + zOffset;
+
+                        cubeGroup.add(cube);
+                    }
                     
                     buttons.forEach(b => b.disabled = true);
 
@@ -228,7 +231,6 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
                         });
                 },
                 onComplete: function(){
-                    buttons.forEach(b => b.disabled = false);
                     start = false;
                     change = false;
                     Model.objeto(texture, object).then((loadedModel) => {
@@ -262,11 +264,23 @@ globalThis.zoomTo = function(buttonID,buttonName,texture,object) {
                             });
                                 
                     }).catch(console.error);
-                    
+                        console.log(cubeGroup.children.length);
+
+                    const interval = setInterval(() => {
+                        if (cubeGroup.children.length > 0) {
+                            const lastIndex = cubeGroup.children.length - 1;
+                            cubeGroup.remove(cubeGroup.children[lastIndex]);
+                        } else {
+                            clearInterval(interval);
+                        }
+                    }, 80);
+                    buttons.forEach(b => b.disabled = false);
+
                 }
             });
     }
     else{
+        if(cubeGroup.children.length < 0) return;
         gsap.to(camera.position,{
             x: startPosition.x,
             y: startPosition.y,
