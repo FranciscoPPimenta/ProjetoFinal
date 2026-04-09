@@ -1,16 +1,20 @@
 <?php
 require_once("../database/config.php");
-// session_start();
-// if(!isset($_SESSION["userID"])){
-//     header("Location: ../../login.php");
-// }
-// $keep = 'userID';
+session_start();
 
-// foreach ($_SESSION as $key => $value) {
-//     if ($key !== $keep) {
-//         unset($_SESSION[$key]);
-//     }
-// }
+
+if (!isset($_SESSION["admin"])) {
+    header("Location: login/login.php");
+}
+
+$keep = 'admin';
+
+foreach ($_SESSION as $key => $value) {
+    if ($key !== $keep) {
+        unset($_SESSION[$key]);
+    }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -42,7 +46,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION["userID"]);
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
 
     // Execute the statement
     mysqli_stmt_execute($stmt);
@@ -90,7 +94,7 @@ if ($stmt) {
 
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="eventos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Eventos</span></a>
@@ -106,9 +110,9 @@ if ($stmt) {
                     <span>Cursos</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="index.php">
+                <a class="nav-link" href="docentes/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Professores</span></a>
+                    <span>Docentes</span></a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="animacoes/index.php">
@@ -116,9 +120,20 @@ if ($stmt) {
                     <span>Animações</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="../ambitos/index.php">
+                <a class="nav-link" href="ucs/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Unidades Curriculares</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="ambitos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Âmbitos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="admins/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Administradores</span>
                 </a>
             </li>
 

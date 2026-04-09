@@ -1,9 +1,8 @@
 <?php
-require_once("../../database/config.php");
-session_start();
-// if (!isset($_SESSION["userID"])) {
-//     header("Location: ../..login.php");
-// }
+require_once __DIR__ . "\..\..\database\config.php";
+if (!isset($_SESSION["admin"])) {
+    header("Location: ../login/login.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +47,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION["userID"]);
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
 
     // Execute the statement
     mysqli_stmt_execute($stmt);
@@ -73,7 +72,7 @@ if ($stmt) {
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -126,6 +125,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ambitos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Âmbitos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../admins/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Administradores</span>
                 </a>
             </li>
 
@@ -553,7 +558,7 @@ if ($stmt) {
         document.getElementById("form").action = '../../database/eventos/create.php';
     </script>
     <?php
-    $keep = 'userID';
+    $keep = 'admin';
 
     foreach ($_SESSION as $key => $value) {
         if ($key !== $keep) {

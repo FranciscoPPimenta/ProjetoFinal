@@ -1,9 +1,12 @@
 <?php
-require_once("../../database/config.php");
+require_once __DIR__ . "\..\..\database\config.php";
 session_start();
-// if (!isset($_SESSION["userID"])) {
-//     header("Location: ../../login.php");
-// }
+
+
+if (!isset($_SESSION["admin"])) {
+    header("Location: ".__DIR__."/admin/login/login.php");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +51,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION["userID"]);
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
 
     // Execute the statement
     mysqli_stmt_execute($stmt);
@@ -134,6 +137,12 @@ if ($stmt) {
                     <span>Âmbitos</span>
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Administradores</span>
+                </a>
+            </li>"
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -283,10 +292,10 @@ if ($stmt) {
                                         <?php
                                         if (isset($_SESSION["animacao_textura"])) {
                                         ?>
-                                            <select style="margin:5px;font-size:20px" class="form-control"
-                                                name="animacaoEscola" id="animacaoEscola" required>
-                                                <option disabled value="0">Selecione uma animação</option>
-                                                <?php
+                                        <select style="margin:5px;font-size:20px" class="form-control"
+                                            name="animacaoEscola" id="animacaoEscola" required>
+                                            <option disabled value="0">Selecione uma animação</option>
+                                            <?php
                                                 foreach ($data as $animacao) {
                                                     if ($animacao['id_animacao'] == $_SESSION['animacao_id']) {
                                                         echo '<option value="' . $animacao['id_animacao'] . '" selected>' . $animacao["nome"] . '</option>';
@@ -296,39 +305,39 @@ if ($stmt) {
                                                 }
                                             } else {
                                                 ?>
-                                                <select style="margin:5px;font-size:20px" class="form-control"
-                                                    name="animacaoEscola" id="animacaoEscola" required>
-                                                    <option disabled value="" selected>Selecione uma animação</option>
+                                            <select style="margin:5px;font-size:20px" class="form-control"
+                                                name="animacaoEscola" id="animacaoEscola" required>
+                                                <option disabled value="" selected>Selecione uma animação</option>
                                                 <?php
                                                 foreach ($data as $animacao) {
                                                     echo '<option value="' . $animacao['id_animacao'] . '">' . $animacao["nome"] . '</option>';
                                                 }
                                             }
                                                 ?>
-                                                </select>
-                                                <input type="file" style="margin:5px;font-size:20px" class="form-control"
-                                                    name="imageEscola" id="imageEscola" required>
-                                                <div class="modal fade" id="createModal" tabindex="-1"
-                                                    aria-labelledby="createModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog modal-dialog-centered">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h1 class="modal-title fs-5" id="createModalLabel">Atualizar
-                                                                    Escola</h1>
-                                                                <button type="button" class="btn-close"
-                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body" id="createModalBody">
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary"
-                                                                    data-bs-dismiss="modal">Não</button>
-                                                                <button id="updateUnidade" type="submit"
-                                                                    class="btn btn-primary">Sim</button>
-                                                            </div>
+                                            </select>
+                                            <input type="file" style="margin:5px;font-size:20px" class="form-control"
+                                                name="imageEscola" id="imageEscola" required>
+                                            <div class="modal fade" id="createModal" tabindex="-1"
+                                                aria-labelledby="createModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="createModalLabel">Atualizar
+                                                                Escola</h1>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body" id="createModalBody">
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Não</button>
+                                                            <button id="updateUnidade" type="submit"
+                                                                class="btn btn-primary">Sim</button>
                                                         </div>
                                                     </div>
                                                 </div>
+                                            </div>
                                     </form>
                                 </div>
                                 <button type="button" id="createButton" class="btn btn-success" data-bs-toggle="modal"
@@ -402,68 +411,68 @@ if ($stmt) {
     </script>
     <script type="module" src="../js/3D/3D.js"></script>
     <script type="module">
-        import {
-            objeto
-        } from '../js/3D/3D.js';
+    import {
+        objeto
+    } from '../js/3D/3D.js';
 
-        document.getElementById("animacaoEscola").addEventListener("change", function() {
-            // Get the selected value
-            var selectedValue = document.getElementById("animacaoEscola").value;
-            if (document.getElementById("nomeEscola").value != "") {
-                if (document.getElementById("descricaoEscola").value != "") {
-                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
-                        "&nome=" + document.getElementById("nomeEscola").value + "&desc=" + document.getElementById(
-                            "descricaoEscola").value + "&page=escolas";
-                } else {
-                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
-                        "&nome=" + document.getElementById("nomeEscola").value + "&page=escolas";
-                }
+    document.getElementById("animacaoEscola").addEventListener("change", function() {
+        // Get the selected value
+        var selectedValue = document.getElementById("animacaoEscola").value;
+        if (document.getElementById("nomeEscola").value != "") {
+            if (document.getElementById("descricaoEscola").value != "") {
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&nome=" + document.getElementById("nomeEscola").value + "&desc=" + document.getElementById(
+                        "descricaoEscola").value + "&page=escolas";
             } else {
-                if (document.getElementById("descricaoEscola").value != "") {
-                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
-                        "&desc=" + document.getElementById("descricaoEscola").value + "&page=escolas";
-                } else {
-                    window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
-                        "&page=escolas";
-                }
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&nome=" + document.getElementById("nomeEscola").value + "&page=escolas";
             }
-        });
+        } else {
+            if (document.getElementById("descricaoEscola").value != "") {
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&desc=" + document.getElementById("descricaoEscola").value + "&page=escolas";
+            } else {
+                window.location.href = "../../database/animacoes/get_animacao.php?id=" + selectedValue +
+                    "&page=escolas";
+            }
+        }
+    });
 
-        <?php
+    <?php
         if (isset($_SESSION["animacao_textura"])) { ?>
-            console.log("aur");
-            document.addEventListener('DOMContentLoaded', function() {
-                setTimeout(function() {
-                    objeto(<?php echo json_encode(base64_encode($_SESSION['animacao_textura'])) ?>, (
-                        <?php echo json_encode(base64_encode($_SESSION['animacao_objeto'])) ?>));
-                }, 1000); // Delay of 5 seconds
-            });
-        <?php
+    console.log("aur");
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+            objeto(<?php echo json_encode(base64_encode($_SESSION['animacao_textura'])) ?>, (
+                <?php echo json_encode(base64_encode($_SESSION['animacao_objeto'])) ?>));
+        }, 1000); // Delay of 5 seconds
+    });
+    <?php
         }
         ?>
     </script>
 
     <script>
-        function setCreateModalText() {
-            const fileInput = document.getElementById("imageEscola");
-            const file = fileInput.files && fileInput.files[0];
+    function setCreateModalText() {
+        const fileInput = document.getElementById("imageEscola");
+        const file = fileInput.files && fileInput.files[0];
 
-            const objectUrl = URL.createObjectURL(file);
-            var string = "De certeza que quer adicionar a escola " + document.getElementById("nomeEscola").value +
-                ".?</br>" +
-                "Campos para a Escola</br>" +
-                "Nome: " + document.getElementById("nomeEscola").value + "</br>" +
-                "Descrição: " + document.getElementById("descricaoEscola").value + "</br>" +
-                "Animação: " + document.getElementById("animacaoEscola").options[document.getElementById("animacaoEscola")
-                    .selectedIndex].text + '</br> Imagem: </br> <div style="margin-top:8px"><img src="' + objectUrl +
-                '" alt="visualizar" style="max-width:100%;height:auto;border: 1px solid #ddd;border-radius:6px"/></div>'
-            document.getElementById("createModalBody").innerHTML = string;
-        }
+        const objectUrl = URL.createObjectURL(file);
+        var string = "De certeza que quer adicionar a escola " + document.getElementById("nomeEscola").value +
+            ".?</br>" +
+            "Campos para a Escola</br>" +
+            "Nome: " + document.getElementById("nomeEscola").value + "</br>" +
+            "Descrição: " + document.getElementById("descricaoEscola").value + "</br>" +
+            "Animação: " + document.getElementById("animacaoEscola").options[document.getElementById("animacaoEscola")
+                .selectedIndex].text + '</br> Imagem: </br> <div style="margin-top:8px"><img src="' + objectUrl +
+            '" alt="visualizar" style="max-width:100%;height:auto;border: 1px solid #ddd;border-radius:6px"/></div>'
+        document.getElementById("createModalBody").innerHTML = string;
+    }
 
-        document.getElementById("form").action = '../../database/escolas/create.php';
+    document.getElementById("form").action = '../../database/escolas/create.php';
     </script>
     <?php
-    $keep = 'userID';
+    $keep = 'admin';
 
     foreach ($_SESSION as $key => $value) {
         if ($key !== $keep) {

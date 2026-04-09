@@ -1,9 +1,12 @@
 <?php
-require_once("../../database/config.php");
+require_once __DIR__ . "\..\..\database\config.php";
 session_start();
-// if (!isset($_SESSION["userID"])) {
-//     header("Location: ../../login.php");
-// }
+
+
+if (!isset($_SESSION["admin"])) {
+    header("Location: ../login/login.php");
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +52,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION["userID"]);
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
 
     // Execute the statement
     mysqli_stmt_execute($stmt);
@@ -107,50 +110,56 @@ if ($stmt) {
 
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="../eventos/index.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Eventos</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../escolas/index.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Escolas</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../cursos/index.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Cursos</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../docentes/index.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Docentes</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../animacoes/index.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Animações</span></a>
-            </li>
-            <li class="nav-item active">
+            <<li class="nav-item active">
                 <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Unidades Curriculares</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../ambitos/index.php">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Âmbitos</span>
-                </a>
-            </li>
+                    <span>Eventos</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../escolas/index.php">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Escolas</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../cursos/index.php">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Cursos</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../docentes/index.php">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Docentes</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../animacoes/index.php">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Animações</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../ucs/index.php">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Unidades Curriculares</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../ambitos/index.php">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Âmbitos</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../admins/index.php">
+                        <i class="fas fa-fw fa-table"></i>
+                        <span>Administradores</span>
+                    </a>
+                </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
+                <!-- Divider -->
+                <hr class="sidebar-divider d-none d-md-block">
 
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
+                <!-- Sidebar Toggler (Sidebar) -->
+                <div class="text-center d-none d-md-inline">
+                    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+                </div>
 
         </ul>
         <!-- End of Sidebar -->

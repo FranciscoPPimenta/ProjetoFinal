@@ -1,9 +1,12 @@
 <?php
-require_once("../../database/config.php");
+require_once __DIR__ . "\..\..\database\config.php";
 session_start();
-// if(!isset($_SESSION["userID"])){
-//     header("Location: ../../login.php");
-// }
+
+
+if (!isset($_SESSION["admin"])) {
+    header("Location: ../login/login.php");
+}
+
 
 ?>
 
@@ -50,7 +53,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION["userID"]);
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
 
     // Execute the statement
     mysqli_stmt_execute($stmt);
@@ -135,6 +138,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ambitos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Âmbitos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../admins/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Administradores</span>
                 </a>
             </li>
 
@@ -405,7 +414,7 @@ if ($stmt) {
     </script> -->
 </body>
 <?php
-$keep = 'userID';
+$keep = 'admin';
 
 foreach ($_SESSION as $key => $value) {
     if ($key !== $keep) {

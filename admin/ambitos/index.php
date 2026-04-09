@@ -1,9 +1,12 @@
 <?php
-require_once("../../database/config.php");
+require_once __DIR__ . "\..\..\database\config.php";
 session_start();
-// if(!isset($_SESSION["userID"])){
-//     header("Location: ../../login.php");
-// }
+
+
+if (!isset($_SESSION["admin"])) {
+    header("Location: ../login/login.php");
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -49,7 +52,7 @@ $stmt = mysqli_prepare($conn, $sql);
 
 if ($stmt) {
     // Bind parameters
-    mysqli_stmt_bind_param($stmt, "i", $_SESSION["userID"]);
+    mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
 
     // Execute the statement
     mysqli_stmt_execute($stmt);
@@ -133,6 +136,12 @@ if ($stmt) {
                 <a class="nav-link" href="../ambitos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Âmbitos</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="../admins/index.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Administradores</span>
                 </a>
             </li>
 
@@ -310,14 +319,14 @@ if ($stmt) {
                                         <?php
                                         foreach ($ambitos as $ambito) {
                                         ?>
-                                        <tr>
-                                            <td><?php echo $ambito['nome']; ?></td>
-                                            <td>
-                                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal"
-                                                    onclick="setDeleteModalText('<?php echo $ambito['nome']; ?>','<?php echo $ambito['id_ambito'] ?>')">Apagar</button>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td><?php echo $ambito['nome']; ?></td>
+                                                <td>
+                                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal"
+                                                        onclick="setDeleteModalText('<?php echo $ambito['nome']; ?>','<?php echo $ambito['id_ambito'] ?>')">Apagar</button>
+                                                </td>
+                                            </tr>
                                         <?php
                                         }
                                         ?>
@@ -410,33 +419,33 @@ if ($stmt) {
     <script src="../js/demo/datatables-demo.js"></script>
 
     <script>
-    function setDeleteModalText(name, id) {
-        document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o âmbito: \"" + name +
-            "\"?";
-        document.getElementById("apagaAmbito").setAttribute("href", "../../database/ambitos/delete_ambito.php?id=" +
-            id + "&start_page=index");
-    };
+        function setDeleteModalText(name, id) {
+            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar o âmbito: \"" + name +
+                "\"?";
+            document.getElementById("apagaAmbito").setAttribute("href", "../../database/ambitos/delete_ambito.php?id=" +
+                id + "&start_page=index");
+        };
     </script>
     <script type="module">
-    import {
-        objeto
-    } from '../js/3D/3D.js';
+        import {
+            objeto
+        } from '../js/3D/3D.js';
 
-    let previewAnimId = null;
-    let previewAnimName = '';
+        let previewAnimId = null;
+        let previewAnimName = '';
 
-    const modalEl = document.getElementById('previewModal');
-    const modal = new bootstrap.Modal(modalEl);
+        const modalEl = document.getElementById('previewModal');
+        const modal = new bootstrap.Modal(modalEl);
 
-    const confirmView = document.getElementById('previewConfirmView');
-    const canvasView = document.getElementById('previewCanvasView');
+        const confirmView = document.getElementById('previewConfirmView');
+        const canvasView = document.getElementById('previewCanvasView');
 
-    const confirmText = document.getElementById('previewConfirmText');
-    const statusText = document.getElementById('previewStatus');
+        const confirmText = document.getElementById('previewConfirmText');
+        const statusText = document.getElementById('previewStatus');
     </script>
 </body>
 <?php
-$keep = 'userID';
+$keep = 'admin';
 
 foreach ($_SESSION as $key => $value) {
     if ($key !== $keep) {

@@ -23,7 +23,7 @@ if (!isset($_SESSION["admin"])) {
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
 
-    <title>Admin - Unidades Curriculares</title>
+    <title>Admin - Admins</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Custom fonts for this template -->
@@ -95,8 +95,8 @@ if ($stmt) {
 
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Tables -->
-            <li class="nav-item active">
-                <a class="nav-link" href="index.php">
+            <li class="nav-item">
+                <a class="nav-link" href="../eventos/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Eventos</span></a>
             </li>
@@ -131,8 +131,8 @@ if ($stmt) {
                     <span>Âmbitos</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../admins/index.php">
+            <li class="nav-item active">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Administradores</span>
                 </a>
@@ -242,32 +242,42 @@ if ($stmt) {
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
                     <?php
-                    $sql = "SELECT ucs.*,animacoes.nome as 'Animacao',cursos.nome as 'Curso' FROM ucs INNER JOIN animacoes ON ucs.id_animacao = animacoes.id_animacao INNER JOIN cursos ON ucs.id_curso = cursos.id_curso";
+                    $sql = "SELECT * FROM admins";
                     $stmt = mysqli_prepare($conn, $sql);
 
                     if ($stmt) {
                         // Execute the statement
                         mysqli_stmt_execute($stmt);
                         $result = mysqli_stmt_get_result($stmt);
-                        $ucs = [];
+                        $profs = [];
                         // Get the result
                         if (mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                $ucs[]  = $row; // Assuming 'nome' is a column in the result set
+                                $profs[]  = $row; // Assuming 'nome' is a column in the result set
                             }
                         } else {
-                            echo "No records found."; // Handle case where no records are found
+                            $sql = "SELECT * FROM admin";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            if ($stmt) {
+                                mysqli_stmt_execute($stmt);
+                                $result = mysqli_stmt_get_result($stmt);
+                                $admins = [];
+                                if (mysqli_num_rows($result) > 0) {
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        $admins[] = $row;
+                                    }
+                                }
+                            }
                         }
                         // Close the statement
                         mysqli_stmt_close($stmt);
                     }
-
                     ?>
                     <!-- Page Heading -->
-                    <h1 class="h3 fs-1 text-gray-800 fw-bold">Unidades Curriculares</h1>
+                    <h1 class="h3 fs-1 text-gray-800 fw-bold">Docentes</h1>
                     <?php
                     if (isset($_SESSION["deleted"])) {
-                        echo '<p class="fs-3 text-success">Unidade Curricular ' . $_SESSION["deletedObject"] . ' apagada com sucesso!</p>';
+                        echo '<p class="fs-3 text-success">Docente ' . $_SESSION["deletedObject"] . ' removido com sucesso!</p>';
                     }
                     ?>
                     <?php
@@ -279,8 +289,25 @@ if ($stmt) {
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h1 class="m-0 font-weight-bold text-primary">Tabela Unidades Curriculares</h1>
-                            <a class="btn btn-primary" href="../../admin/ucs/create.php">Criar Nova UC</a>
+                            <h1 class="m-0 font-weight-bold text-primary">Tabela Admins</h1>
+                            <form method="POST" action="../../database/admin/create.php">
+                                <div class="row">
+                                    <span></span>
+                                    <div class="col-1">
+                                        <button type="submit" class="btn btn-primary">Adicionar
+                                            Adminstrador</button>
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="text" id="nomeAdmin" name="nomeAdmin" required
+                                            class="form-control"></input>
+                                    </div>
+                                    <div class="col-2">
+                                        <input type="password" id="passwordAdmin" name="passwordAdmin" require
+                                            class="form-control">
+                                    </div>
+                                    <div class="col-7"></div>
+                                </div>
+                            </form>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -289,65 +316,25 @@ if ($stmt) {
                                     <thead>
                                         <tr>
                                             <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Animação</th>
-                                            <th>Curso</th>
-                                            <th>Docentes</th>
                                             <th>Edição</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
                                             <th>Nome</th>
-                                            <th>Descrição</th>
-                                            <th>Animação</th>
-                                            <th>Curso</th>
-                                            <th>Docentes</th>
                                             <th>Edição</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                         <?php
-                                        foreach ($ucs as $uc) {
+                                        foreach ($admins as $admin) {
                                         ?>
                                             <tr>
-                                                <td><?php echo $uc['nome']; ?></td>
-                                                <td><?php echo $uc['descricao']; ?></td>
-                                                <td><?php echo $uc['Animacao']; ?></td>
-                                                <td><?php echo $uc['Curso']; ?></td>
-                                                <?php
-                                                $sql = "SELECT * FROM docentes INNER JOIN uc_docente ON docentes.id_docente = uc_docente.id_docente WHERE uc_docente.id_uc = $uc[id_uc]";
-                                                $stmt = mysqli_prepare($conn, $sql);
-
-                                                if ($stmt) {
-                                                    // Execute the statement
-                                                    mysqli_stmt_execute($stmt);
-                                                    $result = mysqli_stmt_get_result($stmt);
-                                                    $docs = [];
-                                                    // Get the result
-                                                    if (mysqli_num_rows($result) > 0) {
-                                                        while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
-                                                            $docs[]  = $row; // Assuming 'nome' is a column in the result set
-                                                        }
-                                                    } else {
-                                                        echo "No records found."; // Handle case where no records are found
-                                                    }
-                                                    // Close the statement
-                                                    mysqli_stmt_close($stmt);
-                                                }
-
-                                                ?>
-                                                <?php
-                                                $string = '';
-                                                $string = implode(', ', array_column($docs, 'nome'));
-                                                ?>
-                                                <td><?php echo $string ?></td>
+                                                <td><?php echo $admin['admin_name']; ?></td>
                                                 <td>
-                                                    <a class="btn btn-primary"
-                                                        href="../../database/ucs/editar_uc.php?id=<?php echo $uc["id_uc"] ?>">Editar</a>
                                                     <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                                         data-bs-target="#deleteModal"
-                                                        onclick="setDeleteModalText('<?php echo $uc['nome']; ?>','<?php echo $uc['id_uc'] ?>')">Apagar</button>
+                                                        onclick="setDeleteModalText('<?php echo $admin['admin_name']; ?>','<?php echo $admin['id_admin'] ?>')">Apagar</button>
                                                 </td>
                                             </tr>
                                         <?php
@@ -394,7 +381,7 @@ if ($stmt) {
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="deleteModalLabel">Apagar Unidade Curricular</h1>
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">Remover Docente</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="deleteModalBody">
@@ -402,7 +389,7 @@ if ($stmt) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                    <a id="apagaUc" type="button" class="btn btn-primary">Sim</a>
+                    <a id="removeDocente" type="button" class="btn btn-primary">Sim</a>
                 </div>
             </div>
         </div>
@@ -445,9 +432,10 @@ if ($stmt) {
     <script src="../js/demo/datatables-demo.js"></script>
     <script>
         function setDeleteModalText(name, id) {
-            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer apagar a unidade: \"" + name + "\"";
-            document.getElementById("apagaUc").setAttribute("href", "../../database/ucs/delete_uc.php?id=" +
-                id + "&start_page=index");
+            document.getElementById("deleteModalBody").innerHTML = "De certeza que quer remover o docente: \"" + name +
+                "\"";
+            document.getElementById("removeDocente").setAttribute("href", "../../database/docentes/remove.php?id=" +
+                id);
         }
     </script>
 </body>
