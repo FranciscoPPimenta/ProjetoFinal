@@ -95,8 +95,8 @@ if ($stmt) {
 
             <!-- Nav Item - Pages Collapse Menu -->
             <!-- Nav Item - Tables -->
-            <li class="nav-item active">
-                <a class="nav-link" href="index.php">
+            <li class="nav-item">
+                <a class="nav-link" href="../ucs/index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Eventos</span></a>
             </li>
@@ -120,8 +120,8 @@ if ($stmt) {
                     <i class="fas fa-fw fa-table"></i>
                     <span>Animações</span></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="../ucs/index.php">
+            <li class="nav-item active">
+                <a class="nav-link" href="index.php">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Unidades Curriculares</span></a>
             </li>

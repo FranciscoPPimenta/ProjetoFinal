@@ -76,7 +76,7 @@ if ($stmt) {
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -140,7 +140,7 @@ if ($stmt) {
             <li class="nav-item">
                 <a class="nav-link" href="../admins/index.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Adminstadores</span>
+                    <span>Administradores</span>
                 </a>
             </li>
 
