@@ -47,9 +47,9 @@ if (!isset($_SESSION["admin"])) {
 
 </head>
 <?php
-$sql = "SELECT * FROM admins WHERE id_admin = ?";
+$sql = "SELECT * FROM admin WHERE id_admin = ?";
 $stmt = mysqli_prepare($conn, $sql);
-
+$row = "";
 if ($stmt) {
     // Bind parameters
     mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
@@ -255,7 +255,6 @@ if ($stmt) {
                 <!-- End of Topbar -->
                 <?php
                 if (isset($_SESSION["uc"])) {
-                    //echo base64_encode($_SESSION["evento"]['Textura']);
                 ?>
                     <div class="container-fluid">
                         <!-- Page Heading -->

@@ -42,9 +42,9 @@ foreach ($_SESSION as $key => $value) {
 
 </head>
 <?php
-$sql = "SELECT * FROM admins WHERE id_admin = ?";
+$sql = "SELECT * FROM admin WHERE id_admin = ?";
 $stmt = mysqli_prepare($conn, $sql);
-
+$row = "";
 if ($stmt) {
     // Bind parameters
     mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
@@ -72,7 +72,7 @@ if ($stmt) {
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="../index.php">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.php">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-laugh-wink"></i>
                 </div>
@@ -209,7 +209,7 @@ if ($stmt) {
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span
                                     class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row["admin_name"] ?></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -245,7 +245,7 @@ if ($stmt) {
                     <div class="row">
 
                         <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
+                        <div class="col-xl-12 col-lg-12">
                             <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
@@ -269,10 +269,11 @@ if ($stmt) {
                                     <div id="schoolRowSize" class="row d-flex flex-wrap align-items-start"
                                         style="color: white;">
                                         <?php foreach ($schools as $school): ?>
-                                            <div class="col-md-2 card-admin" id="escola_<?= $school['id_escola'] ?>">
+                                            <div class="col-md-2" id="escola_<?= $school['id_escola'] ?>">
                                                 <div class="card h-100 text-bg-dark card-admin">
                                                     <img src="../database/escolas/get_image.php?id=<?= $school['id_escola'] ?>"
-                                                        class="card-img card-img-admin" alt="<?= $school["nome"] ?>">
+                                                        class="card-img card-img-admin" alt="<?= $school["nome"] ?>"
+                                                        style="width:100%; height:100%; border-radius:5px; object-fit:cover;">
 
                                                     <div class="card-img-overlay">
                                                         <p class="card-text"><?= $school['descricao'] ?></p>
@@ -284,200 +285,145 @@ if ($stmt) {
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="myPieChart"></canvas>
-                                    </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i> Direct
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i> Social
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i> Referral
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                     </div>
-
                     <!-- Content Row -->
                     <div class="row">
 
                         <!-- Content Column -->
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-12 mb-4">
 
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Projects</h6>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="small font-weight-bold">Server Migration <span
-                                            class="float-right">20%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
-                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Sales Tracking <span
-                                            class="float-right">40%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
-                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Customer Database <span
-                                            class="float-right">60%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar" role="progressbar" style="width: 60%"
-                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Payout Details <span
-                                            class="float-right">80%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
-                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Account Setup <span
-                                            class="float-right">Complete!</span></h4>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
-                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </div>
-                            </div>
+                            <?php
+                    $sql = "SELECT cursos.*,animacoes.nome as 'Animacao',escolas.nome as 'Escolas' FROM cursos INNER JOIN animacoes ON cursos.id_animacao = animacoes.id_animacao INNER JOIN escolas ON cursos.id_escola = escolas.id_escola";
+                    $stmt = mysqli_prepare($conn, $sql);
 
-                            <!-- Color System -->
-                            <div class="row">
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-primary text-white shadow">
-                                        <div class="card-body">
-                                            Primary
-                                            <div class="text-white-50 small">#4e73df</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-success text-white shadow">
-                                        <div class="card-body">
-                                            Success
-                                            <div class="text-white-50 small">#1cc88a</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-info text-white shadow">
-                                        <div class="card-body">
-                                            Info
-                                            <div class="text-white-50 small">#36b9cc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-warning text-white shadow">
-                                        <div class="card-body">
-                                            Warning
-                                            <div class="text-white-50 small">#f6c23e</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-danger text-white shadow">
-                                        <div class="card-body">
-                                            Danger
-                                            <div class="text-white-50 small">#e74a3b</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-secondary text-white shadow">
-                                        <div class="card-body">
-                                            Secondary
-                                            <div class="text-white-50 small">#858796</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-light text-black shadow">
-                                        <div class="card-body">
-                                            Light
-                                            <div class="text-black-50 small">#f8f9fc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-dark text-white shadow">
-                                        <div class="card-body">
-                                            Dark
-                                            <div class="text-white-50 small">#5a5c69</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                    if ($stmt) {
+                        // Execute the statement
+                        mysqli_stmt_execute($stmt);
+                        $result = mysqli_stmt_get_result($stmt);
+                        $cursos = [];
+                        // Get the result
+                        if (mysqli_num_rows($result) > 0) {
+                            while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
+                                $cursos[] = $row; // Assuming 'nome' is a column in the result set
+                            }
+                        }
+                        // Close the statement
+                        mysqli_stmt_close($stmt);
+                    }
+                    ?>
+                    <!-- Page Heading -->
 
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div
+                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Cursos</h6>
                         </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Regime</th>
+                                            <th>Descrição</th>
+                                            <th>Evento</th>
+                                            <th>Animação</th>
+                                            <th>Escola</th>
+                                            <th>Coordenador de Curso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        foreach ($cursos as $curso) {
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $curso['nome']; ?></td>
+                                                <td><?php echo $curso['regime'] ?></td>
+                                                <td><?php echo $curso['descricao']; ?></td>
+                                                <?php
+                                                $sql = "SELECT eventos.nome FROM eventos INNER JOIN cursos ON eventos.id_evento = cursos.id_evento WHERE cursos.id_evento = ?";
+                                                $stmt = mysqli_prepare($conn, $sql);
 
-                        <div class="col-lg-6 mb-4">
+                                                if ($stmt) {
+                                                    mysqli_stmt_bind_param($stmt, "i", $curso["id_evento"]);
+                                                    // Execute the statement
+                                                    mysqli_stmt_execute($stmt);
+                                                    $result = mysqli_stmt_get_result($stmt);
+                                                    $string = "";
+                                                    // Get the result
+                                                    if (mysqli_num_rows($result) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
+                                                            $string = $row;
+                                                        }
+                                                    }
+                                                    // Close the statement
+                                                    mysqli_stmt_close($stmt);
+                                                }
+                                                ?>
+                                                <td><?php echo $string["nome"]; ?></td>
+                                                <td><?php echo $curso['Animacao']; ?></td>
+                                                <?php
+                                                $sql = "SELECT escolas.nome FROM escolas INNER JOIN cursos ON escolas.id_escola = cursos.id_escola WHERE cursos.id_escola = ?";
+                                                $stmt = mysqli_prepare($conn, $sql);
 
-                            <!-- Illustrations -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="img/undraw_posting_photo.svg" alt="...">
-                                    </div>
-                                    <p>Add some quality, svg illustrations to your project courtesy of <a
-                                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                                        constantly updated collection of beautiful svg images that you can use
-                                        completely free and without attribution!</p>
-                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                                        unDraw &rarr;</a>
-                                </div>
+                                                if ($stmt) {
+                                                    mysqli_stmt_bind_param($stmt, "i", $curso["id_escola"]);
+                                                    // Execute the statement
+                                                    mysqli_stmt_execute($stmt);
+                                                    $result = mysqli_stmt_get_result($stmt);
+                                                    $escolas = [];
+                                                    // Get the result
+                                                    if (mysqli_num_rows($result) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
+                                                            $escolas[] = $row;
+                                                        }
+                                                    }
+                                                    $nome_escola = "";
+                                                    foreach ($escolas as $escola) {
+                                                        $nome_escola = $escola["nome"];
+                                                    }
+                                                    // Close the statement
+                                                    mysqli_stmt_close($stmt);
+                                                }
+                                                ?>
+                                                <td><?php echo $nome_escola ?></td>
+                                                <?php
+                                                $sql = "SELECT docentes.nome FROM docentes INNER JOIN cursos ON docentes.id_docente = cursos.id_coordenador WHERE cursos.id_coordenador = ?";
+                                                $stmt = mysqli_prepare($conn, $sql);
+
+                                                if ($stmt) {
+                                                    mysqli_stmt_bind_param($stmt, "i", $curso["id_coordenador"]);
+
+                                                    // Execute the statement
+                                                    mysqli_stmt_execute($stmt);
+                                                    $result = mysqli_stmt_get_result($stmt);
+                                                    $coordenadores = [];
+                                                    // Get the result
+                                                    if (mysqli_num_rows($result) > 0) {
+                                                        while ($row = mysqli_fetch_assoc($result)) { // Use a loop to fetch all rows
+                                                            $coordenadores[] = $row;
+                                                        }
+                                                    }
+                                                    $nome_coordenador = "";
+                                                    foreach ($coordenadores as $coordenador) {
+                                                        $nome_coordenador = $coordenador["nome"];
+                                                    }
+                                                    // Close the statement
+                                                    mysqli_stmt_close($stmt);
+                                                }
+                                                ?>
+                                                <td><?php echo $nome_coordenador ?></td>
+
+                                            </tr>
+                                        <?php
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
                             </div>
-
-                            <!-- Approach -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p>SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                                        custom components and custom utility classes.</p>
-                                    <p class="mb-0">Before working with this theme, you should become familiar with the
-                                        Bootstrap framework, especially the utility classes.</p>
-                                </div>
-                            </div>
-
+                        </div>
+                    </div>
                         </div>
                     </div>
 

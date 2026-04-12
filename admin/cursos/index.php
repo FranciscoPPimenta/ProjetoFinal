@@ -41,9 +41,9 @@ if (!isset($_SESSION["admin"])) {
 
 </head>
 <?php
-$sql = "SELECT * FROM admins WHERE id_admin = ?";
+$sql = "SELECT * FROM admin WHERE id_admin = ?";
 $stmt = mysqli_prepare($conn, $sql);
-
+$row = "";
 if ($stmt) {
     // Bind parameters
     mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);

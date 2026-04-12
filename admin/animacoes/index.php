@@ -44,9 +44,9 @@ if (!isset($_SESSION["admin"])) {
   </script>
 </head>
 <?php
-$sql = "SELECT * FROM admins WHERE id_admin = ?";
+$sql = "SELECT * FROM admin WHERE id_admin = ?";
 $stmt = mysqli_prepare($conn, $sql);
-
+$row = "";
 if ($stmt) {
     // Bind parameters
     mysqli_stmt_bind_param($stmt, "i", $_SESSION["admin"]);
@@ -213,7 +213,7 @@ if ($stmt) {
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span
                                     class="mr-2 d-none d-lg-inline text-gray-600 small"><?php echo $row["admin_name"] ?></span>
-                                <img class="img-profile rounded-circle" src="img/undraw_profile.svg">
+                                <img class="img-profile rounded-circle" src="../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
